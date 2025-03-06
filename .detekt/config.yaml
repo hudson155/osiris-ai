@@ -1,0 +1,829 @@
+# When upgrading Detekt versions, review default-detekt-config.yaml as well as the changelog
+# and decide which changes to make in this file.
+
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+  warningsAsErrors: true
+  checkExhaustiveness: true
+
+processors:
+  active: false
+  exclude:
+    - 'KtFileCountProcessor'
+    - 'PackageCountProcessor'
+    - 'ClassCountProcessor'
+    - 'FunctionCountProcessor'
+    - 'PropertyCountProcessor'
+    - 'ProjectComplexityProcessor'
+    - 'ProjectCognitiveComplexityProcessor'
+    - 'ProjectLLOCProcessor'
+    - 'ProjectCLOCProcessor'
+    - 'ProjectLOCProcessor'
+    - 'ProjectSLOCProcessor'
+    - 'LicenseHeaderLoaderExtension'
+
+console-reports:
+  active: true
+  exclude:
+    - 'FileBasedFindingsReport'
+
+output-reports:
+  active: false
+
+comments:
+  AbsentOrWrongFileLicense:
+    active: false
+  CommentOverPrivateFunction:
+    active: false
+  CommentOverPrivateProperty:
+    active: false
+  DeprecatedBlockTag:
+    active: true
+  EndOfSentenceFormat:
+    active: true
+  KDocReferencesNonPublicProperty:
+    active: false
+  OutdatedDocumentation:
+    active: true
+    matchTypeParameters: true
+    matchDeclarationsOrder: true
+    allowParamOnConstructorProperties: false
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+  UndocumentedPublicProperty:
+    active: false
+
+complexity:
+  CognitiveComplexMethod:
+    active: true # Unsure how this differs from CyclomaticComplexMethod and if one is preferable.
+    threshold: 12
+  ComplexCondition:
+    active: true
+    threshold: 3
+  ComplexInterface:
+    active: true
+    threshold: 8
+    includeStaticDeclarations: true
+    includePrivateDeclarations: false
+    ignoreOverloaded: false
+  CyclomaticComplexMethod: # Unsure how this differs from CognitiveComplexMethod and if one is preferable.
+    active: true
+    threshold: 12
+    ignoreSingleWhenExpression: true
+    ignoreSimpleWhenEntries: true
+    ignoreNestingFunctions: false
+  LabeledExpression:
+    active: false
+  LargeClass:
+    active: false # Good practice, but leave this up to the developer.
+  LongMethod:
+    active: true
+    threshold: 40
+  LongParameterList:
+    active: true
+    functionThreshold: 4
+    constructorThreshold: 4
+    ignoreDefaultParameters: false
+    ignoreDataClasses: true
+    ignoreAnnotated:
+      - 'com.google.inject.Inject'
+  MethodOverloading:
+    active: false
+  NamedArguments:
+    active: true
+    threshold: 3
+    ignoreArgumentsMatchingNames: false
+  NestedBlockDepth:
+    active: true
+    threshold: 4
+  NestedScopeFunctions:
+    active: true
+    threshold: 3
+  ReplaceSafeCallChainWithRun:
+    active: true
+  StringLiteralDuplication:
+    active: false # Could consider enabling this.
+  TooManyFunctions:
+    active: false # Good practice, but leave this up to the developer.
+
+coroutines:
+  GlobalCoroutineUsage:
+    active: true
+  InjectDispatcher:
+    active: false
+  RedundantSuspendModifier:
+    active: true
+  SleepInsteadOfDelay:
+    active: true
+  SuspendFunSwallowedCancellation:
+    active: true
+  SuspendFunWithCoroutineScopeReceiver:
+    active: true
+  SuspendFunWithFlowReturnType:
+    active: true
+
+empty-blocks:
+  EmptyCatchBlock:
+    active: true
+  EmptyClassBlock:
+    active: true
+  EmptyDefaultConstructor:
+    active: true
+  EmptyDoWhileBlock:
+    active: true
+  EmptyElseBlock:
+    active: true
+  EmptyFinallyBlock:
+    active: true
+  EmptyForBlock:
+    active: true
+  EmptyFunctionBlock:
+    active: true
+    ignoreOverridden: false
+  EmptyIfBlock:
+    active: true
+  EmptyInitBlock:
+    active: true
+  EmptyKtFile:
+    active: true
+  EmptySecondaryConstructor:
+    active: true
+  EmptyTryBlock:
+    active: true
+  EmptyWhenBlock:
+    active: true
+  EmptyWhileBlock:
+    active: true
+
+exceptions:
+  ExceptionRaisedInUnexpectedLocation:
+    active: true
+  InstanceOfCheckForException:
+    active: true
+  NotImplementedDeclaration:
+    active: true
+  ObjectExtendsThrowable:
+    active: true
+  PrintStackTrace:
+    active: true
+  RethrowCaughtException:
+    active: true
+  ReturnFromFinally:
+    active: true
+    ignoreLabeled: false
+  SwallowedException:
+    active: true
+  ThrowingExceptionFromFinally:
+    active: true
+  ThrowingExceptionInMain:
+    active: true
+  ThrowingExceptionsWithoutMessageOrCause:
+    active: true
+  ThrowingNewInstanceOfSameException:
+    active: true
+  TooGenericExceptionCaught:
+    active: false # This is a pretty common and useful thing to do!
+  TooGenericExceptionThrown:
+    active: true
+
+formatting:
+  AnnotationOnSeparateLine:
+    active: true
+    indentSize: 2
+  AnnotationSpacing:
+    active: true
+  ArgumentListWrapping:
+    active: true
+    indentSize: 2
+    maxLineLength: 120
+  BlockCommentInitialStarAlignment:
+    active: true
+  ChainWrapping:
+    active: true
+    indentSize: 2
+  ClassName:
+    active: true
+  CommentSpacing:
+    active: true
+  CommentWrapping:
+    active: true
+    indentSize: 2
+  ContextReceiverMapping:
+    active: true
+    maxLineLength: 120
+    indentSize: 2
+  DiscouragedCommentLocation:
+    active: true
+  EnumEntryNameCase:
+    active: false # Overlaps with naming>EnumNaming.
+  EnumWrapping:
+    active: true
+    indentSize: 2
+  Filename:
+    active: false # Overlaps with naming>MatchingDeclarationName.
+  FinalNewline:
+    active: true
+    insertFinalNewLine: true
+  FunKeywordSpacing:
+    active: true
+  FunctionName: # Overlaps with naming>FunctionNaming.
+    active: false
+  FunctionReturnTypeSpacing:
+    active: true
+    maxLineLength: 120
+  FunctionSignature:
+    active: false
+  FunctionStartOfBodySpacing:
+    active: true
+  FunctionTypeReferenceSpacing:
+    active: true
+  IfElseBracing:
+    active: true
+    indentSize: 2
+  IfElseWrapping:
+    active: true
+    indentSize: 2
+  ImportOrdering:
+    active: true
+    layout: '*,^'
+  Indentation:
+    active: true
+    indentSize: 2
+  KdocWrapping:
+    active: true
+    indentSize: 2
+  MaximumLineLength:
+    active: true
+    maxLineLength: 120
+    ignoreBackTickedIdentifier: false
+  ModifierListSpacing:
+    active: true
+  ModifierOrdering:
+    active: true
+  MultiLineIfElse:
+    active: true
+    indentSize: 2
+  MultilineExpressionWrapping:
+    active: false
+  NoBlankLineBeforeRbrace:
+    active: true
+  NoBlankLineInList:
+    active: true
+  NoBlankLinesInChainedMethodCalls:
+    active: true
+  NoConsecutiveBlankLines:
+    active: true
+  NoConsecutiveComments:
+    active: true
+  NoEmptyClassBody:
+    active: true
+  NoEmptyFirstLineInClassBody:
+    active: true
+    indentSize: 2
+  NoEmptyFirstLineInMethodBlock:
+    active: true
+  NoLineBreakAfterElse:
+    active: true
+  NoLineBreakBeforeAssignment:
+    active: true
+  NoMultipleSpaces:
+    active: true
+  NoSemicolons:
+    active: true
+  NoSingleLineBlockComment:
+    active: true
+    indentSize: 2
+  NoTrailingSpaces:
+    active: true
+  NoUnitReturn:
+    active: true
+  NoUnusedImports:
+    active: true
+  NoWildcardImports:
+    active: false # Overlaps with style>WildcardImport.
+  NullableTypeSpacing:
+    active: true
+  PackageName:
+    active: true
+  ParameterListSpacing:
+    active: true
+  ParameterListWrapping:
+    active: true
+    maxLineLength: 120
+    indentSize: 2
+  ParameterWrapping:
+    active: true
+    maxLineLength: 120
+    indentSize: 2
+  PropertyName:
+    active: false
+  PropertyWrapping:
+    active: true
+    maxLineLength: 120
+    indentSize: 2
+  SpacingAroundAngleBrackets:
+    active: true
+  SpacingAroundColon:
+    active: true
+  SpacingAroundComma:
+    active: true
+  SpacingAroundCurly:
+    active: true
+  SpacingAroundDot:
+    active: true
+  SpacingAroundDoubleColon:
+    active: true
+  SpacingAroundKeyword:
+    active: true
+  SpacingAroundOperators:
+    active: true
+  SpacingAroundParens:
+    active: true
+  SpacingAroundRangeOperator:
+    active: true
+  SpacingAroundUnaryOperator:
+    active: true
+  SpacingBetweenDeclarationsWithAnnotations:
+    active: true
+  SpacingBetweenDeclarationsWithComments:
+    active: true
+  SpacingBetweenFunctionNameAndOpeningParenthesis:
+    active: true
+  StringTemplate:
+    active: true
+  StringTemplateIndent:
+    active: false
+  TrailingCommaOnCallSite:
+    active: true
+    useTrailingCommaOnCallSite: true
+  TrailingCommaOnDeclarationSite:
+    active: true
+    useTrailingCommaOnDeclarationSite: true
+  TryCatchFinallySpacing:
+    active: true
+    indentSize: 2
+  TypeArgumentListSpacing:
+    active: true
+    indentSize: 2
+  TypeParameterListSpacing:
+    active: true
+    indentSize: 2
+  UnnecessaryParenthesesBeforeTrailingLambda:
+    active: true
+  Wrapping:
+    indentSize: 2
+    maxLineLength: 120
+
+naming:
+  BooleanPropertyNaming:
+    active: false # Prefixing booleans isn't always useful.
+  ClassNaming:
+    active: true
+    classPattern: '([A-Z][a-z0-9]+|KClass)+'
+  ConstructorParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*'
+    privateParameterPattern: '[a-z][A-Za-z0-9]*'
+  EnumNaming:
+    active: true
+    enumEntryPattern: '([A-Z][a-z0-9]+)+'
+  ForbiddenClassName:
+    active: false
+  FunctionMaxLength:
+    active: true
+    maximumFunctionNameLength: 60
+  FunctionMinLength:
+    active: true
+    minimumFunctionNameLength: 2
+  FunctionNaming:
+    active: true
+    functionPattern: '[a-z][A-Za-z0-9]*'
+    excludes:
+      - '**/src/test/kotlin/**/*Test.kt'
+  FunctionParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*'
+  InvalidPackageDeclaration:
+    active: true
+    rootPackage: 'osiris'
+    requireRootInDeclaration: true
+  LambdaParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*|_'
+  MatchingDeclarationName:
+    active: true
+    mustBeFirst: false
+  MemberNameEqualsClassName:
+    active: false
+  NoNameShadowing:
+    active: true
+  NonBooleanPropertyPrefixedWithIs:
+    active: true
+  ObjectPropertyNaming:
+    active: true
+    constantPattern: '[a-z][A-Za-z0-9]*'
+    propertyPattern: '[a-z][A-Za-z0-9]*'
+    privatePropertyPattern: '[a-z][A-Za-z0-9]*'
+  PackageNaming:
+    active: true
+    packagePattern: '[a-z][A-Za-z0-9]*(\.[a-z][A-Za-z0-9]*)*'
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[a-z][A-Za-z0-9]*'
+    propertyPattern: '[a-z][A-Za-z0-9]*'
+    privatePropertyPattern: '[a-z][A-Za-z0-9]*'
+  VariableMaxLength:
+    active: false
+  VariableMinLength:
+    active: true
+    minimumVariableNameLength: 1
+  VariableNaming:
+    active: true
+    variablePattern: '[a-z][A-Za-z0-9]*'
+    privateVariablePattern: '[a-z][A-Za-z0-9]*'
+
+performance:
+  ArrayPrimitive:
+    active: true
+  CouldBeSequence:
+    active: true
+  ForEachOnRange:
+    active: true
+  SpreadOperator:
+    active: true
+  UnnecessaryPartOfBinaryExpression:
+    active: true
+  UnnecessaryTemporaryInstantiation:
+    active: true
+
+potential-bugs:
+  AvoidReferentialEquality:
+    active: true
+  CastNullableToNonNullableType:
+    active: false # This rule has poor support for platform types.
+  CastToNullableType:
+    active: false
+  Deprecation:
+    active: true
+  DontDowncastCollectionTypes:
+    active: true
+  DoubleMutabilityForCollection:
+    active: true
+  ElseCaseInsteadOfExhaustiveWhen:
+    active: true
+  EqualsAlwaysReturnsTrueOrFalse:
+    active: true
+  EqualsWithHashCodeExist:
+    active: true
+  ExitOutsideMain:
+    active: true
+  ExplicitGarbageCollectionCall:
+    active: true
+  HasPlatformType:
+    active: true
+  IgnoredReturnValue:
+    active: false
+  ImplicitDefaultLocale:
+    active: true
+  ImplicitUnitReturnType:
+    active: true
+    allowExplicitReturnType: true
+  InvalidRange:
+    active: true
+  IteratorHasNextCallsNextMethod:
+    active: true
+  IteratorNotThrowingNoSuchElementException:
+    active: true
+  LateinitUsage:
+    active: true
+    ignoreAnnotated:
+      - 'com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText'
+      - 'com.google.inject.Inject'
+  MapGetWithNotNullAssertionOperator:
+    active: true
+  MissingPackageDeclaration:
+    active: true
+  NullCheckOnMutableProperty:
+    active: true
+  NullableToStringCall:
+    active: true
+  PropertyUsedBeforeDeclaration:
+    active: true
+  UnconditionalJumpStatementInLoop:
+    active: true
+  UnnecessaryNotNullCheck:
+    active: true
+  UnnecessaryNotNullOperator:
+    active: true
+  UnnecessarySafeCall:
+    active: true
+  UnreachableCatchBlock:
+    active: true
+  UnreachableCode:
+    active: true
+  UnsafeCallOnNullableType:
+    active: false # checkNotNull and requireNotNull are often preferable, but leaving this open.
+  UnsafeCast:
+    active: true
+  UnusedUnaryOperator:
+    active: true
+  UselessPostfixExpression:
+    active: true
+  WrongEqualsTypeParameter:
+    active: true
+
+style:
+  AlsoCouldBeApply:
+    active: true
+  BracesOnIfStatements:
+    active: true
+    singleLine: 'never'
+    multiLine: 'always'
+  BracesOnWhenStatements:
+    active: true
+    singleLine: 'necessary'
+    multiLine: 'consistent'
+  CanBeNonNullable:
+    active: true
+  CascadingCallWrapping:
+    active: true
+    includeElvis: true
+  ClassOrdering:
+    active: true
+  CollapsibleIfStatements:
+    active: true
+  DataClassContainsFunctions:
+    active: false # Functions are OK in data classes.
+  DataClassShouldBeImmutable:
+    active: true
+  DestructuringDeclarationWithTooManyEntries:
+    active: true
+    maxDestructuringEntries: 3
+  DoubleNegativeLambda:
+    active: true
+  EqualsNullCall:
+    active: true
+  EqualsOnSignatureLine:
+    active: true
+  ExplicitCollectionElementAccessMethod:
+    active: true
+  ExplicitItLambdaParameter:
+    active: true
+  ExpressionBodySyntax:
+    active: true
+    includeLineWrapping: true
+  ForbiddenAnnotation:
+    active: true
+  ForbiddenComment:
+    active: false
+  ForbiddenImport:
+    active: true
+    # Keep these in sync with IntelliJ auto-import exclusions (codeInsightSettings.xml).
+    imports:
+      - 'com.fasterxml.jackson.module.kotlin.jsonMapper'
+
+      - 'com.google.cloud.scheduler.v1beta*.*'
+      - 'com.google.cloud.secretmanager.v1beta*.*'
+      - 'com.google.cloud.tasks.v2beta*.*'
+
+      - 'com.google.common.base.Optional' # Use the JDK version instead.
+
+      - 'com.google.inject.TypeLiteral' # Use the Kotlin overload.
+
+      - 'com.sun.security.*'
+
+      - 'com.typesafe.config.Optional' # Use the JDK version instead.
+
+      - 'io.kotest.core.spec.*' # Use JUnit test annotations.
+
+      - 'io.ktor.client.HttpClient' # Use kairo.client.KairoClient.
+
+      - 'io.ktor.server.plugins.BadRequestException' # Use kairo.exception.BadRequestException.
+      - 'io.ktor.server.plugins.CannotTransformContentToTypeException'
+      - 'io.ktor.server.plugins.MissingRequestParameterException'
+      - 'io.ktor.server.plugins.NotFoundException' # Use kairo.exception.NotFoundException.
+      - 'io.ktor.server.plugins.ParameterConversionException'
+      - 'io.ktor.server.plugins.PayloadTooLargeException'
+      - 'io.ktor.server.plugins.UnsupportedMediaTypeException'
+
+      - 'jakarta.inject.*' # Use Google's injection annotations.
+      - 'jakarta.validation.constraints.*'
+
+      - 'java.awt.*'
+
+      - 'java.security.AuthProvider'
+      - 'java.security.Permission'
+
+      - 'java.util.UUID' # Use kotlin.uuid.Uuid.
+
+      - 'javax.inject.*' # Use Google's injection annotations.
+
+      - 'kotlin.time.Duration' # Use java.time.Duration.
+
+      - 'org.junit.jupiter.api.Assertions.*' # Use Kotest.
+
+      - 'org.slf4j.Logger' # Use KLogger.
+      - 'org.slf4j.LoggerFactory' # Use KotlinLogging.
+
+      - 'sun.net.ftp.FtpDirEntry'
+  ForbiddenMethodCall:
+    active: true
+    methods:
+
+      # Use the Kotlin overload.
+      - 'com.fasterxml.jackson.core.JsonParser.readValueAs'
+      - 'com.fasterxml.jackson.databind.BeanProperty.getAnnotation'
+      - 'com.fasterxml.jackson.databind.ObjectMapper.convertValue'
+      - 'com.fasterxml.jackson.databind.ObjectMapper.readValue'
+      - 'com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString'
+
+      # Use the Kotlin overload.
+      - 'com.google.inject.Binder.bind'
+      - 'com.google.inject.Injector.getExistingBinding'
+      - 'com.google.inject.Injector.getInstance(java.lang.Class)'
+      - 'com.google.inject.binder.ScopedBindingBuilder.in'
+      - 'com.google.inject.binder.LinkedBindingBuilder.to'
+      - 'com.google.inject.binder.LinkedBindingBuilder.toConstructor'
+      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(jakarta.inject.Provider)'
+      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(java.lang.Class)'
+      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(com.google.inject.TypeLiteral)'
+      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(com.google.inject.Key)'
+
+      - 'io.ktor.server.request.header' # Use headerSingleNullOrThrow instead.
+
+      - 'java.lang.Runtime.getRuntime'
+      - 'java.lang.System.getenv'
+      - 'java.lang.Thread.currentThread'
+      - 'java.time.format.DateTimeFormatter.ofPattern(java.lang.String)' # Use the overload that takes a Locale.
+      - 'java.time.Instant.now()' # Use the overload that takes a Clock.
+      - 'java.time.LocalDate.now()' # Use the overload that takes a Clock.
+      - 'java.time.LocalTime.now()' # Use the overload that takes a Clock.
+      - 'java.time.Month.now()' # Use the overload that takes a Clock.
+      - 'java.time.MonthDay.now()' # Use the overload that takes a Clock.
+      - 'java.time.Year.now()' # Use the overload that takes a Clock.
+      - 'java.time.YearMonth.now()' # Use the overload that takes a Clock.
+
+      # Class should never be used.
+      - 'java.time.LocalDateTime.now'
+      - 'java.time.LocalTime.now'
+      - 'java.time.OffsetDateTime.now'
+      - 'java.time.OffsetTime.now'
+      - 'java.time.ZonedDateTime.now'
+
+      - 'kotlin.collections.singleOrNull' # singleNullOrThrow is less surprising.
+      - 'kotlin.io.print'
+      - 'kotlin.io.println'
+
+      # Use the Kotlin overload.
+      - 'org.jdbi.v3.core.result.ResultBearing.mapTo'
+  ForbiddenSuppress:
+    active: false
+  ForbiddenVoid:
+    active: true
+    ignoreOverridden: false
+    ignoreUsageInGenerics: false
+  FunctionOnlyReturningConstant:
+    active: false # This is sometimes useful for forward-compatibility.
+  LoopWithTooManyJumpStatements:
+    active: true
+    maxJumpCount: 1
+  MagicNumber:
+    active: false # Magic numbers are often code smells, but leaving this open.
+  MandatoryBracesLoops:
+    active: true
+  MaxChainedCallsOnSameLine:
+    active: false
+  MaxLineLength:
+    active: false # Overlaps with formatting>MaximumLineLength.
+  MayBeConst:
+    active: true
+  ModifierOrder:
+    active: false # Overlaps with formatting>ModifierOrdering.
+  MultilineLambdaItParameter:
+    active: true
+  MultilineRawStringIndentation:
+    active: true
+    indentSize: 2
+  NestedClassesVisibility:
+    active: true
+  NewLineAtEndOfFile:
+    active: false # Overlaps with formatting>FinalNewline.
+  NoTabs:
+    active: true
+  NullableBooleanCheck:
+    active: true
+  ObjectLiteralToLambda:
+    active: true
+  OptionalAbstractKeyword:
+    active: true
+  OptionalUnit:
+    active: false
+  PreferToOverPairSyntax:
+    active: false # The pair syntax is often clearer.
+  ProtectedMemberInFinalClass:
+    active: true
+  RedundantExplicitType:
+    active: true
+  RedundantHigherOrderMapUsage:
+    active: true
+  RedundantVisibilityModifierRule:
+    active: false # Conflicts with [explicitApi].
+  ReturnCount:
+    active: false
+  SafeCast:
+    active: true
+  SerialVersionUIDInSerializableClass:
+    active: true
+  SpacingBetweenPackageAndImports:
+    active: true
+  StringShouldBeRawString:
+    active: false
+  ThrowsCount:
+    active: false
+  TrailingWhitespace:
+    active: true
+  TrimMultilineRawString:
+    active: true
+  UnderscoresInNumericLiterals:
+    active: true
+    acceptableLength: 4
+    allowNonStandardGrouping: false
+  UnnecessaryAbstractClass:
+    active: false
+  UnnecessaryAnnotationUseSiteTarget:
+    active: true
+  UnnecessaryApply:
+    active: true
+  UnnecessaryBackticks:
+    active: true
+  UnnecessaryBracesAroundTrailingLambda:
+    active: true
+  UnnecessaryFilter:
+    active: true
+  UnnecessaryInheritance:
+    active: true
+  UnnecessaryInnerClass:
+    active: true
+  UnnecessaryLet:
+    active: true
+  UnnecessaryParentheses:
+    active: true
+    allowForUnclearPrecedence: false
+  UntilInsteadOfRangeTo:
+    active: true
+  UnusedImports:
+    active: false # Overlaps with formatting>NoUnusedImports.
+  UnusedParameter:
+    active: true
+  UnusedPrivateClass:
+    active: true
+  UnusedPrivateMember:
+    active: true
+  UnusedPrivateProperty:
+    active: true
+  UseAnyOrNoneInsteadOfFind:
+    active: true
+  UseArrayLiteralsInAnnotations:
+    active: true
+  UseCheckNotNull:
+    active: true
+  UseCheckOrError:
+    active: false
+  UseDataClass:
+    active: true
+    allowVars: false
+  UseEmptyCounterpart:
+    active: true
+  UseIfEmptyOrIfBlank:
+    active: true
+  UseIfInsteadOfWhen:
+    active: true
+    ignoreWhenContainingVariableDeclaration: false
+  UseIsNullOrEmpty:
+    active: true
+  UseLet:
+    active: true
+  UseOrEmpty:
+    active: true
+  UseRequire:
+    active: false
+  UseRequireNotNull:
+    active: true
+  UseSumOfInsteadOfFlatMapSize:
+    active: true
+  UselessCallOnNotNull:
+    active: true
+  UtilityClassWithPublicConstructor:
+    active: true
+  VarCouldBeVal:
+    active: true
+    ignoreLateinitVar: true
+  WildcardImport:
+    active: true
+    excludeImports: []

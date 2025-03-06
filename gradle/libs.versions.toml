@@ -1,0 +1,4 @@
+[versions]
+kairo = "0.77.0" # https://github.com/hudson155/kairo/releases
+
+[libraries]
