@@ -1,0 +1,17 @@
+*
+
+!/.gitignore
+
+!/codeStyles/
+!/codeStyles/**
+!/inspectionProfiles/
+!/inspectionProfiles/**
+!/runConfigurations/
+!/runConfigurations/**
+
+!/codeInsightSettings.xml
+!/compiler.xml
+!/kotlinc.xml
+!/misc.xml
+!/sqldialects.xml
+!/vcs.xml
