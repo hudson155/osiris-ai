@@ -1,18 +1,23 @@
 package osiris.osiris
 
 import com.openai.client.OpenAIClientAsync
-import com.openai.core.RequestOptions
 import com.openai.core.Timeout
 import com.openai.models.ChatCompletion
 import com.openai.models.ChatCompletion.Choice.FinishReason
-import com.openai.models.ChatCompletionAssistantMessageParam
 import com.openai.models.ChatCompletionCreateParams
+import com.openai.models.ChatCompletionMessage
 import com.openai.models.ChatCompletionMessageParam
 import com.openai.models.ChatCompletionUserMessageParam
 import com.openai.models.ChatModel
 import com.openai.models.ResponseFormatText
 import com.openai.services.async.chat.CompletionServiceAsync
-import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.optional.shouldBeEmpty
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import java.util.concurrent.CompletableFuture
@@ -25,24 +30,32 @@ import org.junit.jupiter.api.Test
 
 internal class OsirisTest {
   @Test
-  fun test(): Unit = runTest {
+  fun `happy path`(): Unit = runTest {
     val openAi = setup("Configure mocking") {
       val choices = listOf(
         mockk<ChatCompletion.Choice> {
-          every { finishReason() } returns mockk {
-            every { value() } returns FinishReason.Value.STOP
-          }
-          every { message() } returns mockk {
-            every { toParam() } returns ChatCompletionAssistantMessageParam.builder().content("").build()
-          }
+          every { finishReason() } returns FinishReason.STOP
+          every { message() } returns ChatCompletionMessage.builder()
+            .refusal(null)
+            .content(
+              "The airplane shuddered as it cut through the storm," +
+                " lightning flashing across the windows like frantic warnings." +
+                " The pilot, gripping the controls, whispered a prayer just as the turbulence vanished," +
+                " revealing a sky so clear it felt otherworldly." +
+                " Below them, the ocean stretched endlessly, and not a single trace of land remained.",
+            )
+            .build()
         },
         mockk<ChatCompletion.Choice> {
-          every { finishReason() } returns mockk {
-            every { value() } returns FinishReason.Value.STOP
-          }
-          every { message() } returns mockk {
-            every { toParam() } returns ChatCompletionAssistantMessageParam.builder().content("").build()
-          }
+          every { finishReason() } returns FinishReason.STOP
+          every { message() } returns ChatCompletionMessage.builder()
+            .refusal(null)
+            .content(
+              "She booked the cheapest flight, hoping distance would soften the pain of what she left behind." +
+                " As the plane lifted off, she stared at the city shrinking below, wondering if she’d ever return." +
+                " Somewhere over the clouds, she realized she no longer cared.",
+            )
+            .build()
         },
       )
       return@setup mockk<OpenAIClientAsync> {
@@ -71,9 +84,11 @@ internal class OsirisTest {
     }
 
     postcondition("Check events") {
-      events.shouldContain(
-        OsirisEvent.ChatCompletionRequest(
-          params = ChatCompletionCreateParams.builder().apply {
+      events.shouldHaveSize(3)
+      events[0].should { event ->
+        event.shouldBeInstanceOf<OsirisEvent.ChatCompletionRequest>()
+        event.params.shouldBe(
+          ChatCompletionCreateParams.builder().apply {
             messages(
               listOf(
                 ChatCompletionMessageParam.ofUser(
@@ -87,12 +102,50 @@ internal class OsirisTest {
             responseFormat(ChatCompletionCreateParams.ResponseFormat.ofText(ResponseFormatText.builder().build()))
             serviceTier(ChatCompletionCreateParams.ServiceTier.AUTO)
           }.build(),
-          options = RequestOptions.builder().apply {
-            responseValidation(true)
-            timeout(Timeout.default())
-          }.build(),
         )
-      )
+        event.options.responseValidation.shouldNotBeNull().shouldBeTrue()
+        event.options.timeout.shouldBe(Timeout.default())
+      }
+      events[1].should { event ->
+        event.shouldBeInstanceOf<OsirisEvent.ChatCompletionResponse>()
+        event.chatCompletion.choices().should { choices ->
+          choices.shouldHaveSize(2)
+          choices[0].should { choice ->
+            choice.finishReason().shouldBe(FinishReason.STOP)
+            choice.message().should { message ->
+              message.refusal().shouldBeEmpty()
+              message.content().get().shouldBe(
+                "The airplane shuddered as it cut through the storm," +
+                  " lightning flashing across the windows like frantic warnings." +
+                  " The pilot, gripping the controls, whispered a prayer just as the turbulence vanished," +
+                  " revealing a sky so clear it felt otherworldly." +
+                  " Below them, the ocean stretched endlessly, and not a single trace of land remained.",
+              )
+            }
+          }
+          choices[1].should { choice ->
+            choice.finishReason().shouldBe(FinishReason.STOP)
+            choice.message().should { message ->
+              message.refusal().shouldBeEmpty()
+              message.content().get().shouldBe(
+                "She booked the cheapest flight, hoping distance would soften the pain of what she left behind." +
+                  " As the plane lifted off, she stared at the city shrinking below, wondering if she’d ever return." +
+                  " Somewhere over the clouds, she realized she no longer cared.",
+              )
+            }
+          }
+        }
+      }
+      events[2].should { event ->
+        event.shouldBeInstanceOf<OsirisEvent.Result<String>>()
+        event.result.shouldBe(
+          "The airplane shuddered as it cut through the storm," +
+            " lightning flashing across the windows like frantic warnings." +
+            " The pilot, gripping the controls, whispered a prayer just as the turbulence vanished," +
+            " revealing a sky so clear it felt otherworldly." +
+            " Below them, the ocean stretched endlessly, and not a single trace of land remained.",
+        )
+      }
     }
   }
 
