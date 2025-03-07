@@ -1,4 +1,11 @@
 [versions]
-kairo = "0.77.0" # https://github.com/hudson155/kairo/releases
+kairo = "0.77.0-SNAPSHOT" # https://github.com/hudson155/kairo/releases
+openAi = "0.33.0" # https://github.com/openai/openai-java/releases
 
 [libraries]
+kairoCoroutines = { module = "kairo:kairo-coroutines", version.ref = "kairo" }
+kairoLogging = { module = "kairo:kairo-logging", version.ref = "kairo" }
+kairoLoggingTesting = { module = "kairo:kairo-logging-testing", version.ref = "kairo" }
+kairoSerialization = { module = "kairo:kairo-serialization", version.ref = "kairo" }
+kairoTesting = { module = "kairo:kairo-testing", version.ref = "kairo" }
+openAi = { module = "com.openai:openai-java", version.ref = "openAi" }
