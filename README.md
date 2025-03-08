@@ -1,9 +1,24 @@
 # Osiris AI
 
-Osiris AI is a Kotlin OpenAI wrapper.
+Building robust production-ready AI integrations goes beyond just sending requests to OpenAI.
+You need a seamless interface, efficient tool calls, logging and debugging capabilities, and reliable error management.
+Osiris AI is a Kotlin-based OpenAI wrapper designed to streamline and simplify your AI integrations.
 
-Limitations:
-- `n` is used for parallel tries, so we can't actually return multiple results.
+Osiris AI provides:
+
+1. **First-class support for tool calls.**
+   Define your tools and make a single call to Osiris, not N calls.
+
+2. **Automatic type conversion**,
+   ensuring structured output is effortlessly mapped to your data types.
+
+3. **Built-in retries**, handling transient errors gracefully.
+   Includes both parallel tries and sequential tries.
+
+4. **Asynchronous operation through Kotlin `Flow`s**,
+   complete with asynchronous progress updates and debug information.
+
+Focus on what matters: build intelligent applications, not plumbing.
 
 ## Project information
 
