@@ -4,6 +4,5 @@ plugins {
 }
 
 dependencies {
-  implementation(libs.kairoLogging)
   api(libs.openAi)
 }

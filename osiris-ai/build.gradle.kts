@@ -8,6 +8,7 @@ dependencies {
 
   implementation(libs.kairoCoroutines)
   implementation(libs.kairoLogging)
+  implementation(libs.kairoReflect)
   implementation(libs.kairoSerialization)
 
   testImplementation(libs.kairoLoggingTesting)
