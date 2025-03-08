@@ -2,6 +2,10 @@ package osiris.osiris
 
 import com.openai.models.ChatCompletionMessageParam
 
+/**
+ * Keeps track of the Osiris execution's internal state.
+ * Primarily used internally, but some [OsirisOptions] can access the state.
+ */
 public data class OsirisState private constructor(
   val messages: List<ChatCompletionMessageParam>,
   val newMessages: Int,

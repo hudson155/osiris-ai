@@ -1,5 +1,6 @@
 package osiris.osiris
 
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.openai.core.JsonArray
 import com.openai.core.JsonBoolean
 import com.openai.core.JsonObject
@@ -33,7 +34,7 @@ public abstract class OsirisResponseType<out Response : Any> {
   public class Json<out Response : Any>(
     private val type: KairoType<Response>,
   ) : OsirisResponseType<Response>() {
-    private val mapper = jsonMapper().build()
+    private val mapper: JsonMapper = jsonMapper().build()
 
     override fun responseFormat(): ResponseFormat {
       val kClass = type.kotlinClass
