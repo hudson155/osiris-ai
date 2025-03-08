@@ -78,7 +78,7 @@ internal class OsirisTest {
       )
       val options = OsirisOptions(
         model = { ChatModel.GPT_4O },
-        responseType = { OsirisResponseType.Text() },
+        responseType = OsirisResponseType.Text(),
       )
       return@test osiris.execute(messages, options).toList()
     }

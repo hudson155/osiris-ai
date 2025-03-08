@@ -8,12 +8,15 @@ import com.openai.models.ChatCompletionToolChoiceOption
 import com.openai.models.ChatModel
 
 public class OsirisOptions<out Response : Any>(
-  internal val exit: (state: OsirisState) -> Boolean =
-    exit@{ state ->
-      if (state.newMessages == 0) return@exit false
-      val lastAssistantMessage = state.messages.lastOrNull { it.isAssistant() } ?: return@exit false
-      return@exit lastAssistantMessage.asAssistant().content().isPresent
-    },
+  /**
+   * Which OpenAI model to use. This can be static or can be dynamically derived from the state.
+   */
+  internal val model: (state: OsirisState) -> ChatModel,
+
+  /**
+   *
+   */
+  internal val responseType: OsirisResponseType<Response>,
 
   internal val sequentialTries: Int =
     1,
@@ -21,9 +24,15 @@ public class OsirisOptions<out Response : Any>(
   internal val parallelTries: (state: OsirisState) -> Int =
     parallelTries@{ 1 },
 
-  internal val model: (state: OsirisState) -> ChatModel,
-
-  internal val responseType: (state: OsirisState) -> OsirisResponseType<Response>,
+  /**
+   * By default, Osiris will exit when the last message is an assistant message.
+   * This is usually the intended behaviour.
+   */
+  internal val exit: (state: OsirisState) -> Boolean =
+    exit@{ state ->
+      val lastMessage = state.messages.lastOrNull() ?: return@exit false
+      return@exit lastMessage.isAssistant()
+    },
 
   internal val tools: (state: OsirisState) -> List<ChatCompletionTool>? =
     tools@{ null },
