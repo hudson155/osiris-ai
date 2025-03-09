@@ -1,5 +1,5 @@
 [versions]
-kairo = "0.77.0-SNAPSHOT" # https://github.com/hudson155/kairo/releases
+kairo = "1.0.0" # https://github.com/hudson155/kairo/releases
 openAi = "0.33.0" # https://github.com/openai/openai-java/releases
 
 [libraries]
