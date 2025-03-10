@@ -71,12 +71,12 @@ public abstract class OsirisResponseType<out Response : Any> {
                     // todo dynamic
                   )))
                   putAdditionalProperty("additionalProperties", JsonBoolean.of(false))
-                }.build()
+                }.build(),
               )
               strict(true)
-            }.build()
+            }.build(),
           )
-        }.build()
+        }.build(),
       )
     }
 

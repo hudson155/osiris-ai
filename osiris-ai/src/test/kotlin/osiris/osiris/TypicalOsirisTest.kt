@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
+@Suppress("LongMethod", "NestedScopeFunctions")
 internal class TypicalOsirisTest : OsirisTest() {
   @Test
   fun test(): Unit = runTest {

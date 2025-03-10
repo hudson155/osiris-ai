@@ -8,6 +8,7 @@ import com.openai.models.ChatCompletionCreateParams
 import com.openai.models.ChatCompletionMessageParam
 import kotlinx.coroutines.future.await
 
+@Suppress("SuspendFunWithCoroutineScopeReceiver")
 internal class OsirisExecution<out Response : Any>(
   private val openAi: OpenAIClientAsync,
   messages: List<ChatCompletionMessageParam>,
@@ -16,7 +17,7 @@ internal class OsirisExecution<out Response : Any>(
   var state = OsirisState.create(messages)
 
   suspend fun OsirisScope<Response>.execute() {
-    withRetries(options.sequentialTries) { i ->
+    withRetries(options.sequentialTries) {
       while (!options.exit(state)) {
         val choices = makeRequest().choices()
         withRetries(choices.size, onError = { send(OsirisEvent.Exception(it)) }) { i ->
@@ -56,8 +57,8 @@ internal class OsirisExecution<out Response : Any>(
   private fun processChoice(choice: ChatCompletion.Choice) {
     val finishReason = choice.finishReason()
     val message = choice.message()
-    var newState = state.appendMessage(ChatCompletionMessageParam.ofAssistant(message.toParam()))
-    when(finishReason) {
+    val newState = state.appendMessage(ChatCompletionMessageParam.ofAssistant(message.toParam()))
+    when (finishReason) {
       FinishReason.Companion.STOP -> {
         state = newState
         return

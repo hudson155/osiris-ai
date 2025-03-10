@@ -7,6 +7,7 @@ import com.openai.models.ChatCompletionTool
 import com.openai.models.ChatCompletionToolChoiceOption
 import com.openai.models.ChatModel
 
+@Suppress("LongParameterList", "NoBlankLineInList", "UseDataClass")
 public class OsirisOptions<out Response : Any>(
   /**
    * Which OpenAI model to use. This can be static or can be dynamically derived from the state.
