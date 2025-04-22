@@ -1,36 +1,34 @@
 # Osiris AI
 
-Osiris AI is a Kotlin OpenAI wrapper.
+Osiris is a Kotlin wrapper for [Langchain](https://github.com/langchain4j/langchain4j).
 
 ## Project information
 
 ### Major dependencies
 
-- Gradle 8.10
-- Kotlin 2.0
+- Gradle 8.13
+- Kotlin 2.1
 - Java 21
-- Kairo 0.77
+- Kairo 4.0
+- Langchain 1.0
 
 ### Style guide
 
 Please follow the [Kairo style guide](https://github.com/hudson155/kairo/blob/main/docs/style-guide.md).
 
-## Getting started
+### Chores
 
-**Run checks (tests and lint):**
+See [chores](./docs/chores.md).
 
-```shell
-./gradlew check
-```
+## Releasing
 
-**Full build:**
-
-```shell
-./gradlew build
-```
-
-**Publish:**
-
-```shell
-./gradlew publish
-```
+1. Familiarize yourself with [semantic versioning](https://semver.org/).
+2. Create a new branch called `release/X.Y.Z`.
+3. Bump the version in [osiris-ai-publish.gradle.kts](./buildSrc/src/main/kotlin/osiris-ai-publish.gradle.kts).
+4. Commit "Release X.Y.Z".
+5. Create and merge a PR "Release X.Y.Z". No description is necessary.
+6. [Draft a new release](https://github.com/hudson155/osiris-ai/releases/new).
+   Create a new tag `vX.Y.Z`.
+   Title "Osiris X.Y.Z".
+   Generate and prefix release notes.
+7. Manually run `./gradlew publish` on `main` after merging.

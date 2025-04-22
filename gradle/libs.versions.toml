@@ -1,4 +1,5 @@
 [versions]
-kairo = "0.77.0" # https://github.com/hudson155/kairo/releases
+kairo = "4.0.0" # https://github.com/hudson155/kairo/releases
+langchain = "1.0.0-beta3" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
