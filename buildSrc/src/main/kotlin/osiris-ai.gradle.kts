@@ -12,7 +12,7 @@ repositories {
     url = uri("https://jitpack.io")
   }
   maven {
-    url = uri("artifactregistry://us-central1-maven.pkg.dev/kairo-13/kairo-13")
+    url = uri("artifactregistry://us-central1-maven.pkg.dev/airborne-software/maven")
   }
 }
 
@@ -29,6 +29,7 @@ kotlin {
   explicitApi()
   compilerOptions {
     allWarningsAsErrors = true
+    javaParameters = true // For Langchain.
     freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
     freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
   }

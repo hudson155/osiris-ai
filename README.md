@@ -24,10 +24,10 @@ Focus on what matters: build intelligent applications, not plumbing.
 
 ### Major dependencies
 
-- Gradle 8.10
-- Kotlin 2.0
+- Gradle 8.13
+- Kotlin 2.1
 - Java 21
-- Kairo 0.77
+- Kairo 4.0
 
 ### Style guide
 
@@ -37,21 +37,7 @@ Please follow the [Kairo style guide](https://github.com/hudson155/kairo/blob/ma
 
 See [chores](./docs/chores.md).
 
-## Contributing
-
-**Run checks (tests and lint):**
-
-```shell
-./gradlew check
-```
-
-**Full build:**
-
-```shell
-./gradlew build
-```
-
-### Releasing
+## Releasing
 
 1. Familiarize yourself with [semantic versioning](https://semver.org/).
 2. Create a new branch called `release/X.Y.Z`.
