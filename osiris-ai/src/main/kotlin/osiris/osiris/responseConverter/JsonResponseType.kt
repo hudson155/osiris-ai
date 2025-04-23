@@ -24,10 +24,8 @@ public abstract class JsonResponseType<Response : Any> : OsirisResponseType<Resp
       "Osiris schema ${kClass.qualifiedName!!}" +
         " must be a data class or data object."
     }
-    val name = parseName(kClass)
-    val params = getAllParams(kClass)
     val rootElement = JsonObjectSchema.builder().apply {
-      params.forEach { param ->
+      getAllParams(kClass).forEach { param ->
         val name = checkNotNull(param.name)
         val type = parseType(kClass, param)
         val description = parseDescription(param)
@@ -41,7 +39,7 @@ public abstract class JsonResponseType<Response : Any> : OsirisResponseType<Resp
       }
     }.build()
     val jsonSchema = JsonSchema.builder()
-      .name(name)
+      .name(parseName(kClass))
       .rootElement(rootElement)
       .build()
     return ResponseFormat.builder()
@@ -79,6 +77,7 @@ public abstract class JsonResponseType<Response : Any> : OsirisResponseType<Resp
     return constructor.valueParameters
   }
 
+  @Suppress("ForbiddenMethodCall")
   override fun convert(langchainResponse: ChatResponse): Response =
     osirisMapper.readValue(langchainResponse.aiMessage().text(), type.typeReference)
 }

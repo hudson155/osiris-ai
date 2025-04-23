@@ -1,7 +1,5 @@
 package osiris.osiris
 
-import dev.langchain4j.data.message.UserMessage
-import dev.langchain4j.model.chat.request.ChatRequest
 import io.kotest.matchers.shouldBe
 import kairo.serialization.util.writeValueAsStringSpecial
 import kotlinx.coroutines.runBlocking

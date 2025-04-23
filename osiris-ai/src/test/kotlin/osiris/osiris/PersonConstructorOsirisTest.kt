@@ -29,12 +29,12 @@ internal class PersonConstructorOsirisTest : OsirisTest<PersonConstructorOsirisT
         request = ChatRequest.builder()
           .messages(
             SystemMessage("Provide a JSON representation of the person matching this description."),
-            UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner.")
+            UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
           )
           .responseFormat(Person.format())
           .build(),
         evals = listOf(
-          OsirisEval.Equality(Person("Jeff Hudson", 29))
+          OsirisEval.Equality(Person("Jeff Hudson", 29)),
         ),
       ),
     )
