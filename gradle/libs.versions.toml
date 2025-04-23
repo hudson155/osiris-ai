@@ -4,6 +4,7 @@ langchain = "1.0.0-beta3" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
 kairoCoroutines = { module = "kairo:kairo-coroutines", version.ref = "kairo" }
+kairoEnvironmentVariableSupplier = { module = "kairo:kairo-environment-variable-supplier", version.ref = "kairo" }
 kairoLogging = { module = "kairo:kairo-logging", version.ref = "kairo" }
 kairoLoggingTesting = { module = "kairo:kairo-logging-testing", version.ref = "kairo" }
 kairoReflect = { module = "kairo:kairo-reflect", version.ref = "kairo" }

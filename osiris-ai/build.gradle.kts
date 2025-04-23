@@ -6,11 +6,12 @@ plugins {
 dependencies {
   api(libs.kairoCoroutines)
   implementation(libs.kairoLogging)
+  implementation(libs.kairoReflect)
+  implementation(libs.kairoSerialization)
   api(libs.langchain)
 
+  testImplementation(libs.kairoEnvironmentVariableSupplier)
   testImplementation(libs.kairoLoggingTesting)
-  testImplementation(libs.kairoReflect)
-  testImplementation(libs.kairoSerialization)
   testImplementation(libs.kairoTesting)
   testImplementation(libs.langchainGemini)
   testImplementation(libs.langchainOpenAi)
