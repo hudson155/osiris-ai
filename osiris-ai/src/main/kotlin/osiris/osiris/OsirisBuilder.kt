@@ -21,7 +21,6 @@ public class OsirisBuilder<Response : Any>(
       @Suppress("UNCHECKED_CAST")
       return StringResponseType as OsirisResponseType<Response>
     } catch (e: ClassCastException) {
-      // TODO: Can/should we automatically use JSON instead?
       throw IllegalArgumentException("Osiris response converter must be set for non-string response types.", e)
     }
   }
