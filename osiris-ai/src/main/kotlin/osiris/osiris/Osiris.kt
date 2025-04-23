@@ -8,20 +8,20 @@ import kotlinx.coroutines.flow.channelFlow
 import osiris.osiris.event.ExceptionOsirisEvent
 import osiris.osiris.event.OsirisEvent
 import osiris.osiris.event.ResponseOsirisEvent
-import osiris.osiris.responseConverter.ResponseConverter
+import osiris.osiris.responseConverter.OsirisResponseType
 
 private val logger: KLogger = KotlinLogging.logger {}
 
 public class Osiris<out Response : Any>(
   private val model: OsirisModel,
-  private val responseConverter: ResponseConverter<Response>,
+  private val responseType: OsirisResponseType<Response>,
 ) {
   public fun request(langchainRequest: ChatRequest): Flow<OsirisEvent<Response>> =
     channelFlow {
       logger.info { "Osiris is executing. $model." }
       try {
         val langchainResponse = model.request(langchainRequest)
-        val osirisResponse = responseConverter.convert(langchainResponse)
+        val osirisResponse = responseType.convert(langchainResponse)
         send(ResponseOsirisEvent(content = osirisResponse))
       } catch (e: Throwable) {
         logger.warn(e) { "An exception was thrown." }
