@@ -1,8 +1,7 @@
 package osiris.osiris
 
-import dev.langchain4j.data.message.UserMessage
-import dev.langchain4j.model.chat.request.ChatRequest
 import io.kotest.matchers.shouldBe
+import kairo.serialization.util.writeValueAsStringSpecial
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DynamicTest
@@ -20,12 +19,9 @@ internal abstract class OsirisTest<out Response : Any> {
     targetModels.flatMap { model ->
       val osiris = buildOsiris(model)
       return@flatMap testMessages.flatMap { testMessage ->
-        val langchainRequest = ChatRequest.builder()
-          .messages(listOf(UserMessage(testMessage.request)))
-          .build()
-        val response = osiris.request(langchainRequest).get()
+        val response = osiris.request(testMessage.request).get()
         return@flatMap testMessage.evals.map { eval ->
-          val testName = getTestName(model, testMessage, eval)
+          val testName = testName(model, testMessage, eval)
           return@map DynamicTest.dynamicTest(testName) {
             runTest {
               evaluate(response, eval)
@@ -36,14 +32,14 @@ internal abstract class OsirisTest<out Response : Any> {
     }
   }
 
-  private fun getTestName(
+  private fun testName(
     model: OsirisModel,
     testMessage: OsirisTestMessage<Response>,
     eval: OsirisEval<Response>,
   ): String =
     listOf(
       model.name,
-      testMessage.request,
+      testMessage.name,
       when (eval) {
         is OsirisEval.Criteria -> eval.criteria
         is OsirisEval.Equality<Response> -> eval.expected
@@ -58,25 +54,8 @@ internal abstract class OsirisTest<out Response : Any> {
   }
 
   private suspend fun evaluate(response: Response, eval: OsirisEval.Criteria) {
-    val evaluator = Osiris.create<String>(evalModel)
-    val messages = listOf(
-      UserMessage(
-        """
-          Evaluate this LLM response according to the following criteria.
-          Return only "true" or "false".
-          <response>
-          $response
-          </response>
-          <criteria>
-          ${eval.criteria}
-          </criteria>
-        """.trimIndent(),
-      ),
-    )
-    val langchainRequest = ChatRequest.builder()
-      .messages(messages)
-      .build()
-    evaluator.request(langchainRequest).get().shouldBe("true") // TODO: Use structured output.
+    val evaluator = OsirisEvaluator(evalModel)
+    evaluator.evaluate(osirisMapper.writeValueAsStringSpecial(response), eval.criteria)
   }
 
   private fun evaluate(response: Response, eval: OsirisEval.Equality<Response>) {
