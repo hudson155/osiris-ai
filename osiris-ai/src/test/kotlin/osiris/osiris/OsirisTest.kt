@@ -25,7 +25,7 @@ internal abstract class OsirisTest<out Response : Any> {
           .build()
         val response = osiris.request(langchainRequest).get()
         return@flatMap testMessage.evals.map { eval ->
-          val testName = getTestName(model, testMessage, eval)
+          val testName = testName(model, testMessage, eval)
           return@map DynamicTest.dynamicTest(testName) {
             runTest {
               evaluate(response, eval)
@@ -36,7 +36,7 @@ internal abstract class OsirisTest<out Response : Any> {
     }
   }
 
-  private fun getTestName(
+  private fun testName(
     model: OsirisModel,
     testMessage: OsirisTestMessage<Response>,
     eval: OsirisEval<Response>,
