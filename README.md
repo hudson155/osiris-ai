@@ -28,7 +28,5 @@ See [chores](./docs/chores.md).
 4. Commit "Release X.Y.Z".
 5. Create and merge a PR "Release X.Y.Z". No description is necessary.
 6. [Draft a new release](https://github.com/hudson155/osiris-ai/releases/new).
-   Create a new tag `vX.Y.Z`.
-   Title "Osiris X.Y.Z".
-   Generate and prefix release notes.
+   Create a new tag `vX.Y.Z`. Generate release notes.
 7. Manually run `./gradlew publish` on `main` after merging.
