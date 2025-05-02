@@ -1,6 +1,7 @@
 [versions]
 kairo = "4.0.0" # https://github.com/hudson155/kairo/releases
-langchain = "1.0.0-beta3" # https://github.com/langchain4j/langchain4j/releases
+langchain = "1.0.0-rc1" # https://github.com/langchain4j/langchain4j/releases
+langchainBeta = "1.0.0-beta4" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
 kairoCoroutines = { module = "kairo:kairo-coroutines", version.ref = "kairo" }
@@ -11,5 +12,6 @@ kairoReflect = { module = "kairo:kairo-reflect", version.ref = "kairo" }
 kairoSerialization = { module = "kairo:kairo-serialization", version.ref = "kairo" }
 kairoTesting = { module = "kairo:kairo-testing", version.ref = "kairo" }
 langchain = { module = "dev.langchain4j:langchain4j", version.ref = "langchain" }
-langchainGemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchain" }
+langchainGemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchainBeta" }
+langchainKotlin = { module = "dev.langchain4j:langchain4j-kotlin", version.ref = "langchainBeta" }
 langchainOpenAi = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain" }
