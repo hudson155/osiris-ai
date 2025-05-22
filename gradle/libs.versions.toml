@@ -1,7 +1,7 @@
 [versions]
-kairo = "4.0.0" # https://github.com/hudson155/kairo/releases
-langchain = "1.0.0-rc1" # https://github.com/langchain4j/langchain4j/releases
-langchainBeta = "1.0.0-beta4" # https://github.com/langchain4j/langchain4j/releases
+kairo = "4.2.0" # https://github.com/hudson155/kairo/releases
+langchain = "1.0.1" # https://github.com/langchain4j/langchain4j/releases
+langchainBeta = "1.0.1-beta6" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
 kairoCoroutines = { module = "kairo:kairo-coroutines", version.ref = "kairo" }
