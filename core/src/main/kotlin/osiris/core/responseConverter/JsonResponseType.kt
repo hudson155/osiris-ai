@@ -47,14 +47,14 @@ public abstract class JsonResponseType<Response : Any> : OsirisResponseType<Resp
       }
       required(required)
     }.build()
-    val jsonSchema = JsonSchema.builder().apply {
-      name(parseName(kClass))
-      rootElement(rootElement)
-    }.build()
-    return ResponseFormat.builder().apply {
-      type(ResponseFormatType.JSON)
-      jsonSchema(jsonSchema)
-    }.build()
+    val jsonSchema = JsonSchema.builder()
+      .name(parseName(kClass))
+      .rootElement(rootElement)
+      .build()
+    return ResponseFormat.builder()
+      .type(ResponseFormatType.JSON)
+      .jsonSchema(jsonSchema)
+      .build()
   }
 
   private fun parseName(kType: KClass<*>): String {
