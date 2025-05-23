@@ -3,17 +3,16 @@ package osiris.testing
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
+import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import io.kotest.matchers.shouldBe
 import osiris.core.Osiris
-import osiris.core.OsirisModel
+import osiris.core.event.get
 import osiris.core.responseConverter.JsonResponseType
 import osiris.core.schema.OsirisSchema
-import osiris.testing.responseConverter.JsonResponseType
-import osiris.testing.schema.OsirisSchema
 
 public class OsirisEvaluator(
-  model: OsirisModel,
+  model: ChatModel,
 ) {
   @OsirisSchema.Name("eval")
   private data class Response(
@@ -28,7 +27,7 @@ public class OsirisEvaluator(
       responseType = Response
     }
 
-  suspend fun evaluate(response: String, criteria: String) {
+  public suspend fun evaluate(response: String, criteria: String) {
     val langchainRequest = ChatRequest.builder()
       .messages(
         AiMessage(response),

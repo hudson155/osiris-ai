@@ -35,16 +35,10 @@ public class Osiris<out Response : Any>(
     }
 
   public companion object {
-    public fun create(
+    public fun <Response : Any> create(
       model: ChatModel,
-      block: OsirisBuilder<String>.() -> Unit = {},
-    ): Osiris<String> =
-      OsirisBuilder<String>(model).apply(block).build()
+      block: OsirisBuilder<Response>.() -> Unit = {},
+    ): Osiris<Response> =
+      OsirisBuilder<Response>(model).apply(block).build()
   }
-
-  public fun <Response : Any> create(
-    model: ChatModel,
-    block: OsirisBuilder<Response>.() -> Unit,
-  ): Osiris<Response> =
-    OsirisBuilder<Response>(model).apply(block).build()
 }

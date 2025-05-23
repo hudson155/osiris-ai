@@ -1,5 +1,8 @@
+@file:Suppress("TestInProductSource")
+
 package osiris.testing
 
+import dev.langchain4j.model.chat.ChatModel
 import io.kotest.matchers.shouldBe
 import kairo.serialization.util.writeValueAsStringSpecial
 import kotlinx.coroutines.runBlocking
@@ -7,17 +10,17 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import osiris.core.Osiris
-import osiris.core.OsirisModel
+import osiris.core.event.get
 import osiris.core.osirisMapper
 
-internal abstract class OsirisTest<out Response : Any> {
-  abstract val targetModels: List<OsirisModel>
-  abstract val evalModel: OsirisModel
+public abstract class OsirisTest<out Response : Any> {
+  protected abstract val targetModels: List<ChatModel>
+  protected abstract val evalModel: ChatModel
 
-  abstract val testMessages: List<OsirisTestMessage<Response>>
+  protected abstract val testMessages: List<OsirisTestMessage<Response>>
 
   @TestFactory
-  fun tests(): List<DynamicTest> = runBlocking {
+  public fun tests(): List<DynamicTest> = runBlocking {
     targetModels.flatMap { model ->
       val osiris = buildOsiris(model)
       return@flatMap testMessages.flatMap { testMessage ->
@@ -35,12 +38,12 @@ internal abstract class OsirisTest<out Response : Any> {
   }
 
   private fun testName(
-    model: OsirisModel,
+    model: ChatModel,
     testMessage: OsirisTestMessage<Response>,
     eval: OsirisEval<Response>,
   ): String =
     listOf(
-      model.name,
+      model.defaultRequestParameters().modelName(),
       testMessage.name,
       when (eval) {
         is OsirisEval.Criteria -> eval.criteria
@@ -64,5 +67,5 @@ internal abstract class OsirisTest<out Response : Any> {
     response.shouldBe(eval.expected)
   }
 
-  abstract fun buildOsiris(model: OsirisModel): Osiris<Response>
+  protected abstract fun buildOsiris(model: ChatModel): Osiris<Response>
 }
