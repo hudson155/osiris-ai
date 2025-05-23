@@ -32,6 +32,8 @@ internal val OsirisModel.Companion.openAiGpt41Mini: OsirisModel by lazy {
     model = OpenAiChatModel.builder()
       .modelName("gpt-4.1-mini")
       .apiKey(openAiApiKey)
+      .strictJsonSchema(true)
+      .strictTools(true)
       .build(),
   )
 }
@@ -42,6 +44,8 @@ internal val OsirisModel.Companion.openAiO3Mini: OsirisModel by lazy {
     model = OpenAiChatModel.builder()
       .modelName("o3-mini")
       .apiKey(openAiApiKey)
+      .strictJsonSchema(true)
+      .strictTools(true)
       .build(),
   )
 }
