@@ -4,8 +4,7 @@ import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ChatRequest
-import io.kotest.assertions.withClue
-import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
 import osiris.core.Osiris
 import osiris.core.OsirisModel
 import osiris.core.event.get
@@ -19,9 +18,6 @@ public class OsirisEvaluator(
   private data class Response(
     @OsirisSchema.Type("boolean")
     val matchesCriteria: Boolean,
-    @OsirisSchema.Type("string")
-    @OsirisSchema.Description("If the response does not match the criteria, provide the reason.")
-    val failureReason: String?,
   ) {
     companion object : JsonResponseType<Response>()
   }
@@ -40,9 +36,6 @@ public class OsirisEvaluator(
       )
       .responseFormat(Response.format())
       .build()
-    val evaluation = evaluator.request(langchainRequest).get()
-    withClue(evaluation.failureReason) {
-      evaluation.matchesCriteria.shouldBeTrue()
-    }
+    evaluator.request(langchainRequest).get().shouldBe(Response(true))
   }
 }
