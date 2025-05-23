@@ -1,3 +1,3 @@
 rootProject.name = "osiris-ai"
 
-include(":osiris-ai")
+include(":core")
