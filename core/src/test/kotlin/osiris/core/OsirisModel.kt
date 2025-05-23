@@ -20,7 +20,7 @@ internal val OsirisModel.Companion.gemini20Flash: OsirisModel by lazy {
     model = GoogleAiGeminiChatModel.builder()
       .modelName("gemini-2.0-flash")
       .apiKey(geminiApiKey)
-      .build()
+      .build(),
   )
 }
 
@@ -30,7 +30,7 @@ internal val OsirisModel.Companion.openAiGpt41Mini: OsirisModel by lazy {
     model = OpenAiChatModel.builder()
       .modelName("gpt-4.1-mini")
       .apiKey(openAiApiKey)
-      .build()
+      .build(),
   )
 }
 
@@ -40,6 +40,6 @@ internal val OsirisModel.Companion.openAiO3Mini: OsirisModel by lazy {
     model = OpenAiChatModel.builder()
       .modelName("o3-mini")
       .apiKey(openAiApiKey)
-      .build()
+      .build(),
   )
 }
