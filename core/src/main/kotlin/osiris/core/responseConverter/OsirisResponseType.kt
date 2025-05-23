@@ -1,4 +1,4 @@
-package osiris.osiris.responseConverter
+package osiris.core.responseConverter
 
 import dev.langchain4j.model.chat.response.ChatResponse
 

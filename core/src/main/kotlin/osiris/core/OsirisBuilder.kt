@@ -1,10 +1,11 @@
-package osiris.osiris
+package osiris.core
 
-import osiris.osiris.responseConverter.OsirisResponseType
-import osiris.osiris.responseConverter.StringResponseType
+import dev.langchain4j.model.chat.ChatModel
+import osiris.core.responseConverter.OsirisResponseType
+import osiris.core.responseConverter.StringResponseType
 
 public class OsirisBuilder<Response : Any>(
-  private val model: OsirisModel,
+  private val model: ChatModel,
 ) {
   public var responseType: OsirisResponseType<Response>? = null
 

@@ -13,5 +13,4 @@ kairoSerialization = { module = "kairo:kairo-serialization", version.ref = "kair
 kairoTesting = { module = "kairo:kairo-testing", version.ref = "kairo" }
 langchain = { module = "dev.langchain4j:langchain4j", version.ref = "langchain" }
 langchainGemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchainBeta" }
-langchainKotlin = { module = "dev.langchain4j:langchain4j-kotlin", version.ref = "langchainBeta" }
 langchainOpenAi = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain" }

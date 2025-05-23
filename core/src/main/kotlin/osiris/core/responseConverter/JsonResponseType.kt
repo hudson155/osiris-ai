@@ -1,4 +1,4 @@
-package osiris.osiris.responseConverter
+package osiris.core.responseConverter
 
 import dev.langchain4j.model.chat.request.ResponseFormat
 import dev.langchain4j.model.chat.request.ResponseFormatType
@@ -12,8 +12,8 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.valueParameters
-import osiris.osiris.osirisMapper
-import osiris.osiris.schema.OsirisSchema
+import osiris.core.osirisMapper
+import osiris.core.schema.OsirisSchema
 
 public abstract class JsonResponseType<Response : Any> : OsirisResponseType<Response>() {
   private val type: KairoType<Response> = KairoType.from(JsonResponseType::class, 0, this::class)

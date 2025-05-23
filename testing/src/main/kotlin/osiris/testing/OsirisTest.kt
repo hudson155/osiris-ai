@@ -1,4 +1,4 @@
-package osiris.osiris
+package osiris.testing
 
 import io.kotest.matchers.shouldBe
 import kairo.serialization.util.writeValueAsStringSpecial
@@ -6,7 +6,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
-import osiris.osiris.event.get
+import osiris.core.Osiris
+import osiris.core.OsirisModel
+import osiris.core.osirisMapper
 
 internal abstract class OsirisTest<out Response : Any> {
   abstract val targetModels: List<OsirisModel>

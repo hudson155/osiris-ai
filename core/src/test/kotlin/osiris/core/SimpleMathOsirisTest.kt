@@ -1,4 +1,4 @@
-package osiris.osiris
+package osiris.core
 
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ChatRequest

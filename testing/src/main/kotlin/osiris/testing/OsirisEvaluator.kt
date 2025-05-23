@@ -1,15 +1,18 @@
-package osiris.osiris
+package osiris.testing
 
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ChatRequest
 import io.kotest.matchers.shouldBe
-import osiris.osiris.event.get
-import osiris.osiris.responseConverter.JsonResponseType
-import osiris.osiris.schema.OsirisSchema
+import osiris.core.Osiris
+import osiris.core.OsirisModel
+import osiris.core.responseConverter.JsonResponseType
+import osiris.core.schema.OsirisSchema
+import osiris.testing.responseConverter.JsonResponseType
+import osiris.testing.schema.OsirisSchema
 
-internal class OsirisEvaluator(
+public class OsirisEvaluator(
   model: OsirisModel,
 ) {
   @OsirisSchema.Name("eval")

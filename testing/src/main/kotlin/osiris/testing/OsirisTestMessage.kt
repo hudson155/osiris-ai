@@ -1,4 +1,4 @@
-package osiris.osiris
+package osiris.testing
 
 import dev.langchain4j.model.chat.request.ChatRequest
 

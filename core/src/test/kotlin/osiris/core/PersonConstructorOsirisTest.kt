@@ -1,10 +1,10 @@
-package osiris.osiris
+package osiris.core
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ChatRequest
-import osiris.osiris.responseConverter.JsonResponseType
-import osiris.osiris.schema.OsirisSchema
+import osiris.core.responseConverter.JsonResponseType
+import osiris.core.schema.OsirisSchema
 
 internal class PersonConstructorOsirisTest : OsirisTest<PersonConstructorOsirisTest.Person>() {
   @OsirisSchema.Name("person")

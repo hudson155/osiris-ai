@@ -1,10 +1,10 @@
-package osiris.osiris
+package osiris.testing
 
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 
-internal object OsirisTestModel {
+public object OsirisTestModel {
   private val geminiApiKey: String =
     requireNotNull(DefaultEnvironmentVariableSupplier["GEMINI_API_KEY"]) {
       "GEMINI_API_KEY environment variable must be set."
