@@ -4,8 +4,17 @@ public class AgentRunner<State> internal constructor(
   private val agents: Map<String, Agent<State>>,
 ) {
   public fun run(initialState: State, initialAgentName: String): State {
-    val initialAgent = requireNotNull(agents[initialAgentName]) { "No agent with name: $initialAgentName." }
-    return initialAgent.execute(initialState).state
+    var context = AgentContext(
+      state = initialState,
+      nextAgentNames = listOf(initialAgentName),
+    )
+    while (context.nextAgentNames.isNotEmpty()) {
+      val nextAgentName = context.nextAgentNames.first()
+      context = context.copy(nextAgentNames = context.nextAgentNames.drop(1))
+      val agent = requireNotNull(agents[nextAgentName]) { "No agent with name: $nextAgentName." }
+      context = agent.execute(context)
+    }
+    return context.state
   }
 }
 
