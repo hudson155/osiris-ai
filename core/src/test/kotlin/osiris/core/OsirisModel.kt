@@ -4,15 +4,17 @@ import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 
-private val geminiApiKey: String =
+private val geminiApiKey: String by lazy {
   requireNotNull(DefaultEnvironmentVariableSupplier["GEMINI_API_KEY"]) {
     "GEMINI_API_KEY environment variable must be set."
   }
+}
 
-private val openAiApiKey: String =
+private val openAiApiKey: String by lazy {
   requireNotNull(DefaultEnvironmentVariableSupplier["OPEN_AI_API_KEY"]) {
     "OPEN_AI_API_KEY environment variable must be set."
   }
+}
 
 internal val OsirisModel.Companion.gemini20Flash: OsirisModel by lazy {
   return@lazy OsirisModel(
