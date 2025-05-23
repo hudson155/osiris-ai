@@ -4,7 +4,7 @@ package osiris.ennead
 public class CustomAgentReceiver<State> internal constructor(
   internal var context: AgentContext<State>,
 ) {
-  internal var state: State
+  public var state: State
     get() = context.state
     set(value) {
       context = context.copy(state = value)
