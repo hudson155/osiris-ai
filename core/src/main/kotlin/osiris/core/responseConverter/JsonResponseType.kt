@@ -25,6 +25,7 @@ public abstract class JsonResponseType<Response : Any> : OsirisResponseType<Resp
         " must be a data class or data object."
     }
     val rootElement = JsonObjectSchema.builder().apply {
+      val required: MutableList<String> = mutableListOf()
       getAllParams(kClass).forEach { param ->
         val name = checkNotNull(param.name)
         val type = parseType(kClass, param)
@@ -36,16 +37,24 @@ public abstract class JsonResponseType<Response : Any> : OsirisResponseType<Resp
           "string" -> addStringProperty(name, description)
           else -> throw IllegalArgumentException("Unsupported type: $type.")
         }
+        require(!param.isOptional) {
+          "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
+            " must not be optional."
+        }
+        if (!param.type.isMarkedNullable) {
+          required += name
+        }
       }
+      required(required)
     }.build()
-    val jsonSchema = JsonSchema.builder()
-      .name(parseName(kClass))
-      .rootElement(rootElement)
-      .build()
-    return ResponseFormat.builder()
-      .type(ResponseFormatType.JSON)
-      .jsonSchema(jsonSchema)
-      .build()
+    val jsonSchema = JsonSchema.builder().apply {
+      name(parseName(kClass))
+      rootElement(rootElement)
+    }.build()
+    return ResponseFormat.builder().apply {
+      type(ResponseFormatType.JSON)
+      jsonSchema(jsonSchema)
+    }.build()
   }
 
   private fun parseName(kType: KClass<*>): String {
