@@ -6,11 +6,11 @@ Osiris is a Kotlin wrapper for [Langchain](https://github.com/langchain4j/langch
 
 ### Major dependencies
 
-- Gradle 8.13
+- Gradle 8.14
 - Kotlin 2.1
 - Java 21
-- Kairo 4.0
-- Langchain 1.0
+- Kairo 4.2
+- Langchain4j 1.0
 
 ### Style guide
 
