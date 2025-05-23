@@ -2,13 +2,23 @@ package osiris.ennead
 
 @Suppress("UseDataClass")
 public class CustomAgentReceiver<State> internal constructor(
-  public var state: State,
-)
+  internal var context: AgentContext<State>,
+) {
+  internal var state: State
+    get() = context.state
+    set(value) {
+      context = context.copy(state = value)
+    }
+}
 
 public fun <State> AgentBuilder<State>.custom(block: CustomAgentReceiver<State>.() -> Unit) {
-  implementation = AgentImplementation { state ->
-    val receiver = CustomAgentReceiver(state)
+  implementation = AgentImplementation { context ->
+    val receiver = CustomAgentReceiver(context)
     receiver.block()
-    return@AgentImplementation AgentResult(receiver.state)
+    return@AgentImplementation receiver.context
   }
+}
+
+public fun <State> CustomAgentReceiver<State>.handoff(agentName: String) {
+  context = context.copy(nextAgentNames = context.nextAgentNames + agentName)
 }
