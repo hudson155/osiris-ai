@@ -2,7 +2,6 @@
 
 package osiris.testing
 
-import dev.langchain4j.model.chat.ChatModel
 import io.kotest.matchers.shouldBe
 import kairo.serialization.util.writeValueAsStringSpecial
 import kotlinx.coroutines.runBlocking
@@ -10,12 +9,13 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import osiris.core.Osiris
+import osiris.core.OsirisModel
 import osiris.core.event.get
 import osiris.core.osirisMapper
 
 public abstract class OsirisTest<out Response : Any> {
-  protected abstract val targetModels: List<ChatModel>
-  protected abstract val evalModel: ChatModel
+  protected abstract val targetModels: List<OsirisModel>
+  protected abstract val evalModel: OsirisModel
 
   protected abstract val testMessages: List<OsirisTestMessage<Response>>
 
@@ -38,12 +38,12 @@ public abstract class OsirisTest<out Response : Any> {
   }
 
   private fun testName(
-    model: ChatModel,
+    model: OsirisModel,
     testMessage: OsirisTestMessage<Response>,
     eval: OsirisEval<Response>,
   ): String =
     listOf(
-      model.defaultRequestParameters().modelName(),
+      model.name,
       testMessage.name,
       when (eval) {
         is OsirisEval.Criteria -> eval.criteria
@@ -67,5 +67,5 @@ public abstract class OsirisTest<out Response : Any> {
     response.shouldBe(eval.expected)
   }
 
-  protected abstract fun buildOsiris(model: ChatModel): Osiris<Response>
+  protected abstract fun buildOsiris(model: OsirisModel): Osiris<Response>
 }

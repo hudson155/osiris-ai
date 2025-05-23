@@ -2,7 +2,6 @@ package osiris.core
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
-import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import osiris.core.responseConverter.JsonResponseType
 import osiris.core.schema.OsirisSchema
@@ -21,10 +20,10 @@ internal class PersonConstructorOsirisTest : OsirisTest<PersonConstructorOsirisT
     companion object : JsonResponseType<Person>()
   }
 
-  override val targetModels: List<ChatModel> =
-    listOf(OsirisTestModel.gemini20Flash, OsirisTestModel.openAiGpt41Mini)
+  override val targetModels: List<OsirisModel> =
+    listOf(OsirisModel.gemini20Flash, OsirisModel.openAiGpt41Mini)
 
-  override val evalModel: ChatModel = OsirisTestModel.openAiO3Mini
+  override val evalModel: OsirisModel = OsirisModel.openAiO3Mini
 
   override val testMessages: List<OsirisTestMessage<Person>> =
     listOf(
@@ -43,7 +42,7 @@ internal class PersonConstructorOsirisTest : OsirisTest<PersonConstructorOsirisT
       ),
     )
 
-  override fun buildOsiris(model: ChatModel): Osiris<Person> =
+  override fun buildOsiris(model: OsirisModel): Osiris<Person> =
     Osiris.create(model) {
       responseType = Person
     }
