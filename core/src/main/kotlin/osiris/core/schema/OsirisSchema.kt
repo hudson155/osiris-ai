@@ -1,4 +1,4 @@
-package osiris.osiris.schema
+package osiris.core.schema
 
 public object OsirisSchema {
   /**

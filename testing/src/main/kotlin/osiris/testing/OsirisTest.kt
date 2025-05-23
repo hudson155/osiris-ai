@@ -1,4 +1,6 @@
-package osiris.osiris
+@file:Suppress("TestInProductSource")
+
+package osiris.testing
 
 import io.kotest.matchers.shouldBe
 import kairo.serialization.util.writeValueAsStringSpecial
@@ -6,16 +8,19 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
-import osiris.osiris.event.get
+import osiris.core.Osiris
+import osiris.core.OsirisModel
+import osiris.core.event.get
+import osiris.core.osirisMapper
 
-internal abstract class OsirisTest<out Response : Any> {
-  abstract val targetModels: List<OsirisModel>
-  abstract val evalModel: OsirisModel
+public abstract class OsirisTest<out Response : Any> {
+  protected abstract val targetModels: List<OsirisModel>
+  protected abstract val evalModel: OsirisModel
 
-  abstract val testMessages: List<OsirisTestMessage<Response>>
+  protected abstract val testMessages: List<OsirisTestMessage<Response>>
 
   @TestFactory
-  fun tests(): List<DynamicTest> = runBlocking {
+  public fun tests(): List<DynamicTest> = runBlocking {
     targetModels.flatMap { model ->
       val osiris = buildOsiris(model)
       return@flatMap testMessages.flatMap { testMessage ->
@@ -62,5 +67,5 @@ internal abstract class OsirisTest<out Response : Any> {
     response.shouldBe(eval.expected)
   }
 
-  abstract fun buildOsiris(model: OsirisModel): Osiris<Response>
+  protected abstract fun buildOsiris(model: OsirisModel): Osiris<Response>
 }

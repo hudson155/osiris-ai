@@ -1,14 +1,14 @@
-package osiris.osiris
+package osiris.core
 
 import dev.langchain4j.model.chat.request.ChatRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import osiris.osiris.event.ExceptionOsirisEvent
-import osiris.osiris.event.OsirisEvent
-import osiris.osiris.event.ResponseOsirisEvent
-import osiris.osiris.responseConverter.OsirisResponseType
+import osiris.core.event.ExceptionOsirisEvent
+import osiris.core.event.OsirisEvent
+import osiris.core.event.ResponseOsirisEvent
+import osiris.core.responseConverter.OsirisResponseType
 
 private val logger: KLogger = KotlinLogging.logger {}
 

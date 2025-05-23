@@ -1,4 +1,4 @@
-package osiris.osiris.event
+package osiris.core.event
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance

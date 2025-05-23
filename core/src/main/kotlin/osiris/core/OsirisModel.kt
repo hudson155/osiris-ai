@@ -1,4 +1,4 @@
-package osiris.osiris
+package osiris.core
 
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
@@ -17,4 +17,6 @@ public class OsirisModel(
 
   override fun toString(): String =
     "OsirisModel(name='$name')"
+
+  public companion object
 }

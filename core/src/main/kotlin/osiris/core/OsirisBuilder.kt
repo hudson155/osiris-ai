@@ -1,7 +1,7 @@
-package osiris.osiris
+package osiris.core
 
-import osiris.osiris.responseConverter.OsirisResponseType
-import osiris.osiris.responseConverter.StringResponseType
+import osiris.core.responseConverter.OsirisResponseType
+import osiris.core.responseConverter.StringResponseType
 
 public class OsirisBuilder<Response : Any>(
   private val model: OsirisModel,
