@@ -45,7 +45,7 @@ internal class HandoffTest {
       custom {
         state = state.copy(
           result = state.result + "Can you help me lift this heavy object?",
-          logs = state.logs + "Question start"
+          logs = state.logs + "Question start",
         )
         state = state.copy(logs = state.logs + "Question end")
       }

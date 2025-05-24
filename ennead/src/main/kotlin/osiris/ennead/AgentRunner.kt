@@ -12,8 +12,8 @@ public class AgentRunner<State> internal constructor(
     while (context.nextAgentNames.isNotEmpty()) {
       val currentAgentName = context.nextAgentNames.first()
       context = context.copy(currentAgentName = currentAgentName, nextAgentNames = context.nextAgentNames.drop(1))
-      val agent = requireNotNull(agents[currentAgentName]) { "No agent with name: $currentAgentName." }
-      context = agent.execute(context)
+      val currentAgent = requireNotNull(agents[currentAgentName]) { "No agent with name: $currentAgentName." }
+      context = currentAgent.execute(context)
     }
     return context.state
   }

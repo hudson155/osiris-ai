@@ -28,7 +28,7 @@ internal class ConsultTest {
           consult("Math")
         }
         state = state.copy(
-          result = "The sum is ${state.sum}.",
+          result = state.sum?.let { "The sum is $it." } ?: state.result,
           logs = state.logs + "Example end",
         )
       }
