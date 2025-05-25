@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  implementation(project(":core"))
+  implementation(project(":osiris-core"))
 
   implementation(libs.kairoEnvironmentVariableSupplier)
   implementation(libs.kairoSerialization)
