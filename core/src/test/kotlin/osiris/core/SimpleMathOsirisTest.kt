@@ -5,6 +5,9 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import osiris.testing.OsirisEval
 import osiris.testing.OsirisTest
 import osiris.testing.OsirisTestMessage
+import osiris.testing.gemini20Flash
+import osiris.testing.openAiGpt41Mini
+import osiris.testing.openAiO3Mini
 
 internal class SimpleMathOsirisTest : OsirisTest<String>() {
   override val targetModels: List<OsirisModel> =

@@ -1,8 +1,9 @@
-package osiris.core
+package osiris.testing
 
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
+import osiris.core.OsirisModel
 
 private val geminiApiKey: String by lazy {
   requireNotNull(DefaultEnvironmentVariableSupplier["GEMINI_API_KEY"]) {
@@ -16,7 +17,7 @@ private val openAiApiKey: String by lazy {
   }
 }
 
-internal val OsirisModel.Companion.gemini20Flash: OsirisModel by lazy {
+public val OsirisModel.Companion.gemini20Flash: OsirisModel by lazy {
   return@lazy OsirisModel(
     name = "Gemini 2.0 Flash",
     model = GoogleAiGeminiChatModel.builder()
@@ -26,7 +27,7 @@ internal val OsirisModel.Companion.gemini20Flash: OsirisModel by lazy {
   )
 }
 
-internal val OsirisModel.Companion.openAiGpt41Mini: OsirisModel by lazy {
+public val OsirisModel.Companion.openAiGpt41Mini: OsirisModel by lazy {
   return@lazy OsirisModel(
     name = "OpenAI GPT-4.1 mini",
     model = OpenAiChatModel.builder()
@@ -38,7 +39,7 @@ internal val OsirisModel.Companion.openAiGpt41Mini: OsirisModel by lazy {
   )
 }
 
-internal val OsirisModel.Companion.openAiO3Mini: OsirisModel by lazy {
+public val OsirisModel.Companion.openAiO3Mini: OsirisModel by lazy {
   return@lazy OsirisModel(
     name = "OpenAI o3-mini",
     model = OpenAiChatModel.builder()
