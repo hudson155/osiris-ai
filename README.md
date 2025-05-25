@@ -1,6 +1,6 @@
 # Osiris AI
 
-Osiris is a Kotlin wrapper for [Langchain](https://github.com/langchain4j/langchain4j).
+Description is coming soon...
 
 ## Project information
 
