@@ -1,5 +1,6 @@
 package osiris.ennead
 
+@Suppress("UseDataClass")
 public class AgentReceiver<State> internal constructor(
   internal var context: AgentContext<State>,
 ) {
