@@ -8,6 +8,9 @@ import osiris.core.schema.OsirisSchema
 import osiris.testing.OsirisEval
 import osiris.testing.OsirisTest
 import osiris.testing.OsirisTestMessage
+import osiris.testing.gemini20Flash
+import osiris.testing.openAiGpt41Mini
+import osiris.testing.openAiO3Mini
 
 internal class PersonConstructorOsirisTest : OsirisTest<PersonConstructorOsirisTest.Person>() {
   @OsirisSchema.Name("person")
