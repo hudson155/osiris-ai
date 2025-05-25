@@ -6,8 +6,9 @@ plugins {
 dependencies {
   implementation(project(":core"))
 
+  implementation(libs.kairoEnvironmentVariableSupplier)
   implementation(libs.kairoSerialization)
-
-  api(libs.kairoLoggingTesting)
   api(libs.kairoTesting)
+  api(libs.langchainGemini)
+  api(libs.langchainOpenAi)
 }

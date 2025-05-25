@@ -4,8 +4,5 @@ plugins {
 }
 
 dependencies {
-  implementation(libs.kairoLogging)
-
-  testImplementation(libs.kairoLoggingTesting)
   testImplementation(libs.kairoTesting)
 }
