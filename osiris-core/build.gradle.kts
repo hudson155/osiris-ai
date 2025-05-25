@@ -10,7 +10,7 @@ dependencies {
   implementation(libs.kairoSerialization)
   api(libs.langchain)
 
-  testImplementation(project(":testing"))
+  testImplementation(project(":osiris-testing"))
 
   testImplementation(libs.kairoLoggingTesting)
 }

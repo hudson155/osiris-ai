@@ -1,5 +1,4 @@
 rootProject.name = "osiris-ai"
 
-include(":core")
-include(":ennead")
-include(":testing")
+include(":osiris-core")
+include(":osiris-testing")
