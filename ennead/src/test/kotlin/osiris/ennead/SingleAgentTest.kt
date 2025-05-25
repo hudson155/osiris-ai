@@ -1,6 +1,7 @@
 package osiris.ennead
 
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 internal class SingleAgentTest {
@@ -17,7 +18,7 @@ internal class SingleAgentTest {
     }
 
   @Test
-  fun test() {
+  fun test(): Unit = runTest {
     val result = runner.run(initialState = null, initialAgentName = "Trivial")
     result.shouldBe("I'm a trivial agent!")
   }

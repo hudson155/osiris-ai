@@ -4,7 +4,7 @@ public class Agent<State> internal constructor(
   public val name: String,
   private val implementation: AgentImplementation<State>,
 ) {
-  internal fun execute(context: AgentContext<State>): AgentContext<State> =
+  internal suspend fun execute(context: AgentContext<State>): AgentContext<State> =
     implementation.execute(context)
 }
 

@@ -3,7 +3,7 @@ package osiris.ennead
 public class AgentRunner<State> internal constructor(
   private val agents: Map<String, Agent<State>>,
 ) {
-  public fun run(initialState: State, initialAgentName: String): State {
+  public suspend fun run(initialState: State, initialAgentName: String): State {
     var context = AgentContext(
       state = initialState,
       currentAgentName = initialAgentName,
