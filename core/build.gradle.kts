@@ -12,7 +12,5 @@ dependencies {
 
   testImplementation(project(":testing"))
 
-  testImplementation(libs.kairoEnvironmentVariableSupplier)
-  testImplementation(libs.langchainGemini)
-  testImplementation(libs.langchainOpenAi)
+  testImplementation(libs.kairoLoggingTesting)
 }
