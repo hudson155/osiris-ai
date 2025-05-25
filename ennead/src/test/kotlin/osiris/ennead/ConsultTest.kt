@@ -1,6 +1,7 @@
 package osiris.ennead
 
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 internal class ConsultTest {
@@ -70,7 +71,7 @@ internal class ConsultTest {
     }
 
   @Test
-  fun `starts with Example agent`() {
+  fun `starts with Example agent`(): Unit = runTest {
     val result = runner.run(initialState = State(inputs = listOf(1, 2, 3)), initialAgentName = "Example")
     val expected = State(
       inputs = listOf(1, 2, 3),
@@ -93,7 +94,7 @@ internal class ConsultTest {
   }
 
   @Test
-  fun `starts with Math agent`() {
+  fun `starts with Math agent`(): Unit = runTest {
     val result = runner.run(initialState = State(inputs = listOf(1, 2, 3)), initialAgentName = "Math")
     val expected = State(
       inputs = listOf(1, 2, 3),
@@ -112,7 +113,7 @@ internal class ConsultTest {
   }
 
   @Test
-  fun `starts with Sum agent`() {
+  fun `starts with Sum agent`(): Unit = runTest {
     val result = runner.run(initialState = State(inputs = listOf(1, 2, 3)), initialAgentName = "Sum")
     val expected = State(
       inputs = listOf(1, 2, 3),

@@ -11,7 +11,7 @@ public class AgentReceiver<State> internal constructor(
     }
 }
 
-public fun <State> AgentBuilder<State>.custom(block: AgentReceiver<State>.() -> Unit) {
+public fun <State> AgentBuilder<State>.custom(block: suspend AgentReceiver<State>.() -> Unit) {
   implementation = AgentImplementation { context ->
     val receiver = AgentReceiver(context)
     receiver.block()

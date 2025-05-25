@@ -1,6 +1,7 @@
 package osiris.ennead
 
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 internal class HandoffTest {
@@ -59,7 +60,7 @@ internal class HandoffTest {
     }
 
   @Test
-  fun `starts with Greeting agent`() {
+  fun `starts with Greeting agent`(): Unit = runTest {
     val result = runner.run(initialState = State(name = "Jeff"), initialAgentName = "Greeting")
     val expected = State(
       name = "Jeff",
@@ -77,7 +78,7 @@ internal class HandoffTest {
   }
 
   @Test
-  fun `starts with Pleasantry agent`() {
+  fun `starts with Pleasantry agent`(): Unit = runTest {
     val result = runner.run(initialState = State(name = "Jeff"), initialAgentName = "Pleasantry")
     val expected = State(
       name = "Jeff",
@@ -93,7 +94,7 @@ internal class HandoffTest {
   }
 
   @Test
-  fun `starts with Question agent`() {
+  fun `starts with Question agent`(): Unit = runTest {
     val result = runner.run(initialState = State(name = "Jeff"), initialAgentName = "Question")
     val expected = State(
       name = "Jeff",

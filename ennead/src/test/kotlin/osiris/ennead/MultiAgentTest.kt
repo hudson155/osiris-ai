@@ -1,6 +1,7 @@
 package osiris.ennead
 
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 internal class MultiAgentTest {
@@ -25,13 +26,13 @@ internal class MultiAgentTest {
     }
 
   @Test
-  fun `starts with Cow agent`() {
+  fun `starts with Cow agent`(): Unit = runTest {
     val result = runner.run(initialState = null, initialAgentName = "Cow")
     result.shouldBe("Moo!")
   }
 
   @Test
-  fun `starts with Duck agent`() {
+  fun `starts with Duck agent`(): Unit = runTest {
     val result = runner.run(initialState = null, initialAgentName = "Duck")
     result.shouldBe("Quack!")
   }
