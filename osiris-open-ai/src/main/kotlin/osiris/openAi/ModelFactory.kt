@@ -9,8 +9,10 @@ private const val openAiApiKeyKey: String = "openAiApiKey"
 public var ModelFactory.openAiApiKey: ProtectedString?
   get() = properties[openAiApiKeyKey] as ProtectedString?
   set(value) {
-    requireNotNull(value) { "Cannot set OpenAI API Key to null." }
-    require(properties[openAiApiKeyKey] == null) { "OpenAI API Key has already been set." }
+    if (value == null) {
+      properties -= openAiApiKeyKey
+      return
+    }
     properties[openAiApiKeyKey] = value
   }
 
