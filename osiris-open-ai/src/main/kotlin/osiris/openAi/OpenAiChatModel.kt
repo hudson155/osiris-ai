@@ -1,0 +1,29 @@
+package osiris.openAi
+
+import dev.langchain4j.model.openai.OpenAiChatModel
+import kairo.protectedString.ProtectedString
+import osiris.core.ModelFactory
+
+private const val openAiApiKeyKey: String = "openAiApiKey"
+
+public var ModelFactory.openAiApiKey: ProtectedString?
+  get() = properties[openAiApiKeyKey] as ProtectedString?
+  set(value) {
+    requireNotNull(value) { "Cannot set OpenAI API Key to null." }
+    require(properties[openAiApiKeyKey] == null) { "OpenAI API Key has already been set." }
+    properties[openAiApiKeyKey] = value
+  }
+
+public fun ModelFactory.openAi(
+  modelName: String,
+  block: OpenAiChatModel.OpenAiChatModelBuilder.() -> Unit = {},
+): OpenAiChatModel =
+  OpenAiChatModel.builder().apply {
+    modelName(modelName)
+    val apiKey = requireNotNull(openAiApiKey) { "OpenAI API key must be set to create a model." }
+    @OptIn(ProtectedString.Access::class)
+    apiKey(apiKey.value)
+    strictJsonSchema(true)
+    strictTools(true)
+    block()
+  }.build()
