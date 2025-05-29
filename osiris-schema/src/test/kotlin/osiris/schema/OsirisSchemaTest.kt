@@ -13,6 +13,7 @@ internal class OsirisSchemaTest {
 
   internal data object DataObject
 
+  @Suppress("UseDataClass")
   internal class NonDataClass(
     val myString: String,
   )
@@ -168,7 +169,7 @@ internal class OsirisSchemaTest {
       osirisSchema(DataClassUnsupportedOverriddenType::class)
     }.shouldHaveMessage(
       "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassUnsupportedOverriddenType::myParam" +
-        " specified an unsupported type: byte."
+        " specified an unsupported type: byte.",
     )
   }
 

@@ -35,7 +35,7 @@ internal fun parseType(kClass: KClass<*>, param: KParameter): OsirisType {
     else -> throw IllegalArgumentException(
       "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
         " is missing @${OsirisSchema.Type::class.simpleName!!}," +
-        " and the type could not be inferred."
+        " and the type could not be inferred.",
     )
   }
 }
