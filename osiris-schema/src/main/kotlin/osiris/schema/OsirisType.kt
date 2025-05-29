@@ -21,7 +21,10 @@ internal fun parseType(kClass: KClass<*>, param: KParameter): OsirisType {
       "integer" -> OsirisType.Integer
       "number" -> OsirisType.Number
       "string" -> OsirisType.String
-      else -> throw IllegalArgumentException("Unsupported type: $type.")
+      else -> throw IllegalArgumentException(
+        "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
+          " specified an unsupported type: $type.",
+      )
     }
   }
   return when (param.type.classifier) {

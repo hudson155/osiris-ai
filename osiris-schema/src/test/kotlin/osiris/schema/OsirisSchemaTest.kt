@@ -49,6 +49,11 @@ internal class OsirisSchemaTest {
     val myParam: Int,
   )
 
+  internal data class DataClassUnsupportedOverriddenType(
+    @OsirisSchema.Type("byte")
+    val myParam: Int,
+  )
+
   internal data class DataClassWithDescriptions(
     @OsirisSchema.Description("My boolean.")
     val myBoolean: Boolean,
@@ -154,6 +159,16 @@ internal class OsirisSchemaTest {
         .addStringProperty("myParam")
         .required("myParam")
         .build(),
+    )
+  }
+
+  @Test
+  fun `data class, unsupported overridden type`() {
+    shouldThrow<IllegalArgumentException> {
+      osirisSchema(DataClassUnsupportedOverriddenType::class)
+    }.shouldHaveMessage(
+      "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassUnsupportedOverriddenType::myParam" +
+        " specified an unsupported type: byte."
     )
   }
 
