@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-  api(libs.kairoReflect)
-  api(libs.langchain)
+  implementation(libs.kairoReflect)
+  implementation(libs.langchain)
 
   testImplementation(libs.kairoTesting)
 }
