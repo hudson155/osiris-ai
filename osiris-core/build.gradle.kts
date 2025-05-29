@@ -6,6 +6,7 @@ plugins {
 dependencies {
   api(libs.kairoCoroutines)
   implementation(libs.kairoLogging)
+  api(libs.kairoProtectedString)
   implementation(libs.kairoReflect)
   implementation(libs.kairoSerialization)
   api(libs.langchain)
