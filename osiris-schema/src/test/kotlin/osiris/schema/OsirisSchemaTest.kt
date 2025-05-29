@@ -60,6 +60,10 @@ internal class OsirisSchemaTest {
     val myString: String,
   )
 
+  internal data class DataClassOptionalParam(
+    val myBoolean: Boolean = false,
+  )
+
   @Test
   fun `non-data object`() {
     shouldThrow<IllegalArgumentException> {
@@ -168,6 +172,16 @@ internal class OsirisSchemaTest {
           "myString",
         )
         .build(),
+    )
+  }
+
+  @Test
+  fun `data class, optional param`() {
+    shouldThrow<IllegalArgumentException> {
+      osirisSchema(DataClassOptionalParam::class)
+    }.shouldHaveMessage(
+      "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassOptionalParam::myBoolean" +
+        " must not be optional.",
     )
   }
 }

@@ -1,8 +1,6 @@
 package osiris.schema
 
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
-import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.findAnnotation
@@ -29,11 +27,10 @@ public fun osirisSchema(kClass: KClass<*>): JsonObjectSchema {
       val type = parseType(kClass, param)
       val description = parseDescription(param)
       when (type) {
-        "boolean" -> addBooleanProperty(name, description)
-        "integer" -> addIntegerProperty(name, description)
-        "number" -> addNumberProperty(name, description)
-        "string" -> addStringProperty(name, description)
-        else -> throw IllegalArgumentException("Unsupported type: $type.")
+        OsirisType.Boolean -> addBooleanProperty(name, description)
+        OsirisType.Integer -> addIntegerProperty(name, description)
+        OsirisType.Number -> addNumberProperty(name, description)
+        OsirisType.String -> addStringProperty(name, description)
       }
       require(!param.isOptional) {
         "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
@@ -45,22 +42,6 @@ public fun osirisSchema(kClass: KClass<*>): JsonObjectSchema {
     }
     required(required)
   }.build()
-}
-
-private fun parseType(kClass: KClass<*>, param: KParameter): String {
-  val annotation = param.findAnnotation<OsirisSchema.Type>()
-  if (annotation != null) return annotation.type
-  return when (param.type.classifier) {
-    Boolean::class -> "boolean"
-    BigInteger::class, Int::class, Long::class, Short::class -> "integer"
-    BigDecimal::class, Double::class, Float::class -> "number"
-    String::class -> "string"
-    else -> throw IllegalArgumentException(
-      "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
-        " is missing @${OsirisSchema.Type::class.simpleName!!}," +
-        " and the type could not be inferred."
-    )
-  }
 }
 
 private fun parseDescription(param: KParameter): String? {
