@@ -1,5 +1,5 @@
 [versions]
-kairo = "5.0.1" # https://github.com/hudson155/kairo/releases
+kairo = "5.1.0" # https://github.com/hudson155/kairo/releases
 langchain = "1.0.1" # https://github.com/langchain4j/langchain4j/releases
 langchainBeta = "1.0.1-beta6" # https://github.com/langchain4j/langchain4j/releases
 
