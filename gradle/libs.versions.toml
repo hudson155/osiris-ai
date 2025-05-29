@@ -1,17 +1,17 @@
 [versions]
-kairo = "4.2.0" # https://github.com/hudson155/kairo/releases
+kairo = "5.0.1" # https://github.com/hudson155/kairo/releases
 langchain = "1.0.1" # https://github.com/langchain4j/langchain4j/releases
 langchainBeta = "1.0.1-beta6" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
-kairoCoroutines = { module = "kairo:kairo-coroutines", version.ref = "kairo" }
-kairoEnvironmentVariableSupplier = { module = "kairo:kairo-environment-variable-supplier", version.ref = "kairo" }
-kairoLogging = { module = "kairo:kairo-logging", version.ref = "kairo" }
-kairoLoggingTesting = { module = "kairo:kairo-logging-testing", version.ref = "kairo" }
-kairoProtectedString = { module = "kairo:kairo-protected-string", version.ref = "kairo" }
-kairoReflect = { module = "kairo:kairo-reflect", version.ref = "kairo" }
-kairoSerialization = { module = "kairo:kairo-serialization", version.ref = "kairo" }
-kairoTesting = { module = "kairo:kairo-testing", version.ref = "kairo" }
+kairoCoroutines = { module = "software.airborne.kairo:kairo-coroutines", version.ref = "kairo" }
+kairoEnvironmentVariableSupplier = { module = "software.airborne.kairo:kairo-environment-variable-supplier", version.ref = "kairo" }
+kairoLogging = { module = "software.airborne.kairo:kairo-logging", version.ref = "kairo" }
+kairoLoggingTesting = { module = "software.airborne.kairo:kairo-logging-testing", version.ref = "kairo" }
+kairoProtectedString = { module = "software.airborne.kairo:kairo-protected-string", version.ref = "kairo" }
+kairoReflect = { module = "software.airborne.kairo:kairo-reflect", version.ref = "kairo" }
+kairoSerialization = { module = "software.airborne.kairo:kairo-serialization", version.ref = "kairo" }
+kairoTesting = { module = "software.airborne.kairo:kairo-testing", version.ref = "kairo" }
 langchain = { module = "dev.langchain4j:langchain4j", version.ref = "langchain" }
 langchainGemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini", version.ref = "langchainBeta" }
 langchainOpenAi = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain" }
