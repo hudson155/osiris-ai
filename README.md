@@ -9,7 +9,7 @@ Description is coming soon...
 - Gradle 8.14
 - Kotlin 2.1
 - Java 21
-- Kairo 4.2
+- Kairo 5.0
 - Langchain4j 1.0
 
 ### Style guide
