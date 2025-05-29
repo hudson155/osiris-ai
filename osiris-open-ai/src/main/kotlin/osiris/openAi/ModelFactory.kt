@@ -19,13 +19,14 @@ public var ModelFactory.openAiApiKey: ProtectedString?
 public fun ModelFactory.openAi(
   modelName: String,
   block: OpenAiChatModel.OpenAiChatModelBuilder.() -> Unit = {},
-): OpenAiChatModel =
-  OpenAiChatModel.builder().apply {
+): OpenAiChatModel {
+  val apiKey = requireNotNull(openAiApiKey) { "OpenAI API key must be set to create a model." }
+  return OpenAiChatModel.builder().apply {
     modelName(modelName)
-    val apiKey = requireNotNull(openAiApiKey) { "OpenAI API key must be set to create a model." }
     @OptIn(ProtectedString.Access::class)
     apiKey(apiKey.value)
     strictJsonSchema(true)
     strictTools(true)
     block()
   }.build()
+}
