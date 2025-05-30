@@ -7,11 +7,12 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
+@Suppress("LongParameterList")
 public fun osiris(
   model: ChatModel,
   messages: List<ChatMessage>,
   tools: Map<String, OsirisTool<*, *>>,
-  buildRequest: ChatRequest.Builder.() -> Unit = {},
+  block: ChatRequest.Builder.() -> Unit = {},
 ): Flow<OsirisEvent> =
   channelFlow {
     val request = ChatRequest.builder().apply {
@@ -19,7 +20,7 @@ public fun osiris(
       if (tools.isNotEmpty()) {
         toolSpecifications(tools.map { it.value.toolSpecification })
       }
-      buildRequest()
+      block()
     }.build()
     val response = model.chat(request)
     val aiMessage = response.aiMessage()
