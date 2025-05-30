@@ -7,7 +7,6 @@ dependencies {
   api(project(":osiris-schema"))
 
   implementation(libs.kairoCoroutines)
-  implementation(libs.kairoEnvironmentVariableSupplier)
   api(libs.kairoProtectedString)
   implementation(libs.kairoReflect)
   implementation(libs.kairoSerialization)
@@ -15,5 +14,6 @@ dependencies {
 
   testImplementation(project(":osiris-open-ai"))
 
+  testImplementation(libs.kairoEnvironmentVariableSupplier)
   testImplementation(libs.kairoTesting)
 }
