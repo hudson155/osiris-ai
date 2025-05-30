@@ -6,7 +6,9 @@ plugins {
 dependencies {
   api(project(":osiris-schema"))
 
+  implementation(libs.kairoCoroutines)
   api(libs.kairoProtectedString)
+  implementation(libs.kairoReflect)
   implementation(libs.kairoSerialization)
   api(libs.langchain)
 }
