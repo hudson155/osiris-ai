@@ -2,8 +2,8 @@ package osiris.core
 
 import dev.langchain4j.agent.tool.ToolSpecification
 import kairo.reflect.KairoType
-import kairo.serialization.typeReference
-import kairo.serialization.util.kairoWrite
+import kairo.serialization.util.kairoWriteSpecial
+import kairo.serialization.util.readValueSpecial
 import osiris.schema.osirisSchema
 
 public abstract class OsirisTool<Input : Any, Output : Any>(
@@ -22,10 +22,9 @@ public abstract class OsirisTool<Input : Any, Output : Any>(
     }.build()
 
   internal suspend operator fun invoke(string: String): String {
-    @Suppress("ForbiddenMethodCall")
-    val input = osirisMapper.readValue(string, inputType.typeReference)
+    val input = checkNotNull(osirisMapper.readValueSpecial(string, inputType))
     val output = invoke(input)
-    return osirisMapper.kairoWrite(output, outputType)
+    return osirisMapper.kairoWriteSpecial(output, outputType)
   }
 
   public abstract suspend operator fun invoke(input: Input): Output

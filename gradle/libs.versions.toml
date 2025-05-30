@@ -3,6 +3,7 @@ kairo = "5.1.0" # https://github.com/hudson155/kairo/releases
 langchain = "1.0.1" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
+kairoCoroutines = { module = "software.airborne.kairo:kairo-coroutines", version.ref = "kairo" }
 kairoProtectedString = { module = "software.airborne.kairo:kairo-protected-string", version.ref = "kairo" }
 kairoReflect = { module = "software.airborne.kairo:kairo-reflect", version.ref = "kairo" }
 kairoSerialization = { module = "software.airborne.kairo:kairo-serialization", version.ref = "kairo" }
