@@ -27,7 +27,7 @@ internal class OsirisTest {
       messages = listOf(
         UserMessage("What's 2+2?"),
         SystemMessage("Do the math. Return only the answer (nothing else)."),
-      )
+      ),
     )
     response.toList().shouldContainExactly(
       OsirisEvent.Message(AiMessage("4")),

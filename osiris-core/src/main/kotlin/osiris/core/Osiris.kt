@@ -10,6 +10,7 @@ import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
+@Suppress("LongParameterList", "SuspendFunWithCoroutineScopeReceiver")
 public class Osiris(
   private val model: ChatModel,
   messages: List<ChatMessage>,
@@ -18,8 +19,8 @@ public class Osiris(
 ) {
   private val messages: MutableList<ChatMessage> = messages.toMutableList()
 
-  public fun execute(): Flow<OsirisEvent> {
-    return channelFlow {
+  public fun execute(): Flow<OsirisEvent> =
+    channelFlow {
       val request = buildRequest()
       val response = makeRequest(request)
       val aiMessage = response.aiMessage()
@@ -28,7 +29,6 @@ public class Osiris(
         executeTools(aiMessage.toolExecutionRequests())
       }
     }
-  }
 
   private fun buildRequest(): ChatRequest =
     ChatRequest.builder().apply {
