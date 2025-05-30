@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 internal class OsirisSchemaTest {
@@ -71,7 +72,7 @@ internal class OsirisSchemaTest {
   )
 
   @Test
-  fun `non-data object`() {
+  fun `non-data object`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
       osirisSchema(NonDataObject::class)
     }.shouldHaveMessage(
@@ -80,7 +81,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data object`() {
+  fun `data object`(): Unit = runTest {
     osirisSchema(DataObject::class).shouldBe(
       JsonObjectSchema.builder()
         .build(),
@@ -88,7 +89,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `non-data class`() {
+  fun `non-data class`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
       osirisSchema(NonDataClass::class)
     }.shouldHaveMessage(
@@ -97,7 +98,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data class, default`() {
+  fun `data class, default`(): Unit = runTest {
     osirisSchema(DataClassDefault::class).shouldBe(
       JsonObjectSchema.builder()
         .addBooleanProperty("myBoolean")
@@ -125,7 +126,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data class, unsupported type`() {
+  fun `data class, unsupported type`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
       osirisSchema(DataClassUnsupportedType::class)
     }.shouldHaveMessage(
@@ -136,7 +137,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data class, type specified`() {
+  fun `data class, type specified`(): Unit = runTest {
     osirisSchema(DataClassTypeSpecified::class).shouldBe(
       JsonObjectSchema.builder()
         .addBooleanProperty("myBoolean")
@@ -154,7 +155,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data class, type overridden`() {
+  fun `data class, type overridden`(): Unit = runTest {
     osirisSchema(DataClassTypeOverridden::class).shouldBe(
       JsonObjectSchema.builder()
         .addStringProperty("myParam")
@@ -164,7 +165,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data class, unsupported overridden type`() {
+  fun `data class, unsupported overridden type`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
       osirisSchema(DataClassUnsupportedOverriddenType::class)
     }.shouldHaveMessage(
@@ -174,7 +175,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data class, with descriptions`() {
+  fun `data class, with descriptions`(): Unit = runTest {
     osirisSchema(DataClassWithDescriptions::class).shouldBe(
       JsonObjectSchema.builder()
         .addBooleanProperty("myBoolean", "My boolean.")
@@ -192,7 +193,7 @@ internal class OsirisSchemaTest {
   }
 
   @Test
-  fun `data class, optional param`() {
+  fun `data class, optional param`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
       osirisSchema(DataClassOptionalParam::class)
     }.shouldHaveMessage(
