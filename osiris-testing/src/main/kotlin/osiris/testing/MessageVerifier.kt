@@ -6,9 +6,9 @@ import io.kotest.assertions.withClue
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 
 public abstract class MessageVerifier {
-  internal abstract val count: Int
+  public abstract val count: Int
 
-  internal abstract fun verify(messages: List<ChatMessage>)
+  public abstract fun verify(messages: List<ChatMessage>)
 
   public abstract class Single : MessageVerifier() {
     final override val count: Int = 1
@@ -17,7 +17,7 @@ public abstract class MessageVerifier {
       verify(messages.single())
     }
 
-    internal abstract fun verify(message: ChatMessage)
+    public abstract fun verify(message: ChatMessage)
   }
 
   public abstract class Multiple(final override val count: Int) : MessageVerifier() {
