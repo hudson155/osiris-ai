@@ -14,8 +14,8 @@ import osiris.openAi.openAi
 import osiris.openAi.openAiApiKey
 import osiris.schema.OsirisSchema
 import osiris.testing.execution
-import osiris.testing.messages
-import osiris.testing.response
+import osiris.testing.getMessages
+import osiris.testing.getResponse
 import osiris.testing.toolCall
 import osiris.testing.verifyAiMessage
 import osiris.testing.verifyMessages
@@ -54,6 +54,12 @@ internal class OsirisTest {
       }
   }
 
+  @OsirisSchema.SchemaName("person")
+  internal data class Person(
+    val name: String,
+    val age: Int,
+  )
+
   @Test
   fun simple(): Unit = runTest {
     val osirisEvents = osiris(
@@ -63,12 +69,12 @@ internal class OsirisTest {
         SystemMessage("Do the math. Return only the answer (nothing else)."),
       ),
     ).toList()
-    verifyMessages(osirisEvents.messages) {
+    verifyMessages(osirisEvents.getMessages()) {
       verifyAiMessage {
-        exactly = "4"
+        response = true
       }
     }
-    osirisEvents.response.shouldBe("4")
+    osirisEvents.getResponse().shouldBe("4")
   }
 
   @Test
@@ -80,7 +86,7 @@ internal class OsirisTest {
         UserMessage("What's the weather in Calgary and Edmonton?"),
       ),
     ).toList()
-    verifyMessages(osirisEvents.messages) {
+    verifyMessages(osirisEvents.getMessages()) {
       verifyAiMessage {
         toolCall("weather", WeatherTool.Input("Calgary"))
         toolCall("weather", WeatherTool.Input("Edmonton"))
@@ -90,6 +96,24 @@ internal class OsirisTest {
         execution("weather", WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
       }
     }
-    osirisEvents.response.shouldBeNull()
+    osirisEvents.getResponse().shouldBeNull()
+  }
+
+  @Test
+  fun `structured output`(): Unit = runTest {
+    val osirisEvents = osiris<Person>(
+      model = modelFactory.openAi("gpt-4.1-nano"),
+      tools = mapOf("weather" to WeatherTool),
+      messages = listOf(
+        UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
+        SystemMessage("Provide a JSON representation of the person matching this description."),
+      ),
+    ).toList()
+    verifyMessages(osirisEvents.getMessages()) {
+      verifyAiMessage {
+        response = true
+      }
+    }
+    osirisEvents.getResponse().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 }
