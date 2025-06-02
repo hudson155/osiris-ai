@@ -16,14 +16,14 @@ public class OsirisEvaluator(
   private val model: ChatModel,
 ) {
   @OsirisSchema.SchemaName("eval")
-  private data class Response(
+  private data class Eval(
     val matchesCriteria: Boolean,
     @OsirisSchema.Description("If the response does not match the criteria, provide the reason.")
     val failureReason: String?,
   )
 
   public suspend fun evaluate(response: String, criteria: String) {
-    val osirisEvents = osiris<Response>(
+    val osirisEvents = osiris<Eval>(
       model = model,
       messages = listOf(
         AiMessage(response),
@@ -31,9 +31,9 @@ public class OsirisEvaluator(
         UserMessage(criteria),
       ),
     ).toList()
-    val response = osirisEvents.getResponse().shouldNotBeNull()
-    withClue(response.failureReason) {
-      response.matchesCriteria.shouldBeTrue()
+    val eval = osirisEvents.getResponse().shouldNotBeNull()
+    withClue(eval.failureReason) {
+      eval.matchesCriteria.shouldBeTrue()
     }
   }
 }
