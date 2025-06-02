@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
-import osiris.evaluator.OsirisEvaluator
+import osiris.evaluator.evaluate
 import osiris.openAi.openAi
 import osiris.openAi.openAiApiKey
 import osiris.schema.OsirisSchema
@@ -29,9 +29,6 @@ internal class OsirisTest {
     modelFactory {
       openAiApiKey = DefaultEnvironmentVariableSupplier["OPEN_AI_API_KEY"]?.let { ProtectedString(it) }
     }
-
-  private val evaluator: OsirisEvaluator =
-    OsirisEvaluator(modelFactory.openAi("o3-mini"))
 
   internal object WeatherTool : OsirisTool<WeatherTool.Input, WeatherTool.Output>("weather") {
     data class Input(
@@ -103,7 +100,8 @@ internal class OsirisTest {
         response = true
       }
     }
-    evaluator.evaluate(
+    evaluate(
+      model = modelFactory.openAi("o3-mini"),
       response = osirisEvents.getResponse().shouldNotBeNull(),
       criteria = """
         Should say the weather in Calgary is 15 degrees Celsius and sunny,
