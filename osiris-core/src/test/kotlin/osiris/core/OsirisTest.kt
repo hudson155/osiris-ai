@@ -4,15 +4,12 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
-import kairo.protectedString.ProtectedString
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
-import osiris.openAi.openAiApiKey
 import osiris.schema.OsirisSchema
 import osiris.testing.execution
 import osiris.testing.getMessages
@@ -23,13 +20,6 @@ import osiris.testing.verifyMessages
 import osiris.testing.verifyToolMessages
 
 internal class OsirisTest {
-  @Suppress("UnnecessaryLet")
-  @OptIn(ProtectedString.Access::class)
-  private val modelFactory: ModelFactory =
-    modelFactory {
-      openAiApiKey = DefaultEnvironmentVariableSupplier["OPEN_AI_API_KEY"]?.let { ProtectedString(it) }
-    }
-
   internal object WeatherTool : OsirisTool<WeatherTool.Input, WeatherTool.Output>("weather") {
     data class Input(
       @OsirisSchema.Description("The city to get the weather for. Only the city name.")
