@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
 @Suppress("LongParameterList", "SuspendFunWithCoroutineScopeReceiver")
-public class Osiris<out Response : Any>(
+public class Osiris(
   private val model: ChatModel,
   messages: List<ChatMessage>,
   private val tools: Map<String, OsirisTool<*, *>>,
@@ -19,7 +19,7 @@ public class Osiris<out Response : Any>(
 ) {
   private val messages: MutableList<ChatMessage> = messages.toMutableList()
 
-  public fun execute(): Flow<OsirisEvent<Response>> =
+  public fun execute(): Flow<OsirisEvent> =
     channelFlow {
       val chatRequest = buildChatRequest()
       val chatResponse = makeChatRequest(chatRequest)
@@ -43,19 +43,19 @@ public class Osiris<out Response : Any>(
   private fun makeChatRequest(chatRequest: ChatRequest): ChatResponse =
     model.chat(chatRequest)
 
-  private suspend fun ProducerScope<OsirisEvent<Response>>.addMessage(message: ChatMessage) {
+  private suspend fun ProducerScope<OsirisEvent>.addMessage(message: ChatMessage) {
     messages += message
     send(OsirisEvent.Message(message))
   }
 
-  private suspend fun ProducerScope<OsirisEvent<Response>>.executeTools(executions: List<ToolExecutionRequest>) {
+  private suspend fun ProducerScope<OsirisEvent>.executeTools(executions: List<ToolExecutionRequest>) {
     // TODO: Parallelize tool calls.
     executions.forEach { execution ->
       executeTool(execution)
     }
   }
 
-  private suspend fun ProducerScope<OsirisEvent<Response>>.executeTool(execution: ToolExecutionRequest) {
+  private suspend fun ProducerScope<OsirisEvent>.executeTool(execution: ToolExecutionRequest) {
     val toolName = execution.name()
     val tool = checkNotNull(tools[toolName]) { "No tool with name: $toolName." }
     val output = tool(execution.arguments())
@@ -70,7 +70,7 @@ public fun osiris(
   messages: List<ChatMessage>,
   tools: Map<String, OsirisTool<*, *>> = emptyMap(),
   block: ChatRequest.Builder.() -> Unit = {},
-): Flow<OsirisEvent<String>> {
+): Flow<OsirisEvent> {
   val osiris = Osiris(
     model = model,
     messages = messages,
