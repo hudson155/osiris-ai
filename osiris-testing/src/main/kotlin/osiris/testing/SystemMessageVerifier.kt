@@ -14,6 +14,7 @@ internal class SystemMessageVerifier(
   }
 }
 
-public fun MessagesVerifier.verifySystemMessage(exactly: String) {
-  verifiers += SystemMessageVerifier(exactly)
+public fun MutableList<MessageVerifier>.verifySystemMessage(exactly: String) {
+  val verifier = SystemMessageVerifier(exactly)
+  add(verifier)
 }

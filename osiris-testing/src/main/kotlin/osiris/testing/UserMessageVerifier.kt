@@ -12,6 +12,7 @@ internal class UserMessageVerifier(private val exactly: String) : MessageVerifie
   }
 }
 
-public fun MessagesVerifier.verifyUserMessage(exactly: String) {
-  verifiers += UserMessageVerifier(exactly)
+public fun MutableList<MessageVerifier>.verifyUserMessage(exactly: String) {
+  val verifier = UserMessageVerifier(exactly)
+  add(verifier)
 }
