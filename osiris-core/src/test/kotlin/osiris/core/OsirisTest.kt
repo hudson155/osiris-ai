@@ -1,16 +1,16 @@
 package osiris.core
 
-import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
-import io.kotest.matchers.collections.shouldContainExactly
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 import kairo.protectedString.ProtectedString
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
 import osiris.openAi.openAiApiKey
+import osiris.testing.getMessages
+import osiris.testing.verifyAiMessage
+import osiris.testing.verifyMessages
 
 internal class OsirisTest {
   @Suppress("UnnecessaryLet")
@@ -29,8 +29,8 @@ internal class OsirisTest {
         SystemMessage("Do the math. Return only the answer (nothing else)."),
       ),
     )
-    response.toList().shouldContainExactly(
-      OsirisEvent.Message(AiMessage("4")),
-    )
+    verifyMessages(response.getMessages()) {
+      verifyAiMessage("4")
+    }
   }
 }

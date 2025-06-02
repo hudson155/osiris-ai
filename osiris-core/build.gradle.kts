@@ -13,6 +13,7 @@ dependencies {
   api(libs.langchain)
 
   testImplementation(project(":osiris-open-ai"))
+  testImplementation(project(":osiris-testing"))
 
   testImplementation(libs.kairoEnvironmentVariableSupplier)
   testImplementation(libs.kairoTesting)
