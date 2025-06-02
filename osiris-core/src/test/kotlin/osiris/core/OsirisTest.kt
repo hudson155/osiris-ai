@@ -60,7 +60,9 @@ internal class OsirisTest {
       ),
     )
     verifyMessages(response.getMessages()) {
-      verifyAiMessage("4")
+      verifyAiMessage {
+        exactly = "4"
+      }
     }
   }
 
