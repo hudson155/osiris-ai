@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  api(project(":osiris-core"))
+  implementation(project(":osiris-core"))
 
   implementation(libs.kairoSerialization)
   implementation(libs.kairoTesting)
