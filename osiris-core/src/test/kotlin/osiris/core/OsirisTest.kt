@@ -2,8 +2,11 @@ package osiris.core
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 import kairo.protectedString.ProtectedString
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
@@ -11,7 +14,8 @@ import osiris.openAi.openAi
 import osiris.openAi.openAiApiKey
 import osiris.schema.OsirisSchema
 import osiris.testing.execution
-import osiris.testing.getMessages
+import osiris.testing.messages
+import osiris.testing.response
 import osiris.testing.toolCall
 import osiris.testing.verifyAiMessage
 import osiris.testing.verifyMessages
@@ -51,31 +55,32 @@ internal class OsirisTest {
   }
 
   @Test
-  fun test(): Unit = runTest {
-    val response = osiris(
+  fun simple(): Unit = runTest {
+    val osirisEvents = osiris(
       model = modelFactory.openAi("gpt-4.1-nano"),
       messages = listOf(
         UserMessage("What's 2+2?"),
         SystemMessage("Do the math. Return only the answer (nothing else)."),
       ),
-    )
-    verifyMessages(response.getMessages()) {
+    ).toList()
+    verifyMessages(osirisEvents.messages) {
       verifyAiMessage {
         exactly = "4"
       }
     }
+    osirisEvents.response.shouldBe("4")
   }
 
   @Test
   fun `function calls`(): Unit = runTest {
-    val response = osiris(
+    val osirisEvents = osiris(
       model = modelFactory.openAi("gpt-4.1-nano"),
       tools = mapOf("weather" to WeatherTool),
       messages = listOf(
         UserMessage("What's the weather in Calgary and Edmonton?"),
       ),
-    )
-    verifyMessages(response.getMessages()) {
+    ).toList()
+    verifyMessages(osirisEvents.messages) {
       verifyAiMessage {
         toolCall("weather", WeatherTool.Input("Calgary"))
         toolCall("weather", WeatherTool.Input("Edmonton"))
@@ -85,5 +90,6 @@ internal class OsirisTest {
         execution("weather", WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
       }
     }
+    osirisEvents.response.shouldBeNull()
   }
 }
