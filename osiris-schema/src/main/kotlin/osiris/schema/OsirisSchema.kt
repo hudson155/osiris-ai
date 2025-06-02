@@ -8,11 +8,22 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.valueParameters
 
 public object OsirisSchema {
+  @Target(AnnotationTarget.CLASS)
+  public annotation class SchemaName(val schemaName: String)
+
   @Target(AnnotationTarget.VALUE_PARAMETER)
   public annotation class Type(val type: String)
 
   @Target(AnnotationTarget.VALUE_PARAMETER)
   public annotation class Description(val description: String)
+}
+
+public fun osirisSchemaName(kType: KClass<*>): String {
+  val annotation = requireNotNull(kType.findAnnotation<OsirisSchema.SchemaName>()) {
+    "Osiris schema ${kType.qualifiedName!!}" +
+      " is missing @${OsirisSchema.SchemaName::class.simpleName!!}."
+  }
+  return annotation.schemaName
 }
 
 public fun osirisSchema(kClass: KClass<*>): JsonObjectSchema {

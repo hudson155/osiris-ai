@@ -6,7 +6,7 @@ import kairo.serialization.util.kairoWriteSpecial
 import kairo.serialization.util.readValueSpecial
 import osiris.schema.osirisSchema
 
-public abstract class OsirisTool<Input : Any, Output : Any>(
+public abstract class OsirisTool<in Input : Any, out Output : Any>(
   public val name: String,
 ) {
   private val inputType: KairoType<Input> = KairoType.from(OsirisTool::class, 0, this::class)

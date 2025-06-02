@@ -16,13 +16,14 @@ import osiris.core.osirisMapper
 internal typealias ToolCallVerifier = (input: String) -> Unit
 
 internal class AiMessageVerifier(
+  private val response: Boolean,
   private val exactly: String?,
   private val toolCalls: List<Pair<String, ToolCallVerifier>>,
 ) : MessageVerifier.Single() {
   override fun verify(message: ChatMessage) {
     message.shouldBeInstanceOf<AiMessage>()
     with(message.text()) {
-      if (exactly != null) shouldNotBeNull() else shouldBeNull()
+      if (response || exactly != null) shouldNotBeNull() else shouldBeNull()
     }
     with(message.hasToolExecutionRequests()) {
       if (toolCalls.isNotEmpty()) shouldBeTrue() else shouldBeFalse()
@@ -45,17 +46,19 @@ internal class AiMessageVerifier(
 }
 
 public class AiMessageVerifierBuilder internal constructor() {
+  public var response: Boolean = false
   public var exactly: String? = null
   public val toolCalls: MutableList<Pair<String, ToolCallVerifier>> = mutableListOf()
 
   internal fun build(): AiMessageVerifier =
     AiMessageVerifier(
+      response = response,
       exactly = exactly,
       toolCalls = toolCalls,
     )
 }
 
-public fun MutableList<MessageVerifier>.verifyAiMessage(block: AiMessageVerifierBuilder.() -> Unit) {
+public fun MutableList<MessageVerifier>.verifyAiMessage(block: AiMessageVerifierBuilder.() -> Unit = {}) {
   val verifier = AiMessageVerifierBuilder().apply(block).build()
   add(verifier)
 }
