@@ -2,7 +2,7 @@ package osiris.core
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
-import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 import kairo.protectedString.ProtectedString
@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
+import osiris.evaluator.OsirisEvaluator
 import osiris.openAi.openAi
 import osiris.openAi.openAiApiKey
 import osiris.schema.OsirisSchema
@@ -28,6 +29,9 @@ internal class OsirisTest {
     modelFactory {
       openAiApiKey = DefaultEnvironmentVariableSupplier["OPEN_AI_API_KEY"]?.let { ProtectedString(it) }
     }
+
+  private val evaluator: OsirisEvaluator =
+    OsirisEvaluator(modelFactory.openAi("o3-mini"))
 
   internal object WeatherTool : OsirisTool<WeatherTool.Input, WeatherTool.Output>("weather") {
     data class Input(
@@ -95,8 +99,17 @@ internal class OsirisTest {
         execution("weather", WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
         execution("weather", WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
       }
+      verifyAiMessage {
+        response = true
+      }
     }
-    osirisEvents.getResponse().shouldBeNull()
+    evaluator.evaluate(
+      response = osirisEvents.getResponse().shouldNotBeNull(),
+      criteria = """
+        Should say the weather in Calgary is 15 degrees Celsius and sunny,
+        and that the weather in Edmonton is -30 degrees Celsius and snowing.
+      """.trimIndent(),
+    )
   }
 
   @Test

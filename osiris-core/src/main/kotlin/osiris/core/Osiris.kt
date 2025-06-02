@@ -1,6 +1,7 @@
 package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
+import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.model.chat.ChatModel
@@ -23,14 +24,16 @@ public class Osiris<out Response : Any>(
 
   public fun execute(): Flow<OsirisEvent<Response>> =
     channelFlow {
-      val chatRequest = buildChatRequest()
-      val chatResponse = makeChatRequest(chatRequest)
-      val aiMessage = chatResponse.aiMessage()
-      addMessage(aiMessage)
-      if (aiMessage.hasToolExecutionRequests()) {
-        executeTools(aiMessage.toolExecutionRequests())
-      }
-      val response = aiMessage.text()?.let { responseType.convert(it) }
+      do {
+        val chatRequest = buildChatRequest()
+        val chatResponse = makeChatRequest(chatRequest)
+        val aiMessage = chatResponse.aiMessage()
+        addMessage(aiMessage)
+        if (aiMessage.hasToolExecutionRequests()) {
+          executeTools(aiMessage.toolExecutionRequests())
+        }
+      } while (aiMessage.hasToolExecutionRequests())
+      val response = (messages.last() as AiMessage).text()?.let { responseType.convert(it) }
       send(OsirisEvent.Response(response))
     }
 
