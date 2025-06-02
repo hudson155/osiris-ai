@@ -6,11 +6,16 @@ import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 import kairo.protectedString.ProtectedString
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import osiris.openAi.openAi
 import osiris.openAi.openAiApiKey
+import osiris.schema.OsirisSchema
+import osiris.testing.execution
 import osiris.testing.getMessages
+import osiris.testing.toolCall
 import osiris.testing.verifyAiMessage
 import osiris.testing.verifyMessages
+import osiris.testing.verifyToolMessages
 
 internal class OsirisTest {
   @Suppress("UnnecessaryLet")
@@ -19,6 +24,31 @@ internal class OsirisTest {
     modelFactory {
       openAiApiKey = DefaultEnvironmentVariableSupplier["OPEN_AI_API_KEY"]?.let { ProtectedString(it) }
     }
+
+  internal object WeatherTool : OsirisTool<WeatherTool.Input, WeatherTool.Output>("weather") {
+    data class Input(
+      @OsirisSchema.Description("The city to get the weather for. Only the city name.")
+      val location: String,
+    )
+
+    data class Output(
+      val temperature: String,
+      val conditions: String,
+    )
+
+    override suspend fun invoke(input: Input): Output =
+      when (val location = input.location) {
+        "Calgary" -> Output(
+          temperature = "15 degrees Celsius",
+          conditions = "Sunny",
+        )
+        "Edmonton" -> Output(
+          temperature = "-30 degrees Celsius",
+          conditions = "Snowing",
+        )
+        else -> fail("Unknown location: $location.")
+      }
+  }
 
   @Test
   fun test(): Unit = runTest {
@@ -31,6 +61,27 @@ internal class OsirisTest {
     )
     verifyMessages(response.getMessages()) {
       verifyAiMessage("4")
+    }
+  }
+
+  @Test
+  fun `function calls`(): Unit = runTest {
+    val response = osiris(
+      model = modelFactory.openAi("gpt-4.1-nano"),
+      tools = mapOf("weather" to WeatherTool),
+      messages = listOf(
+        UserMessage("What's the weather in Calgary and Edmonton?"),
+      ),
+    )
+    verifyMessages(response.getMessages()) {
+      verifyAiMessage {
+        toolCall("weather", WeatherTool.Input("Calgary"))
+        toolCall("weather", WeatherTool.Input("Edmonton"))
+      }
+      verifyToolMessages {
+        execution("weather", WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
+        execution("weather", WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
+      }
     }
   }
 }
