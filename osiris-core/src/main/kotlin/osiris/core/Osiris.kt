@@ -15,22 +15,23 @@ public class Osiris(
   private val model: ChatModel,
   messages: List<ChatMessage>,
   private val tools: Map<String, OsirisTool<*, *>>,
-  private val block: ChatRequest.Builder.() -> Unit = {},
+  private val block: ChatRequest.Builder.() -> Unit,
 ) {
   private val messages: MutableList<ChatMessage> = messages.toMutableList()
 
   public fun execute(): Flow<OsirisEvent> =
     channelFlow {
-      val request = buildRequest()
-      val response = makeRequest(request)
-      val aiMessage = response.aiMessage()
+      val chatRequest = buildChatRequest()
+      val chatResponse = makeChatRequest(chatRequest)
+      val aiMessage = chatResponse.aiMessage()
       addMessage(aiMessage)
       if (aiMessage.hasToolExecutionRequests()) {
         executeTools(aiMessage.toolExecutionRequests())
       }
+      send(OsirisEvent.Response(aiMessage.text()))
     }
 
-  private fun buildRequest(): ChatRequest =
+  private fun buildChatRequest(): ChatRequest =
     ChatRequest.builder().apply {
       messages(messages)
       if (tools.isNotEmpty()) {
@@ -39,8 +40,8 @@ public class Osiris(
       block()
     }.build()
 
-  private fun makeRequest(request: ChatRequest): ChatResponse =
-    model.chat(request)
+  private fun makeChatRequest(chatRequest: ChatRequest): ChatResponse =
+    model.chat(chatRequest)
 
   private suspend fun ProducerScope<OsirisEvent>.addMessage(message: ChatMessage) {
     messages += message

@@ -35,9 +35,9 @@ public class ToolMessagesVerifierBuilder internal constructor() {
     )
 }
 
-public fun MessagesVerifier.verifyToolMessages(block: ToolMessagesVerifierBuilder.() -> Unit) {
+public fun MutableList<MessageVerifier>.verifyToolMessages(block: ToolMessagesVerifierBuilder.() -> Unit) {
   val verifier = ToolMessagesVerifierBuilder().apply(block).build()
-  verifiers += verifier
+  add(verifier)
 }
 
 public inline fun <reified Output : Any> ToolMessagesVerifierBuilder.execution(name: String, output: Output) {
