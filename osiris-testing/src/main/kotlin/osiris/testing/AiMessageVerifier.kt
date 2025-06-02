@@ -58,7 +58,7 @@ public class AiMessageVerifierBuilder internal constructor() {
     )
 }
 
-public fun MutableList<MessageVerifier>.verifyAiMessage(block: AiMessageVerifierBuilder.() -> Unit = {}) {
+public fun MutableList<MessageVerifier>.verifyAiMessage(block: AiMessageVerifierBuilder.() -> Unit) {
   val verifier = AiMessageVerifierBuilder().apply(block).build()
   add(verifier)
 }

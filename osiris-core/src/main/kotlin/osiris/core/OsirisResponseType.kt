@@ -34,6 +34,7 @@ public abstract class OsirisResponseType<out Response : Any> {
         )
         .build()
 
+    @Suppress("ForbiddenMethodCall")
     override fun convert(text: String): Response =
       osirisMapper.readValue(text, type.typeReference)
   }

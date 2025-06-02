@@ -40,7 +40,7 @@ public class Osiris<out Response : Any>(
       if (tools.isNotEmpty()) {
         toolSpecifications(tools.map { it.value.toolSpecification })
       }
-      responseFormat(responseType.format)
+      responseType.format?.let { responseFormat(it) }
       block()
     }.build()
 
