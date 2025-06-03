@@ -1,6 +1,5 @@
 package osiris.core
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
@@ -62,7 +61,7 @@ internal class OsirisTest {
     verifyMessages(osirisEvents.getMessages()) {
       verifyResponse()
     }
-    osirisEvents.getMessages().getResponse().shouldBe("4")
+    osirisEvents.getMessages().getResponseAs<String>().shouldBe("4")
   }
 
   @Test
@@ -108,7 +107,7 @@ internal class OsirisTest {
     verifyMessages(osirisEvents.getMessages()) {
       verifyResponse()
     }
-    osirisMapper.readValue<Person>(osirisEvents.getMessages().getResponse())
+    osirisEvents.getMessages().getResponseAs<Person>()
       .shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 }
