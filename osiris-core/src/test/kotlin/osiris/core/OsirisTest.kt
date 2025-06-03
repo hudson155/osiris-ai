@@ -61,7 +61,7 @@ internal class OsirisTest {
     verifyMessages(osirisEvents.getMessages()) {
       verifyResponse()
     }
-    osirisEvents.getMessages().getResponse().shouldBe("4")
+    osirisEvents.getMessages().getResponseAs<String>().shouldBe("4")
   }
 
   @Test
