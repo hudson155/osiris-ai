@@ -1,8 +1,8 @@
 package osiris.core
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.fail
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
 import osiris.schema.OsirisSchema
-import osiris.testing.getMessages
-import osiris.testing.getResponse
 import osiris.testing.toolCall
 import osiris.testing.toolMessage
 import osiris.testing.verifyMessages
@@ -64,7 +62,7 @@ internal class OsirisTest {
     verifyMessages(osirisEvents.getMessages()) {
       verifyResponse()
     }
-    osirisEvents.getResponse().shouldBe("4")
+    osirisEvents.getMessages().getResponse().shouldBe("4")
   }
 
   @Test
@@ -89,7 +87,7 @@ internal class OsirisTest {
     }
     evaluate(
       model = modelFactory.openAi("o3-mini"),
-      response = osirisEvents.getResponse().shouldNotBeNull(),
+      response = osirisEvents.getMessages().getResponse(),
       criteria = """
         Should say the weather in Calgary is 15 degrees Celsius and sunny,
         and that the weather in Edmonton is -30 degrees Celsius and snowing.
@@ -99,9 +97,9 @@ internal class OsirisTest {
 
   @Test
   fun `structured output`(): Unit = runTest {
-    val osirisEvents = osiris<Person>(
+    val osirisEvents = osiris(
       model = modelFactory.openAi("gpt-4.1-nano"),
-      tools = mapOf("weather" to WeatherTool),
+      responseType = Person::class,
       messages = listOf(
         UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
         SystemMessage("Provide a JSON representation of the person matching this description."),
@@ -110,6 +108,7 @@ internal class OsirisTest {
     verifyMessages(osirisEvents.getMessages()) {
       verifyResponse()
     }
-    osirisEvents.getResponse().shouldBe(Person(name = "Jeff Hudson", age = 29))
+    osirisMapper.readValue<Person>(osirisEvents.getMessages().getResponse())
+      .shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 }

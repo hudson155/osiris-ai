@@ -6,7 +6,7 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.types.shouldBeInstanceOf
 
-internal class ResponseVerifier() : MessageVerifier.Single() {
+internal class ResponseVerifier : MessageVerifier.Single() {
   override fun verify(message: ChatMessage) {
     message.shouldBeInstanceOf<AiMessage>()
     message.text().shouldNotBeNull()

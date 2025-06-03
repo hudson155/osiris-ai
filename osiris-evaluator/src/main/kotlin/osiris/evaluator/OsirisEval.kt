@@ -1,16 +1,18 @@
 package osiris.evaluator
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.ChatModel
 import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.nulls.shouldNotBeNull
 import kotlinx.coroutines.flow.toList
+import osiris.core.getMessages
+import osiris.core.getResponse
 import osiris.core.osiris
+import osiris.core.osirisMapper
 import osiris.schema.OsirisSchema
-import osiris.testing.getResponse
 
 @OsirisSchema.SchemaName("eval")
 private data class OsirisEval(
@@ -24,15 +26,16 @@ public suspend fun evaluate(
   response: String,
   criteria: String,
 ) {
-  val osirisEvents = osiris<OsirisEval>(
+  val osirisEvents = osiris(
     model = model,
     messages = listOf(
       AiMessage(response),
       SystemMessage("Evaluate the LLM response according to the following criteria."),
       UserMessage(criteria),
     ),
+    responseType = OsirisEval::class,
   ).toList()
-  val eval = osirisEvents.getResponse().shouldNotBeNull()
+  val eval = osirisMapper.readValue<OsirisEval>(osirisEvents.getMessages().getResponse())
   withClue(eval.failureReason) {
     eval.matchesCriteria.shouldBeTrue()
   }
