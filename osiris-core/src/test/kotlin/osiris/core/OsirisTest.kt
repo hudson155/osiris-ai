@@ -11,12 +11,13 @@ import org.junit.jupiter.api.fail
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
 import osiris.schema.OsirisSchema
-import osiris.testing.execution
 import osiris.testing.getMessages
 import osiris.testing.getResponse
 import osiris.testing.toolCall
-import osiris.testing.verifyAiMessage
+import osiris.testing.toolMessage
 import osiris.testing.verifyMessages
+import osiris.testing.verifyResponse
+import osiris.testing.verifyToolCalls
 import osiris.testing.verifyToolMessages
 
 internal class OsirisTest {
@@ -61,9 +62,7 @@ internal class OsirisTest {
       ),
     ).toList()
     verifyMessages(osirisEvents.getMessages()) {
-      verifyAiMessage {
-        response = true
-      }
+      verifyResponse()
     }
     osirisEvents.getResponse().shouldBe("4")
   }
@@ -78,17 +77,15 @@ internal class OsirisTest {
       ),
     ).toList()
     verifyMessages(osirisEvents.getMessages()) {
-      verifyAiMessage {
+      verifyToolCalls {
         toolCall("weather", WeatherTool.Input("Calgary"))
         toolCall("weather", WeatherTool.Input("Edmonton"))
       }
       verifyToolMessages {
-        execution("weather", WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
-        execution("weather", WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
+        toolMessage("weather", WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
+        toolMessage("weather", WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
       }
-      verifyAiMessage {
-        response = true
-      }
+      verifyResponse()
     }
     evaluate(
       model = modelFactory.openAi("o3-mini"),
@@ -111,9 +108,7 @@ internal class OsirisTest {
       ),
     ).toList()
     verifyMessages(osirisEvents.getMessages()) {
-      verifyAiMessage {
-        response = true
-      }
+      verifyResponse()
     }
     osirisEvents.getResponse().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }

@@ -40,6 +40,6 @@ public fun MutableList<MessageVerifier>.verifyToolMessages(block: ToolMessagesVe
   add(verifier)
 }
 
-public inline fun <reified Output : Any> ToolMessagesVerifierBuilder.execution(name: String, output: Output) {
+public inline fun <reified Output : Any> ToolMessagesVerifierBuilder.toolMessage(name: String, output: Output) {
   executions += Pair(name) { osirisMapper.readValue<Output>(it).shouldBe(output) }
 }
