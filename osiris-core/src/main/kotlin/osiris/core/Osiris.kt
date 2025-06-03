@@ -26,17 +26,18 @@ public class Osiris(
 ) {
   private val messages: MutableList<ChatMessage> = messages.toMutableList()
 
-  public fun execute(): Flow<OsirisEvent> =
+  public fun execute(executeTools: Boolean): Flow<OsirisEvent> =
     channelFlow {
       do {
         val chatRequest = buildChatRequest()
         val chatResponse = makeChatRequest(chatRequest)
         val aiMessage = chatResponse.aiMessage()
         addMessage(aiMessage)
-        if (aiMessage.hasToolExecutionRequests()) {
+        val hasToolExecutionRequests = aiMessage.hasToolExecutionRequests() && executeTools
+        if (hasToolExecutionRequests) {
           executeTools(aiMessage.toolExecutionRequests())
         }
-      } while (aiMessage.hasToolExecutionRequests())
+      } while (hasToolExecutionRequests)
     }
 
   private fun buildChatRequest(): ChatRequest =
@@ -89,6 +90,7 @@ public fun osiris(
   messages: List<ChatMessage>,
   tools: Map<String, OsirisTool<*, *>> = emptyMap(),
   responseType: KClass<*>? = null,
+  executeTools: Boolean = true,
   block: ChatRequest.Builder.() -> Unit = {},
 ): Flow<OsirisEvent> {
   val osiris = Osiris(
@@ -98,5 +100,5 @@ public fun osiris(
     responseType = responseType,
     block = block,
   )
-  return osiris.execute()
+  return osiris.execute(executeTools = executeTools)
 }
