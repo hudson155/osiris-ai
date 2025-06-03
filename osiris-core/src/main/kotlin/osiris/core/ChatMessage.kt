@@ -5,7 +5,7 @@ import dev.langchain4j.data.message.ChatMessage
 import kairo.serialization.util.readValueSpecial
 
 public inline fun <reified Response : Any> List<ChatMessage>.getResponseAs(): Response? =
-  osirisMapper.readValueSpecial<Response>(getResponse())
+  getResponse()?.let { osirisMapper.readValueSpecial<Response>(it) }
 
-public fun List<ChatMessage>.getResponse(): String =
+public fun List<ChatMessage>.getResponse(): String? =
   (last() as AiMessage).text()
