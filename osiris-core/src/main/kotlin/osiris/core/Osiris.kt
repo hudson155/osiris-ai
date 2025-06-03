@@ -1,28 +1,32 @@
 package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
-import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
+import dev.langchain4j.model.chat.request.ResponseFormat
+import dev.langchain4j.model.chat.request.ResponseFormatType
+import dev.langchain4j.model.chat.request.json.JsonSchema
 import dev.langchain4j.model.chat.response.ChatResponse
-import kairo.reflect.kairoType
+import kotlin.reflect.KClass
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import osiris.schema.osirisSchema
+import osiris.schema.osirisSchemaName
 
 @Suppress("LongParameterList", "SuspendFunWithCoroutineScopeReceiver")
-public class Osiris<out Response : Any>(
+public class Osiris(
   private val model: ChatModel,
   messages: List<ChatMessage>,
   private val tools: Map<String, OsirisTool<*, *>>,
-  private val responseType: OsirisResponseType<Response>,
+  private val responseType: KClass<*>?,
   private val block: ChatRequest.Builder.() -> Unit,
 ) {
   private val messages: MutableList<ChatMessage> = messages.toMutableList()
 
-  public fun execute(): Flow<OsirisEvent<Response>> =
+  public fun execute(): Flow<OsirisEvent> =
     channelFlow {
       do {
         val chatRequest = buildChatRequest()
@@ -33,8 +37,6 @@ public class Osiris<out Response : Any>(
           executeTools(aiMessage.toolExecutionRequests())
         }
       } while (aiMessage.hasToolExecutionRequests())
-      val response = (messages.last() as AiMessage).text()?.let { responseType.convert(it) }
-      send(OsirisEvent.Response(response))
     }
 
   private fun buildChatRequest(): ChatRequest =
@@ -43,26 +45,36 @@ public class Osiris<out Response : Any>(
       if (tools.isNotEmpty()) {
         toolSpecifications(tools.map { it.value.toolSpecification })
       }
-      responseType.format?.let { responseFormat(it) }
+      if (responseType != null) {
+        val jsonSchema = JsonSchema.builder()
+          .name(osirisSchemaName(responseType))
+          .rootElement(osirisSchema(responseType))
+          .build()
+        val responseFormat = ResponseFormat.builder()
+          .type(ResponseFormatType.JSON)
+          .jsonSchema(jsonSchema)
+          .build()
+        responseFormat(responseFormat)
+      }
       block()
     }.build()
 
   private fun makeChatRequest(chatRequest: ChatRequest): ChatResponse =
     model.chat(chatRequest)
 
-  private suspend fun ProducerScope<OsirisEvent<Response>>.addMessage(message: ChatMessage) {
+  private suspend fun ProducerScope<OsirisEvent>.addMessage(message: ChatMessage) {
     messages += message
     send(OsirisEvent.Message(message))
   }
 
-  private suspend fun ProducerScope<OsirisEvent<Response>>.executeTools(executions: List<ToolExecutionRequest>) {
+  private suspend fun ProducerScope<OsirisEvent>.executeTools(executions: List<ToolExecutionRequest>) {
     // TODO: Parallelize tool calls.
     executions.forEach { execution ->
       executeTool(execution)
     }
   }
 
-  private suspend fun ProducerScope<OsirisEvent<Response>>.executeTool(execution: ToolExecutionRequest) {
+  private suspend fun ProducerScope<OsirisEvent>.executeTool(execution: ToolExecutionRequest) {
     val toolName = execution.name()
     val tool = checkNotNull(tools[toolName]) { "No tool with name: $toolName." }
     val output = tool(execution.arguments())
@@ -72,36 +84,18 @@ public class Osiris<out Response : Any>(
 }
 
 @Suppress("LongParameterList")
-@JvmName("osirisText")
 public fun osiris(
   model: ChatModel,
   messages: List<ChatMessage>,
   tools: Map<String, OsirisTool<*, *>> = emptyMap(),
+  responseType: KClass<*>? = null,
   block: ChatRequest.Builder.() -> Unit = {},
-): Flow<OsirisEvent<String>> {
+): Flow<OsirisEvent> {
   val osiris = Osiris(
     model = model,
     messages = messages,
     tools = tools,
-    responseType = OsirisResponseType.Text,
-    block = block,
-  )
-  return osiris.execute()
-}
-
-@Suppress("LongParameterList")
-@JvmName("osirisJson")
-public inline fun <reified Response : Any> osiris(
-  model: ChatModel,
-  messages: List<ChatMessage>,
-  tools: Map<String, OsirisTool<*, *>> = emptyMap(),
-  noinline block: ChatRequest.Builder.() -> Unit = {},
-): Flow<OsirisEvent<Response>> {
-  val osiris = Osiris(
-    model = model,
-    messages = messages,
-    tools = tools,
-    responseType = OsirisResponseType.Json(kairoType<Response>()),
+    responseType = responseType,
     block = block,
   )
   return osiris.execute()
