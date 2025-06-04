@@ -14,13 +14,18 @@ public class Agent internal constructor(
 ) {
   public suspend fun execute() {
     val execution = useExecution()
-    val systemMessage = SystemMessage(instructions)
+    val systemMessage = instructions?.let { SystemMessage(it) }
     val response = llm(
       model = model,
-      messages = execution.messages + systemMessage,
+      messages = buildList {
+        addAll(execution.messages)
+        if (systemMessage != null) add(systemMessage)
+      },
       tools = tools,
     )
-    if (execution.network.settings.persistSystemMessages) execution.messages += systemMessage
+    if (execution.network.settings.persistSystemMessages && systemMessage != null) {
+      execution.messages += systemMessage
+    }
     execution.messages += response
   }
 }
