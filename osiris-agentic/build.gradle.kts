@@ -8,6 +8,7 @@ dependencies {
 
   implementation(libs.kairoLogging)
 
+  testImplementation(project(":osiris-agentic:testing"))
   testImplementation(project(":osiris-evaluator"))
   testImplementation(project(":osiris-open-ai"))
 
