@@ -11,6 +11,8 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import osiris.schema.llmSchema
 import osiris.schema.osirisSchemaName
@@ -43,7 +45,7 @@ public fun llm(
         logger.debug { "Executing tools: $executionRequests." }
         val executionResponses = toolExecutor.execute(tools, executionRequests)
         logger.debug { "Executed tools: $executionResponses." }
-        executionResponses.forEach { emit(it) }
+        emitAll(executionResponses.asFlow())
         messages += executionResponses
       } else {
         logger.debug { "Chat request: $chatRequest." }
