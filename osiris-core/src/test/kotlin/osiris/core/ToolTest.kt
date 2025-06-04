@@ -28,9 +28,9 @@ internal class ToolTest {
             JsonObjectSchema.builder().apply {
               addStringProperty("location", "The city to get the weather for. Only the city name.")
               required("location")
-            }.build()
+            }.build(),
           )
-        }.build()
+        }.build(),
       )
   }
 

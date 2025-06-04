@@ -14,6 +14,7 @@ public abstract class ToolExecutor {
       tools: List<Tool<*, *>>,
       executionRequests: List<ToolExecutionRequest>,
     ): List<ToolExecutionResultMessage> {
+      @Suppress("NoNameShadowing")
       val tools = tools.associateBy { it.name }
       return executionRequests.map { executionRequest ->
         val id = executionRequest.id()

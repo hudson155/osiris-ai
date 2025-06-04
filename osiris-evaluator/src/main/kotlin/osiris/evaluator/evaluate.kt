@@ -15,6 +15,7 @@ public suspend fun evaluate(
   response: String,
   criteria: String,
 ) {
+  @Suppress("NoNameShadowing")
   val response = llm(
     model = model,
     messages = listOf(

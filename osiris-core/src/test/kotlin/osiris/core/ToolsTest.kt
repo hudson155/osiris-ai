@@ -17,7 +17,7 @@ internal class ToolsTest {
     val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       tools = listOf(WeatherTool),
-      messages = messages
+      messages = messages,
     )
     evaluate(
       model = testModelFactory.openAi("o3-mini"),

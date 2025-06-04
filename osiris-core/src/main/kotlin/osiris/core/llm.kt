@@ -15,6 +15,7 @@ import osiris.schema.osirisSchemaName
 
 private val logger: KLogger = KotlinLogging.logger {}
 
+@Suppress("LongParameterList")
 public suspend fun llm(
   model: ChatModel,
   messages: List<ChatMessage>,
@@ -24,6 +25,7 @@ public suspend fun llm(
   toolExecutor: ToolExecutor = ToolExecutor.Default(),
   block: ChatRequest.Builder.() -> Unit = {},
 ): AiMessage {
+  @Suppress("NoNameShadowing")
   val messages = messages.toMutableList()
   while (true) {
     logger.debug { "Messages: $messages." }
@@ -56,6 +58,7 @@ public suspend fun llm(
   return messages.last() as AiMessage
 }
 
+@Suppress("LongParameterList")
 private fun buildChatRequest(
   messages: List<ChatMessage>,
   tools: List<Tool<*, *>>,
