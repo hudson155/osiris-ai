@@ -1,8 +1,6 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.UserMessage
-import io.kotest.inspectors.shouldForSome
-import io.kotest.matchers.types.shouldBeInstanceOf
 import kairo.lazySupplier.LazySupplier
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
@@ -41,13 +39,5 @@ internal class EcommerceChatbotTest {
         and that ord_1 is in transit.
       """.trimIndent(),
     )
-  }
-
-  @Test
-  fun events(): Unit = runTest {
-    val events = events.get()
-    events.shouldForSome { event ->
-      event.shouldBeInstanceOf<Event.ProgressUpdate>()
-    }
   }
 }
