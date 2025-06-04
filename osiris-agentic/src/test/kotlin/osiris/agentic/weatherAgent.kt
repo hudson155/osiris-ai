@@ -7,6 +7,5 @@ internal val weatherAgent: Agent =
     model = testModelFactory.openAi("gpt-4.1-nano") {
       temperature(0.20)
     }
-    instructions = "Do the math. Return only the answer (nothing else)."
     tools += WeatherTool
   }
