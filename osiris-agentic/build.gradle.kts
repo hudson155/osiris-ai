@@ -6,6 +6,7 @@ plugins {
 dependencies {
   api(project(":osiris-core"))
 
+  api(libs.kairoCoroutines)
   implementation(libs.kairoLogging)
 
   testImplementation(project(":osiris-agentic:testing"))
