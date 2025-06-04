@@ -7,7 +7,6 @@ import io.kotest.matchers.collections.shouldMatchEach
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kairo.lazySupplier.LazySupplier
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -33,7 +32,7 @@ internal class SimpleTest {
 
   @Test
   fun response(): Unit = runTest {
-    val response = flow { events.get().forEach { emit(it) } }.getResponse()
+    val response = events.get().getResponse()
     response.convert<String>().shouldBe("4")
   }
 
@@ -60,7 +59,7 @@ internal class SimpleTest {
 
   @Test
   fun execution(): Unit = runTest {
-    val execution = events.get().filterIsInstance<Event.End>().single().execution
+    val execution = events.get().getExecution()
     withClue("Messages: ${execution.messages}.") {
       execution.messages.shouldMatchEach(
         { message ->
