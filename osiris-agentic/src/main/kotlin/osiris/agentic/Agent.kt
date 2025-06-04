@@ -3,7 +3,6 @@ package osiris.agentic
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import kotlin.reflect.KClass
-import osiris.core.Tool
 import osiris.core.llm
 
 @Suppress("LongParameterList")
@@ -11,16 +10,16 @@ public class Agent internal constructor(
   internal val name: String,
   private val model: ChatModel,
   private val instructions: String?,
-  private val tools: List<Tool<*, *>>,
+  private val toolProviders: List<ToolProvider>,
   private val responseType: KClass<*>?,
 ) {
-  public suspend fun execute() {
-    val execution = useExecution()
+  public suspend fun execute(execution: Execution) {
     val systemMessage = instructions?.let { SystemMessage(it) }
     val messages = buildList {
       addAll(execution.messages)
       if (systemMessage != null) add(systemMessage)
     }
+    val tools = toolProviders.map { it.provide(execution) }
     val response = llm(
       model = model,
       messages = messages,
@@ -39,7 +38,7 @@ public class AgentBuilder internal constructor(
 ) {
   public var model: ChatModel? = null
   public var instructions: String? = null
-  public val tools: MutableList<Tool<*, *>> = mutableListOf()
+  public val tools: MutableList<ToolProvider> = mutableListOf()
   public var responseType: KClass<*>? = null
 
   internal fun build(): Agent {
@@ -48,7 +47,7 @@ public class AgentBuilder internal constructor(
       name = name,
       model = model,
       instructions = instructions,
-      tools = tools,
+      toolProviders = tools,
       responseType = responseType,
     )
   }
