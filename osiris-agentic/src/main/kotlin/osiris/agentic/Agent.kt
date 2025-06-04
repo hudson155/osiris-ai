@@ -3,6 +3,8 @@ package osiris.agentic
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import kotlin.reflect.KClass
+import kotlinx.coroutines.flow.onEach
+import osiris.core.get
 import osiris.core.llm
 
 @Suppress("LongParameterList")
@@ -21,13 +23,15 @@ public class Agent internal constructor(
       if (systemMessage != null) add(systemMessage)
     }
     val tools = toolProviders.map { it.provide(execution) }
-    val response = llm(
+    val flow = llm(
       model = model,
       messages = messages,
       tools = tools,
       responseType = responseType,
     )
-    execution.messages += response
+    flow
+      .onEach { execution.messages += it }
+      .get()
   }
 }
 

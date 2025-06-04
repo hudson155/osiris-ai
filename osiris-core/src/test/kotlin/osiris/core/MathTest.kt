@@ -17,6 +17,6 @@ internal class MathTest {
         SystemMessage("Do the math. Return only the answer (nothing else)."),
       ),
     )
-    response.convert<String>().shouldBe("4")
+    response.get().convert<String>().shouldBe("4")
   }
 }

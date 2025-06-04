@@ -18,7 +18,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's 2+2?"),
   ),
-)
+).get()
 
 response.convert<String>() // 2 + 2 equals 4.
 ```
@@ -35,7 +35,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's 2+2?"),
   ),
-)
+).get()
 
 response.convert<String>() // 2 + 2 equals 4.
 ```
@@ -70,7 +70,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),
-)
+).get()
 
 response.convert<String>() // The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
 ```
@@ -95,7 +95,7 @@ val response = llm(
     UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
     SystemMessage("Provide a JSON representation of the person matching this description."),
   ),
-)
+).get()
 
 response.convert<String>() // Person(name=Jeff Hudson, age=29)
 ```
@@ -113,7 +113,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),
-)
+).get()
 
 evaluate(
   model = modelFactory.openAi("o3-mini"),

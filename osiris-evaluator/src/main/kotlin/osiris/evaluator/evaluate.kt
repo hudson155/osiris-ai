@@ -8,6 +8,7 @@ import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import osiris.core.convert
+import osiris.core.get
 import osiris.core.llm
 
 public suspend fun evaluate(
@@ -26,7 +27,7 @@ public suspend fun evaluate(
     ),
     responseType = Eval::class,
   )
-  val eval = response.convert<Eval>().shouldNotBeNull()
+  val eval = response.get().convert<Eval>().shouldNotBeNull()
   withClue(eval.failureReason) {
     eval.matchesCriteria.shouldBeTrue()
   }
