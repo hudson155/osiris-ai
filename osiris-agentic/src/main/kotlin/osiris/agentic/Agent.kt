@@ -23,12 +23,13 @@ public class Agent internal constructor(
       if (systemMessage != null) add(systemMessage)
     }
     val tools = toolProviders.map { it.provide(execution) }
-    val response = llm(
+    val flow = llm(
       model = model,
       messages = messages,
       tools = tools,
       responseType = responseType,
     )
+    flow
       .onEach { execution.messages += it }
       .get()
   }
