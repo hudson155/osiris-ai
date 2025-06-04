@@ -18,9 +18,9 @@ public object LlmSchema {
   public annotation class Description(val description: String)
 }
 
-public fun osirisSchemaName(kType: KClass<*>): String {
+public fun llmSchemaName(kType: KClass<*>): String {
   val annotation = requireNotNull(kType.findAnnotation<LlmSchema.SchemaName>()) {
-    "Osiris schema ${kType.qualifiedName!!}" +
+    "LLM schema ${kType.qualifiedName!!}" +
       " is missing @${LlmSchema.SchemaName::class.simpleName!!}."
   }
   return annotation.schemaName
@@ -28,7 +28,7 @@ public fun osirisSchemaName(kType: KClass<*>): String {
 
 public fun llmSchema(kClass: KClass<*>): JsonObjectSchema {
   require(kClass.isData) {
-    "Osiris schema ${kClass.qualifiedName!!}" +
+    "LLM schema ${kClass.qualifiedName!!}" +
       " must be a data class or data object."
   }
   return JsonObjectSchema.builder().apply {
@@ -44,7 +44,7 @@ public fun llmSchema(kClass: KClass<*>): JsonObjectSchema {
         LlmType.String -> addStringProperty(name, description)
       }
       require(!param.isOptional) {
-        "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
+        "LLM schema for ${kClass.qualifiedName!!}::${param.name!!}" +
           " must not be optional."
       }
       if (!param.type.isMarkedNullable) {

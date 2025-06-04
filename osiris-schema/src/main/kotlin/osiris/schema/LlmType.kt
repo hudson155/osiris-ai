@@ -22,7 +22,7 @@ internal fun parseType(kClass: KClass<*>, param: KParameter): LlmType {
       "number" -> LlmType.Number
       "string" -> LlmType.String
       else -> throw IllegalArgumentException(
-        "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
+        "LLM schema for ${kClass.qualifiedName!!}::${param.name!!}" +
           " specified an unsupported type: $type.",
       )
     }
@@ -33,7 +33,7 @@ internal fun parseType(kClass: KClass<*>, param: KParameter): LlmType {
     BigDecimal::class, Double::class, Float::class -> LlmType.Number
     String::class -> LlmType.String
     else -> throw IllegalArgumentException(
-      "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
+      "LLM schema for ${kClass.qualifiedName!!}::${param.name!!}" +
         " is missing @${LlmSchema.Type::class.simpleName!!}," +
         " and the type could not be inferred.",
     )
