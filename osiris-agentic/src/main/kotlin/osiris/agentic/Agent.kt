@@ -3,6 +3,8 @@ package osiris.agentic
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import kotlin.reflect.KClass
+import kotlinx.coroutines.flow.onEach
+import osiris.core.get
 import osiris.core.llm
 
 @Suppress("LongParameterList")
@@ -27,7 +29,8 @@ public class Agent internal constructor(
       tools = tools,
       responseType = responseType,
     )
-    execution.messages += response
+      .onEach { execution.messages += it }
+      .get()
   }
 }
 
