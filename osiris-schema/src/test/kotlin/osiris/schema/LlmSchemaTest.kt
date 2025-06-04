@@ -9,7 +9,7 @@ import java.math.BigInteger
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
-internal class OsirisSchemaTest {
+internal class LlmSchemaTest {
   internal object NonDataObject
 
   internal data object DataObject
@@ -76,7 +76,7 @@ internal class OsirisSchemaTest {
     shouldThrow<IllegalArgumentException> {
       llmSchema(NonDataObject::class)
     }.shouldHaveMessage(
-      "Osiris schema osiris.schema.OsirisSchemaTest.NonDataObject must be a data class or data object.",
+      "LLM schema osiris.schema.LlmSchemaTest.NonDataObject must be a data class or data object.",
     )
   }
 
@@ -93,7 +93,7 @@ internal class OsirisSchemaTest {
     shouldThrow<IllegalArgumentException> {
       llmSchema(NonDataClass::class)
     }.shouldHaveMessage(
-      "Osiris schema osiris.schema.OsirisSchemaTest.NonDataClass must be a data class or data object.",
+      "LLM schema osiris.schema.LlmSchemaTest.NonDataClass must be a data class or data object.",
     )
   }
 
@@ -130,7 +130,7 @@ internal class OsirisSchemaTest {
     shouldThrow<IllegalArgumentException> {
       llmSchema(DataClassUnsupportedType::class)
     }.shouldHaveMessage(
-      "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassUnsupportedType::myByte" +
+      "LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedType::myByte" +
         " is missing @Type," +
         " and the type could not be inferred.",
     )
@@ -169,7 +169,7 @@ internal class OsirisSchemaTest {
     shouldThrow<IllegalArgumentException> {
       llmSchema(DataClassUnsupportedOverriddenType::class)
     }.shouldHaveMessage(
-      "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassUnsupportedOverriddenType::myParam" +
+      "LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedOverriddenType::myParam" +
         " specified an unsupported type: byte.",
     )
   }
@@ -197,7 +197,7 @@ internal class OsirisSchemaTest {
     shouldThrow<IllegalArgumentException> {
       llmSchema(DataClassOptionalParam::class)
     }.shouldHaveMessage(
-      "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassOptionalParam::myBoolean" +
+      "LLM schema for osiris.schema.LlmSchemaTest.DataClassOptionalParam::myBoolean" +
         " must not be optional.",
     )
   }

@@ -23,9 +23,9 @@ public abstract class Tool<in Input : Any, out Output : Any>(
   }
 
   public suspend fun execute(string: String): String {
-    val input = checkNotNull(osirisMapper.readValueSpecial(string, inputType))
+    val input = checkNotNull(llmMapper.readValueSpecial(string, inputType))
     val output = execute(input)
-    return osirisMapper.kairoWriteSpecial(output, outputType)
+    return llmMapper.kairoWriteSpecial(output, outputType)
   }
 
   public abstract suspend fun execute(input: Input): Output

@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import osiris.schema.llmSchema
-import osiris.schema.osirisSchemaName
+import osiris.schema.llmSchemaName
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -73,7 +73,7 @@ private fun buildChatRequest(
     }
     if (responseType != null) {
       val jsonSchema = JsonSchema.builder().apply {
-        name(osirisSchemaName(responseType))
+        name(llmSchemaName(responseType))
         rootElement(llmSchema(responseType))
       }.build()
       val responseFormat = ResponseFormat.builder().apply {

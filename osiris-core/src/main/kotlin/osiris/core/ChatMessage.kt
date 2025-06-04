@@ -11,4 +11,4 @@ public suspend fun Flow<ChatMessage>.get(): AiMessage =
   filterIsInstance<AiMessage>().first { !it.hasToolExecutionRequests() }
 
 public inline fun <reified Response : Any> AiMessage.convert(): Response? =
-  text()?.let { osirisMapper.readValueSpecial<Response>(it) }
+  text()?.let { llmMapper.readValueSpecial<Response>(it) }
