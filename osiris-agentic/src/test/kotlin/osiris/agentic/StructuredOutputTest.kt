@@ -13,22 +13,20 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import osiris.core.convert
-import osiris.evaluator.evaluate
-import osiris.openAi.openAi
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class ToolsTest {
+internal class StructuredOutputTest {
   private val network: Network =
     network {
-      entrypoint = weatherAgent.name
-      agents += weatherAgent
+      entrypoint = personCreator.name
+      agents += personCreator
     }
 
   private val events: LazySupplier<List<Event>> =
     LazySupplier {
       network.run(
         messages = listOf(
-          UserMessage("What's the weather in Calgary and Edmonton?"),
+          UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
         ),
       ).toList()
     }
@@ -36,14 +34,7 @@ internal class ToolsTest {
   @Test
   fun response(): Unit = runTest {
     val response = events.get().getResponse()
-    evaluate(
-      model = testModelFactory.openAi("o3-mini"),
-      response = response.convert<String>(),
-      criteria = """
-        Should say the weather in Calgary is 15 degrees Celsius and sunny,
-        and that the weather in Edmonton is -30 degrees Celsius and snowing.
-      """.trimIndent(),
-    )
+    response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 
   @Test
@@ -55,10 +46,10 @@ internal class ToolsTest {
           event.shouldBeInstanceOf<Event.Start>()
         },
         { event ->
-          event.shouldBe(Event.AgentStart(weatherAgent.name))
+          event.shouldBe(Event.AgentStart(personCreator.name))
         },
         { event ->
-          event.shouldBe(Event.AgentEnd(weatherAgent.name))
+          event.shouldBe(Event.AgentEnd(personCreator.name))
         },
         { event ->
           event.shouldBeInstanceOf<Event.End>()
@@ -74,7 +65,7 @@ internal class ToolsTest {
       execution.messages.shouldMatchEach(
         { message ->
           message.shouldBe(
-            UserMessage("What's the weather in Calgary and Edmonton?"),
+            UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
           )
         },
         { message ->

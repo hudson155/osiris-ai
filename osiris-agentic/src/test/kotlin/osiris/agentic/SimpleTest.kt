@@ -64,7 +64,9 @@ internal class SimpleTest {
     withClue("Messages: ${execution.messages}.") {
       execution.messages.shouldMatchEach(
         { message ->
-          message.shouldBe(UserMessage("What's 2+2?"))
+          message.shouldBe(
+            UserMessage("What's 2+2?"),
+          )
         },
         { message ->
           message.shouldBeInstanceOf<AiMessage>()

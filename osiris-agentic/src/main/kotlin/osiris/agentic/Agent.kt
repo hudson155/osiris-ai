@@ -2,6 +2,7 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
+import kotlin.reflect.KClass
 import osiris.core.Tool
 import osiris.core.llm
 
@@ -11,6 +12,7 @@ public class Agent internal constructor(
   private val model: ChatModel,
   private val instructions: String?,
   private val tools: List<Tool<*, *>>,
+  private val responseType: KClass<*>?,
 ) {
   public suspend fun execute() {
     val execution = useExecution()
@@ -23,6 +25,7 @@ public class Agent internal constructor(
       model = model,
       messages = messages,
       tools = tools,
+      responseType = responseType,
     )
     if (execution.network.settings.persistSystemMessages && systemMessage != null) {
       execution.messages += systemMessage
@@ -37,6 +40,7 @@ public class AgentBuilder internal constructor(
   public var model: ChatModel? = null
   public var instructions: String? = null
   public val tools: MutableList<Tool<*, *>> = mutableListOf()
+  public var responseType: KClass<*>? = null
 
   internal fun build(): Agent {
     val model = requireNotNull(model) { "Agent $name must set a model." }
@@ -45,6 +49,7 @@ public class AgentBuilder internal constructor(
       model = model,
       instructions = instructions,
       tools = tools,
+      responseType = responseType,
     )
   }
 }
