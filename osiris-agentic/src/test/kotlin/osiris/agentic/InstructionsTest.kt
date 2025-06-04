@@ -8,7 +8,7 @@ internal class InstructionsTest {
   @Test
   fun empty(): Unit = runTest {
     val instructions: Instructions =
-      instructions {}
+      instructions(includeDefaultInstructions = false) {}
     instructions.create("The real instructions.").shouldBe(
       """
         The real instructions.
@@ -18,16 +18,35 @@ internal class InstructionsTest {
 
   @Test
   fun typical(): Unit = runTest {
-    val instructionBuilder: Instructions =
-      instructions {
-        add("Preamble.")
-        add("Intro.")
+    val instructions: Instructions =
+      instructions(includeDefaultInstructions = false) {
+        add("First")
+        add("Second")
       }
-    instructionBuilder.create("The real instructions.").shouldBe(
+    instructions.create("Third").shouldBe(
       """
-        Preamble.
+        First
 
-        Intro.
+        Second
+
+        Third
+      """.trimIndent(),
+    )
+  }
+
+  @Test
+  fun `default instructions`(): Unit = runTest {
+    val instructions: Instructions =
+      instructions(includeDefaultInstructions = true)
+    instructions.create("The real instructions.").shouldBe(
+      """
+        # The system
+
+        You're a part of a multi-agent system.
+        You can consult other agents.
+        Play your role, but remember the ultimate goal is to give the user a good answer to their original question
+        When consulting other agents, succinctly tell them what to do or what you need.
+        Don't tell them how to do their job.
 
         The real instructions.
       """.trimIndent(),
