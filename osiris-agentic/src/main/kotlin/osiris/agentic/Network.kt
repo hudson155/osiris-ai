@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
 public class Network(
-  internal val entrypoint: String?,
+  private val entrypoint: String?,
   internal val agents: Map<String, Agent>,
   internal val settings: Settings,
 ) {
