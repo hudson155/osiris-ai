@@ -1,14 +1,8 @@
 package osiris.agentic
 
-internal data class Settings(
-  val persistSystemMessages: Boolean,
-)
+internal data object Settings
 
 public class SettingsBuilder internal constructor() {
-  public var persistSystemMessages: Boolean = false
-
   internal fun build(): Settings =
-    Settings(
-      persistSystemMessages = persistSystemMessages,
-    )
+    Settings
 }
