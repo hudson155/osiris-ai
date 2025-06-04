@@ -5,6 +5,7 @@ import dev.langchain4j.model.chat.ChatModel
 import osiris.core.Tool
 import osiris.core.llm
 
+@Suppress("LongParameterList")
 public class Agent internal constructor(
   internal val name: String,
   private val model: ChatModel,
