@@ -5,7 +5,6 @@ langchain = "1.0.1" # https://github.com/langchain4j/langchain4j/releases
 [libraries]
 kairoCoroutines = { module = "software.airborne.kairo:kairo-coroutines", version.ref = "kairo" }
 kairoEnvironmentVariableSupplier = { module = "software.airborne.kairo:kairo-environment-variable-supplier", version.ref = "kairo" }
-kairoLazySupplier = { module = "software.airborne.kairo:kairo-lazy-supplier", version.ref = "kairo" }
 kairoLogging = { module = "software.airborne.kairo:kairo-logging", version.ref = "kairo" }
 kairoLoggingTesting = { module = "software.airborne.kairo:kairo-logging-testing", version.ref = "kairo" }
 kairoProtectedString = { module = "software.airborne.kairo:kairo-protected-string", version.ref = "kairo" }

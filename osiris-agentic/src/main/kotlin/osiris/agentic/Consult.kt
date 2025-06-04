@@ -1,6 +1,7 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.AiMessage
+import kotlinx.coroutines.flow.onEach
 import osiris.agentic.Consult.Input
 import osiris.core.Tool
 import osiris.schema.LlmSchema
@@ -19,12 +20,16 @@ public class Consult internal constructor(
 
   override suspend fun execute(input: Input): String {
     val network = execution.network
-    val response = network.run(
+    val flow = network.run(
       messages = listOf(AiMessage(input.message)),
       entrypoint = agentName,
-    ).getResponse()
-    execution.producerScope.send(Event.Consult(input))
+    )
+    val response = flow.onEach { handleEvent(it) }.getResponse()
     return response.text()
+  }
+
+  private suspend fun handleEvent(event: Event) {
+    if (event.shouldPropagate) execution.emit(event)
   }
 }
 

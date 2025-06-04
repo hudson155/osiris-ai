@@ -1,41 +1,36 @@
 package osiris.agentic
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import dev.langchain4j.data.message.AiMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.single
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes(
-  JsonSubTypes.Type(Event.Start::class, "Start"),
-  JsonSubTypes.Type(Event.End::class, "End"),
-  JsonSubTypes.Type(Event.AgentStart::class, "AgentStart"),
-  JsonSubTypes.Type(Event.AgentEnd::class, "AgentEnd"),
-  JsonSubTypes.Type(Event.Consult::class, "Consult"),
-)
 public sealed class Event {
+  public abstract val shouldPropagate: Boolean
+
   public data class Start(
-    @JsonIgnore val execution: Execution,
-  ) : Event()
+    val execution: Execution,
+  ) : Event() {
+    override val shouldPropagate: Boolean = false
+  }
 
   public data class End(
-    @JsonIgnore val execution: Execution,
-  ) : Event()
+    val execution: Execution,
+  ) : Event() {
+    override val shouldPropagate: Boolean = false
+  }
 
   public data class AgentStart(
-    val agentName: String,
-  ) : Event()
+    val agent: Agent,
+  ) : Event() {
+    override val shouldPropagate: Boolean = true
+  }
 
   public data class AgentEnd(
-    val execution: String,
-  ) : Event()
-
-  public data class Consult(
-    val input: Consult.Input,
-  ) : Event()
+    val agent: Agent,
+  ) : Event() {
+    override val shouldPropagate: Boolean = true
+  }
 }
 
 public suspend fun Flow<Event>.getResponse(): AiMessage {

@@ -1,5 +1,6 @@
 package osiris.agentic
 
+import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import kotlin.reflect.KClass
@@ -29,10 +30,15 @@ public class Agent internal constructor(
       tools = tools,
       responseType = responseType,
     )
-    flow
-      .onEach { execution.messages += it }
-      .get()
+    flow.onEach { handleMessage(execution, it) }.get()
   }
+
+  private fun handleMessage(execution: Execution, message: ChatMessage) {
+    execution.messages += message
+  }
+
+  override fun toString(): String =
+    "Agent(name=$name)"
 }
 
 public class AgentBuilder internal constructor(
