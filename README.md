@@ -58,10 +58,10 @@ object WeatherTool : Tool<WeatherTool.Input, WeatherTool.Output>("weather") {
     val conditions: String,
   )
 
-   override val description: String = "Gets the weather."
+  override val description: String = "Gets the weather."
 
-   override suspend fun execute(input: Input): Output =
-      TODO("Your implementation.")
+  override suspend fun execute(input: Input): Output =
+    TODO("Your implementation.")
 }
 
 val response = llm(

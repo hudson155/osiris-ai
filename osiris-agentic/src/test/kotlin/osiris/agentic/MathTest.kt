@@ -15,7 +15,7 @@ import org.junit.jupiter.api.TestInstance
 import osiris.core.convert
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class SimpleTest {
+internal class MathTest {
   private val network: Network =
     network {
       entrypoint = mathAgent.name

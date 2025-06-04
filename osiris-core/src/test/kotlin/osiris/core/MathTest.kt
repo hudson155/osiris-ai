@@ -7,7 +7,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
 
-internal class SimpleTest {
+internal class MathTest {
   @Test
   fun test(): Unit = runTest {
     val response = llm(
