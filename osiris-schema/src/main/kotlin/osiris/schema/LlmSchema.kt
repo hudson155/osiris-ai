@@ -7,7 +7,7 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.valueParameters
 
-public object OsirisSchema {
+public object LlmSchema {
   @Target(AnnotationTarget.CLASS)
   public annotation class SchemaName(val schemaName: String)
 
@@ -19,14 +19,14 @@ public object OsirisSchema {
 }
 
 public fun osirisSchemaName(kType: KClass<*>): String {
-  val annotation = requireNotNull(kType.findAnnotation<OsirisSchema.SchemaName>()) {
+  val annotation = requireNotNull(kType.findAnnotation<LlmSchema.SchemaName>()) {
     "Osiris schema ${kType.qualifiedName!!}" +
-      " is missing @${OsirisSchema.SchemaName::class.simpleName!!}."
+      " is missing @${LlmSchema.SchemaName::class.simpleName!!}."
   }
   return annotation.schemaName
 }
 
-public fun osirisSchema(kClass: KClass<*>): JsonObjectSchema {
+public fun llmSchema(kClass: KClass<*>): JsonObjectSchema {
   require(kClass.isData) {
     "Osiris schema ${kClass.qualifiedName!!}" +
       " must be a data class or data object."
@@ -38,10 +38,10 @@ public fun osirisSchema(kClass: KClass<*>): JsonObjectSchema {
       val type = parseType(kClass, param)
       val description = parseDescription(param)
       when (type) {
-        OsirisType.Boolean -> addBooleanProperty(name, description)
-        OsirisType.Integer -> addIntegerProperty(name, description)
-        OsirisType.Number -> addNumberProperty(name, description)
-        OsirisType.String -> addStringProperty(name, description)
+        LlmType.Boolean -> addBooleanProperty(name, description)
+        LlmType.Integer -> addIntegerProperty(name, description)
+        LlmType.Number -> addNumberProperty(name, description)
+        LlmType.String -> addStringProperty(name, description)
       }
       require(!param.isOptional) {
         "Osiris schema for ${kClass.qualifiedName!!}::${param.name!!}" +
@@ -56,7 +56,7 @@ public fun osirisSchema(kClass: KClass<*>): JsonObjectSchema {
 }
 
 private fun parseDescription(param: KParameter): String? {
-  val annotation = param.findAnnotation<OsirisSchema.Description>() ?: return null
+  val annotation = param.findAnnotation<LlmSchema.Description>() ?: return null
   return annotation.description
 }
 

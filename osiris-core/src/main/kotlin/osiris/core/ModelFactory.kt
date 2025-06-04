@@ -1,6 +1,5 @@
 package osiris.core
 
-@Suppress("UseDataClass")
 public class ModelFactory {
   public val properties: MutableMap<String, Any> = mutableMapOf()
 }

@@ -36,34 +36,34 @@ internal class OsirisSchemaTest {
   )
 
   internal data class DataClassTypeSpecified(
-    @OsirisSchema.Type("boolean")
+    @LlmSchema.Type("boolean")
     val myBoolean: Byte,
-    @OsirisSchema.Type("integer")
+    @LlmSchema.Type("integer")
     val myInteger: Byte,
-    @OsirisSchema.Type("number")
+    @LlmSchema.Type("number")
     val myNumber: Byte,
-    @OsirisSchema.Type("string")
+    @LlmSchema.Type("string")
     val myString: Byte,
   )
 
   internal data class DataClassTypeOverridden(
-    @OsirisSchema.Type("string")
+    @LlmSchema.Type("string")
     val myParam: Int,
   )
 
   internal data class DataClassUnsupportedOverriddenType(
-    @OsirisSchema.Type("byte")
+    @LlmSchema.Type("byte")
     val myParam: Int,
   )
 
   internal data class DataClassWithDescriptions(
-    @OsirisSchema.Description("My boolean.")
+    @LlmSchema.Description("My boolean.")
     val myBoolean: Boolean,
-    @OsirisSchema.Description("My int.")
+    @LlmSchema.Description("My int.")
     val myInt: Int,
-    @OsirisSchema.Description("My double.")
+    @LlmSchema.Description("My double.")
     val myDouble: Double,
-    @OsirisSchema.Description("My string.")
+    @LlmSchema.Description("My string.")
     val myString: String,
   )
 
@@ -74,7 +74,7 @@ internal class OsirisSchemaTest {
   @Test
   fun `non-data object`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
-      osirisSchema(NonDataObject::class)
+      llmSchema(NonDataObject::class)
     }.shouldHaveMessage(
       "Osiris schema osiris.schema.OsirisSchemaTest.NonDataObject must be a data class or data object.",
     )
@@ -82,7 +82,7 @@ internal class OsirisSchemaTest {
 
   @Test
   fun `data object`(): Unit = runTest {
-    osirisSchema(DataObject::class).shouldBe(
+    llmSchema(DataObject::class).shouldBe(
       JsonObjectSchema.builder()
         .build(),
     )
@@ -91,7 +91,7 @@ internal class OsirisSchemaTest {
   @Test
   fun `non-data class`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
-      osirisSchema(NonDataClass::class)
+      llmSchema(NonDataClass::class)
     }.shouldHaveMessage(
       "Osiris schema osiris.schema.OsirisSchemaTest.NonDataClass must be a data class or data object.",
     )
@@ -99,18 +99,18 @@ internal class OsirisSchemaTest {
 
   @Test
   fun `data class, default`(): Unit = runTest {
-    osirisSchema(DataClassDefault::class).shouldBe(
-      JsonObjectSchema.builder()
-        .addBooleanProperty("myBoolean")
-        .addIntegerProperty("myBigInteger")
-        .addIntegerProperty("myInt")
-        .addIntegerProperty("myLong")
-        .addIntegerProperty("myShort")
-        .addNumberProperty("myBigDecimal")
-        .addNumberProperty("myDouble")
-        .addNumberProperty("myFloat")
-        .addStringProperty("myString")
-        .required(
+    llmSchema(DataClassDefault::class).shouldBe(
+      JsonObjectSchema.builder().apply {
+        addBooleanProperty("myBoolean")
+        addIntegerProperty("myBigInteger")
+        addIntegerProperty("myInt")
+        addIntegerProperty("myLong")
+        addIntegerProperty("myShort")
+        addNumberProperty("myBigDecimal")
+        addNumberProperty("myDouble")
+        addNumberProperty("myFloat")
+        addStringProperty("myString")
+        required(
           "myBoolean",
           "myBigInteger",
           "myInt",
@@ -121,14 +121,14 @@ internal class OsirisSchemaTest {
           "myFloat",
           "myString",
         )
-        .build(),
+      }.build(),
     )
   }
 
   @Test
   fun `data class, unsupported type`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
-      osirisSchema(DataClassUnsupportedType::class)
+      llmSchema(DataClassUnsupportedType::class)
     }.shouldHaveMessage(
       "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassUnsupportedType::myByte" +
         " is missing @Type," +
@@ -138,36 +138,36 @@ internal class OsirisSchemaTest {
 
   @Test
   fun `data class, type specified`(): Unit = runTest {
-    osirisSchema(DataClassTypeSpecified::class).shouldBe(
-      JsonObjectSchema.builder()
-        .addBooleanProperty("myBoolean")
-        .addIntegerProperty("myInteger")
-        .addNumberProperty("myNumber")
-        .addStringProperty("myString")
-        .required(
+    llmSchema(DataClassTypeSpecified::class).shouldBe(
+      JsonObjectSchema.builder().apply {
+        addBooleanProperty("myBoolean")
+        addIntegerProperty("myInteger")
+        addNumberProperty("myNumber")
+        addStringProperty("myString")
+        required(
           "myBoolean",
           "myInteger",
           "myNumber",
           "myString",
         )
-        .build(),
+      }.build(),
     )
   }
 
   @Test
   fun `data class, type overridden`(): Unit = runTest {
-    osirisSchema(DataClassTypeOverridden::class).shouldBe(
-      JsonObjectSchema.builder()
-        .addStringProperty("myParam")
-        .required("myParam")
-        .build(),
+    llmSchema(DataClassTypeOverridden::class).shouldBe(
+      JsonObjectSchema.builder().apply {
+        addStringProperty("myParam")
+        required("myParam")
+      }.build(),
     )
   }
 
   @Test
   fun `data class, unsupported overridden type`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
-      osirisSchema(DataClassUnsupportedOverriddenType::class)
+      llmSchema(DataClassUnsupportedOverriddenType::class)
     }.shouldHaveMessage(
       "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassUnsupportedOverriddenType::myParam" +
         " specified an unsupported type: byte.",
@@ -176,26 +176,26 @@ internal class OsirisSchemaTest {
 
   @Test
   fun `data class, with descriptions`(): Unit = runTest {
-    osirisSchema(DataClassWithDescriptions::class).shouldBe(
-      JsonObjectSchema.builder()
-        .addBooleanProperty("myBoolean", "My boolean.")
-        .addIntegerProperty("myInt", "My int.")
-        .addNumberProperty("myDouble", "My double.")
-        .addStringProperty("myString", "My string.")
-        .required(
+    llmSchema(DataClassWithDescriptions::class).shouldBe(
+      JsonObjectSchema.builder().apply {
+        addBooleanProperty("myBoolean", "My boolean.")
+        addIntegerProperty("myInt", "My int.")
+        addNumberProperty("myDouble", "My double.")
+        addStringProperty("myString", "My string.")
+        required(
           "myBoolean",
           "myInt",
           "myDouble",
           "myString",
         )
-        .build(),
+      }.build(),
     )
   }
 
   @Test
   fun `data class, optional param`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
-      osirisSchema(DataClassOptionalParam::class)
+      llmSchema(DataClassOptionalParam::class)
     }.shouldHaveMessage(
       "Osiris schema for osiris.schema.OsirisSchemaTest.DataClassOptionalParam::myBoolean" +
         " must not be optional.",
