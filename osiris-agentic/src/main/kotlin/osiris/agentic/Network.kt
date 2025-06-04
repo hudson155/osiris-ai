@@ -4,7 +4,7 @@ import dev.langchain4j.data.message.ChatMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
-public class Network(
+public class Network internal constructor(
   private val entrypoint: String?,
   internal val agents: Map<String, Agent>,
   internal val settings: Settings,
@@ -13,6 +13,7 @@ public class Network(
     messages: List<ChatMessage>,
     entrypoint: String? = null,
   ): Flow<Event> {
+    @Suppress("NoNameShadowing")
     val entrypoint = requireNotNull(entrypoint ?: this.entrypoint) { "Network must set an entrypoint." }
     return channelFlow {
       val execution = Execution(

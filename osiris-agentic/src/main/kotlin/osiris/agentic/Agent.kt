@@ -4,7 +4,7 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import osiris.core.llm
 
-public class Agent(
+public class Agent internal constructor(
   internal val name: String,
   private val model: ChatModel,
   private val instructions: String?,

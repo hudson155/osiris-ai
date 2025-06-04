@@ -7,15 +7,16 @@ import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.withContext
 
-internal class Execution(
+@Suppress("LongParameterList")
+public class Execution internal constructor(
   internal val network: Network,
   private val producerScope: ProducerScope<Event>,
   messages: List<ChatMessage>,
   private val entrypoint: String,
 ) : AbstractCoroutineContextElement(Key) {
-  internal val messages: MutableList<ChatMessage> = messages.toMutableList()
+  public val messages: MutableList<ChatMessage> = messages.toMutableList()
 
-  suspend fun execute() {
+  internal suspend fun execute() {
     withContext(this) {
       producerScope.send(Event.Start(this@Execution))
       val agent = requireNotNull(network.agents[entrypoint]) { "No agent with name $entrypoint." }
@@ -26,7 +27,7 @@ internal class Execution(
     }
   }
 
-  internal companion object Key : CoroutineContext.Key<Execution>
+  public companion object Key : CoroutineContext.Key<Execution>
 }
 
 internal suspend fun useExecution(): Execution =
