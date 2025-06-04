@@ -14,12 +14,13 @@ public abstract class Tool<in Input : Any, out Output : Any>(
 
   public open val description: String? = null
 
-  public val toolSpecification: ToolSpecification =
+  public val toolSpecification: ToolSpecification by lazy {
     ToolSpecification.builder().apply {
       name(name)
       if (description != null) description(description)
       parameters(llmSchema(inputType.kotlinClass))
     }.build()
+  }
 
   public suspend fun execute(string: String): String {
     val input = checkNotNull(osirisMapper.readValueSpecial(string, inputType))

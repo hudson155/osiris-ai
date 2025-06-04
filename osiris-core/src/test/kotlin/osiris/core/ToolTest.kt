@@ -24,6 +24,7 @@ internal class ToolTest {
       .shouldBe(
         ToolSpecification.builder().apply {
           name("weather")
+          description("Gets the weather.")
           parameters(
             JsonObjectSchema.builder().apply {
               addStringProperty("location", "The city to get the weather for. Only the city name.")

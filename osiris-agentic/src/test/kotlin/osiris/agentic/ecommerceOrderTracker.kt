@@ -4,6 +4,7 @@ import osiris.openAi.openAi
 
 internal val ecommerceOrderTracker: Agent =
   agent("ecommerce_order_tracker") {
+    description = "Use to track an order."
     model = testModelFactory.openAi("gpt-4.1-nano") {
       temperature(0.20)
     }

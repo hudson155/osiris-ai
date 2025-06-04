@@ -8,6 +8,7 @@ import osiris.core.llm
 @Suppress("LongParameterList")
 public class Agent internal constructor(
   internal val name: String,
+  internal val description: String?,
   private val model: ChatModel,
   private val instructions: String?,
   private val toolProviders: List<ToolProvider>,
@@ -36,6 +37,7 @@ public class Agent internal constructor(
 public class AgentBuilder internal constructor(
   private val name: String,
 ) {
+  public var description: String? = null
   public var model: ChatModel? = null
   public var instructions: String? = null
   public val tools: MutableList<ToolProvider> = mutableListOf()
@@ -45,6 +47,7 @@ public class AgentBuilder internal constructor(
     val model = requireNotNull(model) { "Agent $name must set a model." }
     return Agent(
       name = name,
+      description = description,
       model = model,
       instructions = instructions,
       toolProviders = tools,
