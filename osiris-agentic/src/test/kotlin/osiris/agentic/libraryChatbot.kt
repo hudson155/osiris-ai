@@ -15,5 +15,4 @@ internal val libraryChatbot: Agent =
         Your task is to use tools to comprehensively answer the user's question.
       """.trimIndent(),
     )
-    canConsult("library_data_analyst")
   }
