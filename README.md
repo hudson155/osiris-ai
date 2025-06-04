@@ -117,7 +117,7 @@ val response = llm(
 
 evaluate(
   model = modelFactory.openAi("o3-mini"),
-  response = response.convert<String>().shouldNotBeNull(),
+  response = response.convert<String>(),
   criteria = "Should say the weather in Calgary is 15 degrees Celsius and sunny.",
 )
 ```

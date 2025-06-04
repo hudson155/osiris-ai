@@ -12,9 +12,10 @@ import osiris.core.llm
 
 public suspend fun evaluate(
   model: ChatModel,
-  response: String,
+  response: String?,
   criteria: String,
 ) {
+  response.shouldNotBeNull()
   @Suppress("NoNameShadowing")
   val response = llm(
     model = model,
