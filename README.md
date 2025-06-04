@@ -1,7 +1,7 @@
 # Osiris AI
 
-> [Osiris](https://en.wikipedia.org/wiki/Osiris) was the god of fertility, agriculture,
-> the afterlife, the dead, resurrection, life, and vegetation
+> [Osiris](https://en.wikipedia.org/wiki/Osiris)
+> was the god of fertility, agriculture, the afterlife, the dead, resurrection, life, and vegetation
 > in ancient Egyptian religion.
 
 **Osiris AI** is a thin wrapper around [LangChain4j](https://github.com/langchain4j/langchain4j),
