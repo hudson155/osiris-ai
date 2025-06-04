@@ -12,8 +12,8 @@ import osiris.core.convert
 import osiris.openAi.openAi
 
 internal class SimpleTest {
-  private val simple: Agent =
-    agent("simple") {
+  private val agent: Agent =
+    agent("agent") {
       model = testModelFactory.openAi("gpt-4.1-nano") {
         temperature(0.20)
       }
@@ -22,8 +22,8 @@ internal class SimpleTest {
 
   private val network: Network =
     network {
-      entrypoint = "simple"
-      agents += simple
+      entrypoint = "agent"
+      agents += agent
     }
 
   @Test
@@ -40,10 +40,10 @@ internal class SimpleTest {
         event.shouldBe(NetworkEvent.Start)
       },
       { event ->
-        event.shouldBe(NetworkEvent.AgentStart("simple"))
+        event.shouldBe(NetworkEvent.AgentStart("agent"))
       },
       { event ->
-        event.shouldBe(NetworkEvent.AgentEnd("simple"))
+        event.shouldBe(NetworkEvent.AgentEnd("agent"))
       },
       { event ->
         event.shouldBeInstanceOf<NetworkEvent.End>()
