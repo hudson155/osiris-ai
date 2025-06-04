@@ -13,7 +13,6 @@ internal val ecommerceOrderTracker: Agent =
 
         You are the store's data analyst.
         Your role is to track orders.
-        Another agent will respond to the user (you don't respond directly).
       """.trimIndent(),
     )
     tools += TrackOrderTool
