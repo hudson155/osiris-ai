@@ -27,9 +27,6 @@ public class Agent internal constructor(
       tools = tools,
       responseType = responseType,
     )
-    if (execution.network.settings.persistSystemMessages && systemMessage != null) {
-      execution.messages += systemMessage
-    }
     execution.messages += response
   }
 }
