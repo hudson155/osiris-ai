@@ -10,52 +10,51 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import osiris.schema.llmSchema
 import osiris.schema.osirisSchemaName
 
 private val logger: KLogger = KotlinLogging.logger {}
 
 @Suppress("LongParameterList")
-public suspend fun llm(
+public fun llm(
   model: ChatModel,
   messages: List<ChatMessage>,
   tools: List<Tool<*, *>> = emptyList(),
   responseType: KClass<*>? = null,
-  exitCondition: ExitCondition = ExitCondition.Default(),
   toolExecutor: ToolExecutor = ToolExecutor.Default(),
   block: ChatRequest.Builder.() -> Unit = {},
-): AiMessage {
+): Flow<ChatMessage> {
   @Suppress("NoNameShadowing")
   val messages = messages.toMutableList()
-  while (true) {
-    logger.debug { "Messages: $messages." }
-    val chatRequest = buildChatRequest(
-      messages = messages,
-      tools = tools,
-      responseType = responseType,
-      block = block,
-    )
-    logger.debug { "Evaluating exit condition." }
-    if (exitCondition.evaluate(chatRequest)) {
-      logger.debug { "Exit condition was met. Exiting." }
-      break
-    }
-    logger.debug { "Exit condition was not met." }
-    val lastMessage = chatRequest.messages().lastOrNull()
-    if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
-      val executionRequests = lastMessage.toolExecutionRequests()
-      logger.debug { "Executing tools: $executionRequests." }
-      val executionResponses = toolExecutor.execute(tools, executionRequests)
-      logger.debug { "Executed tools: $executionResponses." }
-      messages += executionResponses
-    } else {
-      logger.debug { "Chat request: $chatRequest." }
-      val chatResponse = model.chat(chatRequest)
-      logger.debug { "Chat response: $chatResponse." }
-      messages += chatResponse.aiMessage()
+  return flow {
+    while (true) {
+      logger.debug { "Messages: $messages." }
+      val chatRequest = buildChatRequest(
+        messages = messages,
+        tools = tools,
+        responseType = responseType,
+        block = block,
+      )
+      val lastMessage = chatRequest.messages().lastOrNull()
+      if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
+        val executionRequests = lastMessage.toolExecutionRequests()
+        logger.debug { "Executing tools: $executionRequests." }
+        val executionResponses = toolExecutor.execute(tools, executionRequests)
+        logger.debug { "Executed tools: $executionResponses." }
+        executionResponses.forEach { emit(it) }
+        messages += executionResponses
+      } else {
+        logger.debug { "Chat request: $chatRequest." }
+        val chatResponse = model.chat(chatRequest)
+        logger.debug { "Chat response: $chatResponse." }
+        val aiMessage = chatResponse.aiMessage()
+        emit(aiMessage)
+        messages += aiMessage
+      }
     }
   }
-  return messages.last() as AiMessage
 }
 
 @Suppress("LongParameterList")

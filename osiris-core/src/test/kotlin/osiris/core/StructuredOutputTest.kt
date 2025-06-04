@@ -18,6 +18,6 @@ internal class StructuredOutputTest {
         SystemMessage("Provide a JSON representation of the person matching this description."),
       ),
     )
-    response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
+    response.get().convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 }
