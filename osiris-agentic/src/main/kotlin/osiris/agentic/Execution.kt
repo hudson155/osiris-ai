@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 @Suppress("LongParameterList")
 public class Execution internal constructor(
   internal val network: Network,
-  private val producerScope: ProducerScope<Event>,
+  internal val producerScope: ProducerScope<Event>,
   messages: List<ChatMessage>,
   private val entrypoint: String,
 ) : AbstractCoroutineContextElement(Key) {

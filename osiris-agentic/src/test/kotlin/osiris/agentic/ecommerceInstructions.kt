@@ -1,6 +1,6 @@
 package osiris.agentic
 
-internal val libraryInstructions: Instructions =
+internal val ecommerceInstructions: Instructions =
   instructions {
     add(
       """
@@ -15,9 +15,9 @@ internal val libraryInstructions: Instructions =
     )
     add(
       """
-        # Library
+        # Ecommerce store
 
-        The user is the admin at a public library.
+        The user is a customer at an ecommerce store.
       """.trimIndent(),
     )
   }

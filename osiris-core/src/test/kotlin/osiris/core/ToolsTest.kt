@@ -22,7 +22,7 @@ internal class ToolsTest {
       model = testModelFactory.openAi("o3-mini"),
       response = response.convert<String>(),
       criteria = """
-        Should say the weather in Calgary is 15 degrees Celsius and sunny,
+        Should say that the weather in Calgary is 15 degrees Celsius and sunny,
         and that the weather in Edmonton is -30 degrees Celsius and snowing.
       """.trimIndent(),
     )
