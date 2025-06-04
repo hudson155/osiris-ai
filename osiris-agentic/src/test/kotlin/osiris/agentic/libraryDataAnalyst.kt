@@ -13,7 +13,6 @@ internal val libraryDataAnalyst: Agent =
 
         You are the library's data analyst.
         Your role is to create tables representing data from your tools.
-        Another agent will use these to respond to the user (you don't respond directly).
 
         # Tables
 

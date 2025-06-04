@@ -19,10 +19,7 @@ public class Consult internal constructor(
     val execution = useExecution()
     val network = execution.network
     val response = network.run(
-      messages = buildList {
-        addAll(execution.messages)
-        add(AiMessage(input.message))
-      },
+      messages = listOf(AiMessage(input.message)),
       entrypoint = agentName,
     ).getResponse()
     execution.producerScope.send(Event.Consult(input))
