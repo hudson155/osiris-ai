@@ -21,6 +21,10 @@ public sealed class Event {
   public data class AgentEnd(
     val execution: String,
   ) : Event()
+
+  public data class ProgressUpdate(
+    val message: String,
+  ) : Event()
 }
 
 public suspend fun Flow<Event>.getResponse(): AiMessage {
