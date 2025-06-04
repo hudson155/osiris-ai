@@ -25,9 +25,7 @@ public class Consult internal constructor(
       },
       entrypoint = agentName,
     ).getResponse()
-    if (network.settings.includeConsultationProgressUpdates) {
-      execution.producerScope.send(Event.ProgressUpdate(input.progressUpdateForUser))
-    }
+    execution.producerScope.send(Event.Consult(input))
     return response.text()
   }
 }

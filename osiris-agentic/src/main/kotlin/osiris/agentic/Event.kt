@@ -22,8 +22,8 @@ public sealed class Event {
     val execution: String,
   ) : Event()
 
-  public data class ProgressUpdate(
-    val message: String,
+  public data class Consult(
+    val input: Consult.Input,
   ) : Event()
 }
 
