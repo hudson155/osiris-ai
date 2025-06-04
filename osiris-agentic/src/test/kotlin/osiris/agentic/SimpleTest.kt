@@ -1,0 +1,74 @@
+package osiris.agentic
+
+import dev.langchain4j.data.message.AiMessage
+import dev.langchain4j.data.message.UserMessage
+import io.kotest.assertions.withClue
+import io.kotest.matchers.collections.shouldMatchEach
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import kairo.lazySupplier.LazySupplier
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import osiris.core.convert
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+internal class SimpleTest {
+  private val network: Network =
+    network {
+      entrypoint = mathAgent.name
+      agents += mathAgent
+    }
+
+  private val events: LazySupplier<List<Event>> =
+    LazySupplier {
+      network.run(
+        messages = listOf(
+          UserMessage("What's 2+2?"),
+        ),
+      ).toList()
+    }
+
+  @Test
+  fun response(): Unit = runTest {
+    val response = events.get().getResponse()
+    response.convert<String>().shouldBe("4")
+  }
+
+  @Test
+  fun events(): Unit = runTest {
+    val events = events.get()
+    withClue("Events: $events.") {
+      events.shouldMatchEach(
+        { event ->
+          event.shouldBeInstanceOf<Event.Start>()
+        },
+        { event ->
+          event.shouldBe(Event.AgentStart(mathAgent.name))
+        },
+        { event ->
+          event.shouldBe(Event.AgentEnd(mathAgent.name))
+        },
+        { event ->
+          event.shouldBeInstanceOf<Event.End>()
+        },
+      )
+    }
+  }
+
+  @Test
+  fun execution(): Unit = runTest {
+    val execution = events.get().getExecution()
+    withClue("Messages: ${execution.messages}.") {
+      execution.messages.shouldMatchEach(
+        { message ->
+          message.shouldBe(UserMessage("What's 2+2?"))
+        },
+        { message ->
+          message.shouldBe(AiMessage("4"))
+        },
+      )
+    }
+  }
+}
