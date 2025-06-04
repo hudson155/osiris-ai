@@ -2,12 +2,14 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
+import osiris.core.Tool
 import osiris.core.llm
 
 public class Agent internal constructor(
   internal val name: String,
   private val model: ChatModel,
   private val instructions: String?,
+  private val tools: List<Tool<*, *>>,
 ) {
   public suspend fun execute() {
     val execution = useExecution()
@@ -15,6 +17,7 @@ public class Agent internal constructor(
     val response = llm(
       model = model,
       messages = execution.messages + systemMessage,
+      tools = tools,
     )
     if (execution.network.settings.persistSystemMessages) execution.messages += systemMessage
     execution.messages += response
@@ -26,6 +29,7 @@ public class AgentBuilder internal constructor(
 ) {
   public var model: ChatModel? = null
   public var instructions: String? = null
+  public val tools: MutableList<Tool<*, *>> = mutableListOf()
 
   internal fun build(): Agent {
     val model = requireNotNull(model) { "Agent $name must set a model." }
@@ -33,6 +37,7 @@ public class AgentBuilder internal constructor(
       name = name,
       model = model,
       instructions = instructions,
+      tools = tools,
     )
   }
 }
