@@ -20,7 +20,7 @@ public abstract class ToolExecutor {
         val id = executionRequest.id()
         val toolName = executionRequest.name()
         val input = executionRequest.arguments()
-        val tool = checkNotNull(tools[toolName]) { "No tool with name: $toolName." }
+        val tool = requireNotNull(tools[toolName]) { "No tool with name: $toolName." }
         val output = tool.execute(input)
         return@map ToolExecutionResultMessage(id, toolName, output)
       }

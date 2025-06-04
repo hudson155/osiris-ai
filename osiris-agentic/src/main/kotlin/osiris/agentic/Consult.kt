@@ -7,6 +7,7 @@ import osiris.schema.LlmSchema
 
 public class Consult internal constructor(
   private val agentName: String,
+  private val execution: Execution,
 ) : Tool<Input, String>("consult_$agentName") {
   public data class Input(
     @LlmSchema.Description("The message to the agent.")
@@ -16,7 +17,6 @@ public class Consult internal constructor(
   )
 
   override suspend fun execute(input: Input): String {
-    val execution = useExecution()
     val network = execution.network
     val response = network.run(
       messages = listOf(AiMessage(input.message)),
@@ -27,5 +27,10 @@ public class Consult internal constructor(
   }
 }
 
-public fun consult(agentName: String): Consult =
-  Consult(agentName)
+public fun consult(agentName: String): ToolProvider =
+  ToolProvider { execution ->
+    return@ToolProvider Consult(
+      agentName = agentName,
+      execution = execution,
+    )
+  }
