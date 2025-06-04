@@ -1,9 +1,11 @@
 package osiris.core
 
 import io.kotest.assertions.fail
+import osiris.core.WeatherTool.Input
+import osiris.core.WeatherTool.Output
 import osiris.schema.LlmSchema
 
-internal object WeatherTool : Tool<WeatherTool.Input, WeatherTool.Output>("weather") {
+internal object WeatherTool : Tool<Input, Output>("weather") {
   internal data class Input(
     @LlmSchema.Description("The city to get the weather for. Only the city name.")
     val location: String,
