@@ -7,6 +7,7 @@ import osiris.schema.LlmSchema
 
 public class Consult internal constructor(
   private val agentName: String,
+  override val description: String?,
   private val execution: Execution,
 ) : Tool<Input, String>("consult_$agentName") {
   public data class Input(
@@ -27,10 +28,15 @@ public class Consult internal constructor(
   }
 }
 
-public fun consult(agentName: String): ToolProvider =
+public fun consult(
+  agentName: String,
+  description: String? = null,
+): ToolProvider =
   ToolProvider { execution ->
+    val agent = requireNotNull(execution.network.agents[agentName]) { "No agent with name $agentName." }
     return@ToolProvider Consult(
       agentName = agentName,
+      description = description ?: agent.description,
       execution = execution,
     )
   }
