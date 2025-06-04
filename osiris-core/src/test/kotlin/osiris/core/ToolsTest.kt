@@ -2,8 +2,6 @@ package osiris.core
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.UserMessage
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.evaluator.evaluate
@@ -20,14 +18,13 @@ internal class ToolsTest {
       tools = listOf(WeatherTool),
       messages = messages,
     )
-    response.take(3).collect()
-    // evaluate(
-    //   model = testModelFactory.openAi("o3-mini"),
-    //   response = response.get().convert<String>(),
-    //   criteria = """
-    //     Should say that the weather in Calgary is 15 degrees Celsius and sunny,
-    //     and that the weather in Edmonton is -30 degrees Celsius and snowing.
-    //   """.trimIndent(),
-    // )
+    evaluate(
+      model = testModelFactory.openAi("o3-mini"),
+      response = response.get().convert<String>(),
+      criteria = """
+        Should say that the weather in Calgary is 15 degrees Celsius and sunny,
+        and that the weather in Edmonton is -30 degrees Celsius and snowing.
+      """.trimIndent(),
+    )
   }
 }
