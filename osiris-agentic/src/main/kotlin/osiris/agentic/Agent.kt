@@ -11,7 +11,7 @@ import osiris.core.llm
 
 @Suppress("LongParameterList")
 public class Agent internal constructor(
-  internal val name: String,
+  public val name: String,
   internal val description: String?,
   private val model: ChatModel,
   private val instructions: String?,
