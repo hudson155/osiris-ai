@@ -20,7 +20,8 @@ val response = llm(
   ),
 ).get()
 
-response.convert<String>() // 2 + 2 equals 4.
+response.convert<String>()
+// 2 + 2 equals 4.
 ```
 
 ## Features
@@ -37,7 +38,8 @@ val response = llm(
   ),
 ).get()
 
-response.convert<String>() // 2 + 2 equals 4.
+response.convert<String>()
+// 2 + 2 equals 4.
 ```
 
 </details>
@@ -72,7 +74,8 @@ val response = llm(
   ),
 ).get()
 
-response.convert<String>() // The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
+response.convert<String>()
+// The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
 ```
 
 </details>
@@ -97,7 +100,8 @@ val response = llm(
   ),
 ).get()
 
-response.convert<String>() // Person(name=Jeff Hudson, age=29)
+response.convert<Person>()
+// Person(name=Jeff Hudson, age=29)
 ```
 
 </details>
@@ -120,6 +124,81 @@ evaluate(
   response = response.convert<String>(),
   criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
 )
+```
+
+</details>
+
+<details>
+
+<summary>Agents</summary>
+
+```kotlin
+object TrackOrderTool : Tool<TrackOrderTool.Input, String>("track_order") {
+  data class Input(
+    val orderId: String,
+  )
+
+  override suspend fun execute(input: Input): String =
+    TODO("Your implementation.")
+}
+
+val instructions: Instructions =
+  instructions(includeDefaultInstructions = true) {
+    add(
+      """
+        # Ecommerce store
+   
+        The user is a customer at an ecommerce store.
+      """.trimIndent(),
+    )
+  }
+
+val chatbot: Agent =
+  agent("chatbot") {
+    model = testModelFactory.openAi("gpt-4.1-nano") {
+      temperature(0.20)
+    }
+    instructions = instructions.create(
+      """
+        # Your role and task
+
+        You are the store's really smart AI assistant.
+        Your task is to use tools to comprehensively answer the user's question.
+      """.trimIndent(),
+    )
+    tools += consult("order_tracker")
+  }
+
+val orderTracker: Agent =
+  agent("order_tracker") {
+    description = "Use to track an order."
+    model = testModelFactory.openAi("gpt-4.1-nano") {
+      temperature(0.20)
+    }
+    instructions = instructions.create(
+      """
+        # Your role and task
+
+        You are the store's data analyst.
+        Your role is to track orders.
+      """.trimIndent(),
+    )
+    tools += tool(TrackOrderTool)
+  }
+
+val network: Network =
+  network {
+    entrypoint = chatbot.name
+    agents += chatbot
+    agents += orderTracker
+  }
+
+network.run(
+  messages = listOf(
+    UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
+  ),
+).getResponse().convert<String>()
+// Your order with ID ord_0 has not been shipped yet, and your order with ID ord_1 is currently in transit.
 ```
 
 </details>
