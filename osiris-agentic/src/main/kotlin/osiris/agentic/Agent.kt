@@ -3,6 +3,7 @@ package osiris.agentic
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.request.ChatRequest
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.onEach
 import osiris.core.get
@@ -16,6 +17,7 @@ public class Agent internal constructor(
   private val instructions: String?,
   private val toolProviders: List<ToolProvider>,
   private val responseType: KClass<*>?,
+  private val block: ChatRequest.Builder.() -> Unit,
 ) {
   public suspend fun execute(execution: Execution) {
     val systemMessage = instructions?.let { SystemMessage(it) }
@@ -29,6 +31,7 @@ public class Agent internal constructor(
       messages = messages,
       tools = tools,
       responseType = responseType,
+      block = block,
     )
     flow.onEach { handleMessage(execution, it) }.get()
   }
@@ -49,18 +52,22 @@ public class AgentBuilder internal constructor(
   public var instructions: String? = null
   public val tools: MutableList<ToolProvider> = mutableListOf()
   public var responseType: KClass<*>? = null
+  private val blocks: MutableList<ChatRequest.Builder.() -> Unit> = mutableListOf()
 
-  internal fun build(): Agent {
-    val model = requireNotNull(model) { "Agent $name must set a model." }
-    return Agent(
+  public fun llm(llm: ChatRequest.Builder.() -> Unit) {
+    blocks += llm
+  }
+
+  internal fun build(): Agent =
+    Agent(
       name = name,
       description = description,
-      model = model,
+      model = requireNotNull(model) { "Agent $name must set a model." },
       instructions = instructions,
       toolProviders = tools,
       responseType = responseType,
+      block = { blocks.forEach { it() } },
     )
-  }
 }
 
 public fun agent(name: String, block: AgentBuilder.() -> Unit): Agent =
