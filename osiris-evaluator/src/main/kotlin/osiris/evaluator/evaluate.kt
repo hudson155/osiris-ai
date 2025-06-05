@@ -15,20 +15,16 @@ public suspend fun evaluate(
   messages: List<ChatMessage>,
   criteria: String,
 ) {
+  val systemMessage = SystemMessage(
+    """
+      Evaluate whether the user's question was answered well according to the following criteria.
+
+      $criteria
+    """.trimIndent(),
+  )
   val response = llm(
     model = model,
-    messages = buildList {
-      addAll(messages)
-      add(
-        SystemMessage(
-          """
-            Evaluate whether the user's question was answered well according to the following criteria.
-
-            $criteria
-          """.trimIndent(),
-        ),
-      )
-    },
+    messages = messages + systemMessage,
     responseType = Eval::class,
   )
   val eval = response.get().convert<Eval>().shouldNotBeNull()
