@@ -21,8 +21,7 @@ internal class MathTest {
     val messages = listOf(
       UserMessage("What's 2+2?"),
     )
-    val flow = network.run(messages)
-    val response = flow.onEach(::logEvent).getResponse()
+    val response = network.run(messages).onEach(::logEvent).getResponse()
     response.convert<String>().shouldBe("4")
   }
 }
