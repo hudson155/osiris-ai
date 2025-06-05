@@ -2,7 +2,7 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.ChatMessage
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 
 public class Network internal constructor(
   private val entrypoint: String?,
@@ -15,10 +15,10 @@ public class Network internal constructor(
   ): Flow<Event> {
     @Suppress("NoNameShadowing")
     val entrypoint = requireNotNull(entrypoint ?: this.entrypoint) { "Network must set an entrypoint." }
-    return channelFlow {
+    return flow {
       val execution = Execution(
         network = this@Network,
-        producerScope = this,
+        collector = this,
         messages = messages,
         entrypoint = entrypoint,
       )

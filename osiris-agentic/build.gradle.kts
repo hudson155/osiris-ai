@@ -13,7 +13,6 @@ dependencies {
   testImplementation(project(":osiris-open-ai"))
 
   testImplementation(libs.kairoEnvironmentVariableSupplier)
-  testImplementation(libs.kairoLazySupplier)
   testImplementation(libs.kairoLoggingTesting)
   testImplementation(libs.kairoSerialization)
   testImplementation(libs.kairoTesting)
