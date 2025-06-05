@@ -202,6 +202,27 @@ network.run(messages).getResponse().convert<String>()
 
 </details>
 
+## Getting started
+
+```kotlin
+plugins {
+  id("com.google.cloud.artifactregistry.gradle-plugin")
+}
+
+repositories {
+   maven {
+      url = uri("artifactregistry://us-central1-maven.pkg.dev/airborne-software/maven")
+   }
+}
+
+dependencies {
+  implementation("software.airborne.osiris:osiris-agentic:0.6.0")
+  implementation("software.airborne.osiris:osiris-core:0.6.0")
+  implementation("software.airborne.osiris:osiris-evaluator:0.6.0")
+  implementation("software.airborne.osiris:osiris-open-ai:0.6.0")
+}
+```
+
 ## Project information
 
 ### Major dependencies
