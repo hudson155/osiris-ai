@@ -18,12 +18,10 @@ internal class StructuredOutputTest {
 
   @Test
   fun test(): Unit = runTest {
-    val flow = network.run(
-      messages = listOf(
-        UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
-      ),
+    val messages = listOf(
+      UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
     )
-    val response = flow.onEach(::logEvent).getResponse()
+    val response = network.run(messages).onEach(::logEvent).getResponse()
     response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 }

@@ -18,12 +18,10 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
-    val flow = network.run(
-      messages = listOf(
-        UserMessage("What's 2+2?"),
-      ),
+    val messages = listOf(
+      UserMessage("What's 2+2?"),
     )
-    val response = flow.onEach(::logEvent).getResponse()
+    val response = network.run(messages).onEach(::logEvent).getResponse()
     response.convert<String>().shouldBe("4")
   }
 }

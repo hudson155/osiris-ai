@@ -17,10 +17,10 @@ internal class ToolsTest {
       model = testModelFactory.openAi("gpt-4.1-nano"),
       tools = listOf(WeatherTool),
       messages = messages,
-    )
+    ).get()
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
-      response = response.get().convert<String>(),
+      messages = messages + response,
       criteria = """
         Should say that the weather in Calgary is 15 degrees Celsius and sunny,
         and that the weather in Edmonton is -30 degrees Celsius and snowing.
