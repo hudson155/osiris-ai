@@ -193,11 +193,10 @@ val network: Network =
     agents += orderTracker
   }
 
-network.run(
-  messages = listOf(
-    UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
-  ),
-).getResponse().convert<String>()
+val messages = listOf(
+  UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
+)
+network.run(messages).getResponse().convert<String>()
 // Your order with ID ord_0 has not been shipped yet, and your order with ID ord_1 is currently in transit.
 ```
 
