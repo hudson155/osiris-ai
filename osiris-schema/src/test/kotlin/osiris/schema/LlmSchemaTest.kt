@@ -14,7 +14,7 @@ internal class LlmSchemaTest {
 
   internal data object DataObject
 
-  @Suppress("UseDataClass")
+  @Suppress("unused", "UseDataClass")
   internal class NonDataClass(
     val myString: String,
   )
