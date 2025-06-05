@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import osiris.core.convert
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
 
@@ -19,15 +18,13 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
-    val flow = network.run(
-      messages = listOf(
-        UserMessage("What's the weather in Calgary and Edmonton?"),
-      ),
+    val messages = listOf(
+      UserMessage("What's the weather in Calgary and Edmonton?"),
     )
-    val response = flow.onEach(::logEvent).getResponse()
+    val response = network.run(messages).onEach(::logEvent).getResponse()
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
-      response = response.convert<String>(),
+      messages = messages + response,
       criteria = """
         Should say that the weather in Calgary is 15 degrees Celsius and sunny,
         and that the weather in Edmonton is -30 degrees Celsius and snowing.
