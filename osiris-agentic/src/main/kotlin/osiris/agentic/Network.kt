@@ -4,38 +4,25 @@ import dev.langchain4j.data.message.ChatMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-public class Network internal constructor(
-  private val entrypoint: String?,
-  internal val agents: Map<String, Agent>,
+public abstract class Network(
+  agents: List<Agent>,
 ) {
+  protected open val entrypoint: String? = null
+
+  internal val agents: Map<String, Agent> = agents.associateBy { it.name }
+
   public fun run(
     messages: List<ChatMessage>,
     entrypoint: String? = null,
   ): Flow<Event> {
-    @Suppress("NoNameShadowing")
-    val entrypoint = requireNotNull(entrypoint ?: this.entrypoint) { "Network must set an entrypoint." }
     return flow {
       val execution = Execution(
         network = this@Network,
         collector = this,
         messages = messages,
-        entrypoint = entrypoint,
+        entrypoint = requireNotNull(entrypoint ?: this@Network.entrypoint) { "Network must set an entrypoint." },
       )
       execution.execute()
     }
   }
 }
-
-public class NetworkBuilder internal constructor() {
-  public var entrypoint: String? = null
-  public val agents: MutableList<Agent> = mutableListOf()
-
-  internal fun build(): Network =
-    Network(
-      entrypoint = entrypoint,
-      agents = agents.associateBy { it.name },
-    )
-}
-
-public fun network(block: NetworkBuilder.() -> Unit): Network =
-  NetworkBuilder().apply(block).build()
