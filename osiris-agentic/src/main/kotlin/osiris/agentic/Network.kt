@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.flow
 public class Network internal constructor(
   private val entrypoint: String?,
   internal val agents: Map<String, Agent>,
-  internal val settings: Settings,
 ) {
   public fun run(
     messages: List<ChatMessage>,
@@ -30,17 +29,11 @@ public class Network internal constructor(
 public class NetworkBuilder internal constructor() {
   public var entrypoint: String? = null
   public val agents: MutableList<Agent> = mutableListOf()
-  private val settings: SettingsBuilder = SettingsBuilder()
-
-  public fun settings(block: SettingsBuilder.() -> Unit) {
-    settings.apply(block)
-  }
 
   internal fun build(): Network =
     Network(
       entrypoint = entrypoint,
       agents = agents.associateBy { it.name },
-      settings = settings.build(),
     )
 }
 
