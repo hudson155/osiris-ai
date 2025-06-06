@@ -4,6 +4,7 @@ import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import kotlin.reflect.KClass
 
+@Suppress("LongParameterList")
 internal class AgentImpl(
   override val name: String,
   override val description: String?,

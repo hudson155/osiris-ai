@@ -14,8 +14,8 @@ public abstract class Network(
   public fun run(
     messages: List<ChatMessage>,
     entrypoint: String? = null,
-  ): Flow<Event> {
-    return flow {
+  ): Flow<Event> =
+    flow {
       val execution = Execution(
         network = this@Network,
         collector = this,
@@ -24,5 +24,4 @@ public abstract class Network(
       )
       execution.execute()
     }
-  }
 }
