@@ -1,7 +1,8 @@
 package osiris.agentic
 
-public abstract class Instructions {
-  protected abstract val includeDefaultInstructions: Boolean
+public abstract class Instructions(
+  private val includeDefaultInstructions: Boolean,
+) {
   protected abstract val instructions: List<String>
 
   protected open fun combine(instructions: List<String>): String =
