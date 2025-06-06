@@ -9,16 +9,15 @@ import kotlinx.coroutines.flow.onEach
 import osiris.core.get
 import osiris.core.llm
 
-@Suppress("LongParameterList")
-public class Agent internal constructor(
-  public val name: String,
-  internal val description: String?,
-  private val model: ChatModel,
-  private val instructions: String?,
-  private val toolProviders: List<ToolProvider>,
-  private val responseType: KClass<*>?,
-  private val block: ChatRequest.Builder.() -> Unit,
-) {
+public abstract class Agent {
+  public abstract val name: String
+  internal open val description: String? = null
+  protected abstract val model: ChatModel
+  protected open val instructions: String? = null
+  protected open val toolProviders: List<ToolProvider> = emptyList()
+  protected open val responseType: KClass<*>? = null
+  protected open val llm: ChatRequest.Builder.() -> Unit = {}
+
   public suspend fun execute(execution: Execution) {
     val systemMessage = instructions?.let { SystemMessage(it) }
     val messages = buildList {
@@ -31,7 +30,7 @@ public class Agent internal constructor(
       messages = messages,
       tools = tools,
       responseType = responseType,
-      block = block,
+      block = llm,
     )
     flow.onEach { handleMessage(execution, it) }.get()
   }
@@ -44,6 +43,17 @@ public class Agent internal constructor(
     "Agent(name=$name)"
 }
 
+@Suppress("LongParameterList")
+internal class AgentImpl internal constructor(
+  override val name: String,
+  override val description: String?,
+  override val model: ChatModel,
+  override val instructions: String?,
+  override val toolProviders: List<ToolProvider>,
+  override val responseType: KClass<*>?,
+  override val llm: ChatRequest.Builder.() -> Unit,
+) : Agent()
+
 public class AgentBuilder internal constructor(
   private val name: String,
 ) {
@@ -54,19 +64,19 @@ public class AgentBuilder internal constructor(
   public var responseType: KClass<*>? = null
   private val blocks: MutableList<ChatRequest.Builder.() -> Unit> = mutableListOf()
 
-  public fun llm(llm: ChatRequest.Builder.() -> Unit) {
-    blocks += llm
+  public fun llm(block: ChatRequest.Builder.() -> Unit) {
+    blocks += block
   }
 
   internal fun build(): Agent =
-    Agent(
+    AgentImpl(
       name = name,
       description = description,
       model = requireNotNull(model) { "Agent $name must set a model." },
       instructions = instructions,
       toolProviders = tools,
       responseType = responseType,
-      block = { blocks.forEach { it() } },
+      llm = { blocks.forEach { it() } },
     )
 }
 
