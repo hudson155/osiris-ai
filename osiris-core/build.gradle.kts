@@ -11,6 +11,7 @@ dependencies {
   api(libs.kairoProtectedString)
   implementation(libs.kairoReflect)
   implementation(libs.kairoSerialization)
+  implementation(libs.kairoUtil)
   api(libs.langchain)
 
   testImplementation(project(":osiris-evaluator"))

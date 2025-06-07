@@ -11,5 +11,6 @@ kairoProtectedString = { module = "software.airborne.kairo:kairo-protected-strin
 kairoReflect = { module = "software.airborne.kairo:kairo-reflect", version.ref = "kairo" }
 kairoSerialization = { module = "software.airborne.kairo:kairo-serialization", version.ref = "kairo" }
 kairoTesting = { module = "software.airborne.kairo:kairo-testing", version.ref = "kairo" }
+kairoUtil = { module = "software.airborne.kairo:kairo-util", version.ref = "kairo" }
 langchain = { module = "dev.langchain4j:langchain4j", version.ref = "langchain" }
 langchainOpenAi = { module = "dev.langchain4j:langchain4j-open-ai", version.ref = "langchain" }
