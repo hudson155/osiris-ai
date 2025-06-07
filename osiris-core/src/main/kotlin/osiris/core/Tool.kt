@@ -29,4 +29,7 @@ public abstract class Tool<in Input : Any, out Output : Any>(
   }
 
   public abstract suspend fun execute(input: Input): Output
+
+  override fun toString(): String =
+    "Tool(name=$name)"
 }
