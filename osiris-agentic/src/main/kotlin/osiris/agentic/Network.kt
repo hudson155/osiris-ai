@@ -11,6 +11,8 @@ public abstract class Network(
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
+  public constructor(vararg agents: Agent) : this(agents.toList())
+
   public fun run(
     messages: List<ChatMessage>,
     entrypoint: String? = null,

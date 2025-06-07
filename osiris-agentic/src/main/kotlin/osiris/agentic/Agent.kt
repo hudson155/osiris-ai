@@ -9,10 +9,11 @@ import kotlinx.coroutines.flow.onEach
 import osiris.core.get
 import osiris.core.llm
 
-public abstract class Agent {
-  public abstract val name: String
+public abstract class Agent(
+  public val name: String,
+  protected val model: ChatModel,
+) {
   internal open val description: String? = null
-  protected abstract val model: ChatModel
   protected open val instructions: String? = null
   protected open val toolProviders: List<ToolProvider> = emptyList()
   protected open val responseType: KClass<*>? = null
