@@ -11,7 +11,7 @@ import osiris.core.llm
 
 public abstract class Agent(
   public val name: String,
-  public val model: ChatModel,
+  protected val model: ChatModel,
 ) {
   internal open val description: String? = null
   protected open val instructions: String? = null
