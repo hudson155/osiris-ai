@@ -1,0 +1,48 @@
+package osiris.agentic
+
+import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.request.ChatRequest
+import kotlin.reflect.KClass
+
+@Suppress("LongParameterList")
+internal class AgentImpl(
+  override val name: String,
+  override val description: String?,
+  override val model: ChatModel,
+  override val instructions: String?,
+  override val toolProviders: List<ToolProvider>,
+  override val responseType: KClass<*>?,
+  private val llmBlock: ChatRequest.Builder.() -> Unit,
+) : Agent() {
+  override fun ChatRequest.Builder.llm(): Unit =
+    llmBlock()
+}
+
+public class AgentBuilder internal constructor(
+  private val name: String,
+) {
+  public var description: String? = null
+  public var model: ChatModel? = null
+  public var instructions: String? = null
+  public val tools: MutableList<ToolProvider> = mutableListOf()
+  public var responseType: KClass<*>? = null
+  private val llmBlocks: MutableList<ChatRequest.Builder.() -> Unit> = mutableListOf()
+
+  public fun llm(block: ChatRequest.Builder.() -> Unit) {
+    llmBlocks += block
+  }
+
+  internal fun build(): Agent =
+    AgentImpl(
+      name = name,
+      description = description,
+      model = requireNotNull(model) { "Agent $name must set a model." },
+      instructions = instructions,
+      toolProviders = tools,
+      responseType = responseType,
+      llmBlock = { llmBlocks.forEach { it() } },
+    )
+}
+
+public fun agent(name: String, block: AgentBuilder.() -> Unit): Agent =
+  AgentBuilder(name).apply(block).build()

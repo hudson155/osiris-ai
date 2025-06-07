@@ -9,16 +9,16 @@ import kotlinx.coroutines.flow.onEach
 import osiris.core.get
 import osiris.core.llm
 
-@Suppress("LongParameterList")
-public class Agent internal constructor(
-  public val name: String,
-  internal val description: String?,
-  private val model: ChatModel,
-  private val instructions: String?,
-  private val toolProviders: List<ToolProvider>,
-  private val responseType: KClass<*>?,
-  private val block: ChatRequest.Builder.() -> Unit,
-) {
+public abstract class Agent {
+  public abstract val name: String
+  internal open val description: String? = null
+  protected abstract val model: ChatModel
+  protected open val instructions: String? = null
+  protected open val toolProviders: List<ToolProvider> = emptyList()
+  protected open val responseType: KClass<*>? = null
+
+  protected open fun ChatRequest.Builder.llm(): Unit = Unit
+
   public suspend fun execute(execution: Execution) {
     val systemMessage = instructions?.let { SystemMessage(it) }
     val messages = buildList {
@@ -31,7 +31,7 @@ public class Agent internal constructor(
       messages = messages,
       tools = tools,
       responseType = responseType,
-      block = block,
+      block = { llm() },
     )
     flow.onEach { handleMessage(execution, it) }.get()
   }
@@ -43,32 +43,3 @@ public class Agent internal constructor(
   override fun toString(): String =
     "Agent(name=$name)"
 }
-
-public class AgentBuilder internal constructor(
-  private val name: String,
-) {
-  public var description: String? = null
-  public var model: ChatModel? = null
-  public var instructions: String? = null
-  public val tools: MutableList<ToolProvider> = mutableListOf()
-  public var responseType: KClass<*>? = null
-  private val blocks: MutableList<ChatRequest.Builder.() -> Unit> = mutableListOf()
-
-  public fun llm(llm: ChatRequest.Builder.() -> Unit) {
-    blocks += llm
-  }
-
-  internal fun build(): Agent =
-    Agent(
-      name = name,
-      description = description,
-      model = requireNotNull(model) { "Agent $name must set a model." },
-      instructions = instructions,
-      toolProviders = tools,
-      responseType = responseType,
-      block = { blocks.forEach { it() } },
-    )
-}
-
-public fun agent(name: String, block: AgentBuilder.() -> Unit): Agent =
-  AgentBuilder(name).apply(block).build()
