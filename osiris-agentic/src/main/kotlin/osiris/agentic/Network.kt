@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.flow
 public abstract class Network(
   agents: List<Agent>,
 ) {
-  public constructor(vararg agents: Agent) : this(agents.toList())
-
   protected open val entrypoint: String? = null
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
+
+  public constructor(vararg agents: Agent) : this(agents.toList())
 
   public fun run(
     messages: List<ChatMessage>,
