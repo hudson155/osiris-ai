@@ -13,17 +13,14 @@ public abstract class ToolExecutor {
     override suspend fun execute(
       tools: List<Tool<*, *>>,
       executionRequests: List<ToolExecutionRequest>,
-    ): List<ToolExecutionResultMessage> {
-      @Suppress("NoNameShadowing")
-      val tools = tools.associateBy { it.name }
-      return executionRequests.map { executionRequest ->
+    ): List<ToolExecutionResultMessage> =
+      executionRequests.map { executionRequest ->
         val id = executionRequest.id()
         val toolName = executionRequest.name()
         val input = executionRequest.arguments()
-        val tool = requireNotNull(tools[toolName]) { "No tool with name: $toolName." }
+        val tool = requireNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
         val output = tool.execute(input)
         return@map ToolExecutionResultMessage(id, toolName, output)
       }
-    }
   }
 }
