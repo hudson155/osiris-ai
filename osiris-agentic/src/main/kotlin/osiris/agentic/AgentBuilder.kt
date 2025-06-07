@@ -6,14 +6,14 @@ import kotlin.reflect.KClass
 
 @Suppress("LongParameterList")
 internal class AgentImpl(
-  override val name: String,
+  name: String,
   override val description: String?,
-  override val model: ChatModel,
+  model: ChatModel,
   override val instructions: String?,
   override val toolProviders: List<ToolProvider>,
   override val responseType: KClass<*>?,
   private val llmBlock: ChatRequest.Builder.() -> Unit,
-) : Agent() {
+) : Agent(name, model) {
   override fun ChatRequest.Builder.llm(): Unit =
     llmBlock()
 }
