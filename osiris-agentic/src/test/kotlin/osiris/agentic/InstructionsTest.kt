@@ -38,7 +38,7 @@ internal class InstructionsTest {
   fun `default instructions`(): Unit = runTest {
     val instructionsBuilder: InstructionsBuilder =
       instructionsBuilder(includeDefaultInstructions = true)
-    instructionsBuilder.create {"The real instructions." }.get().shouldBe(
+    instructionsBuilder.create { "The real instructions." }.get().shouldBe(
       """
         # The system
 
