@@ -14,14 +14,14 @@ public abstract class Agent(
   protected val model: ChatModel,
 ) {
   internal open val description: String? = null
-  protected open val instructions: String? = null
+  protected open val instructions: Instructions? = null
   protected open val toolProviders: List<ToolProvider> = emptyList()
   protected open val responseType: KClass<*>? = null
 
   protected open fun ChatRequest.Builder.llm(): Unit = Unit
 
   public suspend fun execute(execution: Execution) {
-    val systemMessage = instructions?.let { SystemMessage(it) }
+    val systemMessage = instructions?.let { SystemMessage(it.get()) }
     val messages = buildList {
       addAll(execution.messages)
       if (systemMessage != null) add(systemMessage)

@@ -7,6 +7,6 @@ internal val personCreator: Agent =
     model = testModelFactory.openAi("gpt-4.1-nano") {
       temperature(0.20)
     }
-    instructions = "Provide a JSON representation of the person matching this description."
+    instructions = Instructions { "Provide a JSON representation of the person matching this description." }
     responseType = Person::class
   }
