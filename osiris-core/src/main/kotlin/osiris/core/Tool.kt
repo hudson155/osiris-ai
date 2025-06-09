@@ -15,7 +15,7 @@ public abstract class Tool<in Input : Any, out Output : Any>(
   public open val description: String? = null
 
   public val toolSpecification: ToolSpecification by lazy {
-    return@lazy ToolSpecification.builder().apply {
+    ToolSpecification.builder().apply {
       name(name)
       if (description != null) description(description)
       parameters(llmSchema(inputType.kotlinClass))
