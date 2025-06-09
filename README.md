@@ -142,7 +142,7 @@ object TrackOrderTool : Tool<TrackOrderTool.Input, String>("track_order") {
     TODO("Your implementation.")
 }
 
-val instructionBuilder: InstructionsBuilder =
+val instructionsBuilder: InstructionsBuilder =
   instructionsBuilder(includeDefaultInstructions = true) {
     add(
       """
