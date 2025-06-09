@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test
 internal class InstructionsTest {
   @Test
   fun empty(): Unit = runTest {
-    val instructions: Instructions =
-      instructions(includeDefaultInstructions = false) {}
-    instructions.create("The real instructions.").shouldBe(
+    val instructionsBuilder: InstructionsBuilder =
+      instructionsBuilder(includeDefaultInstructions = false) {}
+    instructionsBuilder.create { "The real instructions." }.get().shouldBe(
       """
         The real instructions.
       """.trimIndent(),
@@ -18,12 +18,12 @@ internal class InstructionsTest {
 
   @Test
   fun typical(): Unit = runTest {
-    val instructions: Instructions =
-      instructions(includeDefaultInstructions = false) {
-        add("First")
-        add("Second")
+    val instructionsBuilder: InstructionsBuilder =
+      instructionsBuilder(includeDefaultInstructions = false) {
+        add { "First" }
+        add { "Second" }
       }
-    instructions.create("Third").shouldBe(
+    instructionsBuilder.create { "Third" }.get().shouldBe(
       """
         First
 
@@ -36,9 +36,9 @@ internal class InstructionsTest {
 
   @Test
   fun `default instructions`(): Unit = runTest {
-    val instructions: Instructions =
-      instructions(includeDefaultInstructions = true)
-    instructions.create("The real instructions.").shouldBe(
+    val instructionsBuilder: InstructionsBuilder =
+      instructionsBuilder(includeDefaultInstructions = true)
+    instructionsBuilder.create {"The real instructions." }.get().shouldBe(
       """
         # The system
 

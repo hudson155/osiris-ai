@@ -9,7 +9,7 @@ internal class AgentImpl(
   name: String,
   override val description: String?,
   model: ChatModel,
-  override val instructions: String?,
+  override val instructions: Instructions?,
   override val toolProviders: List<ToolProvider>,
   override val responseType: KClass<*>?,
   private val llmBlock: ChatRequest.Builder.() -> Unit,
@@ -23,7 +23,7 @@ public class AgentBuilder internal constructor(
 ) {
   public var description: String? = null
   public var model: ChatModel? = null
-  public var instructions: String? = null
+  public var instructions: Instructions? = null
   public val tools: MutableList<ToolProvider> = mutableListOf()
   public var responseType: KClass<*>? = null
   private val llmBlocks: MutableList<ChatRequest.Builder.() -> Unit> = mutableListOf()

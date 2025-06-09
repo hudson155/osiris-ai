@@ -1,35 +1,32 @@
 package osiris.agentic
 
-internal class InstructionsImpl(
-  includeDefaultInstructions: Boolean,
-  override val instructions: List<String>,
-  private val combineBlock: ((instructions: List<String>) -> String)?,
-) : Instructions(
-  includeDefaultInstructions = includeDefaultInstructions,
-) {
-  override fun combine(instructions: List<String>): String {
-    combineBlock ?: return super.combine(instructions)
-    return combineBlock(instructions)
-  }
-}
-
-public class InstructionsBuilder internal constructor(
+public abstract class InstructionsBuilder(
   private val includeDefaultInstructions: Boolean,
-) : MutableList<String> by mutableListOf() {
-  public var combine: ((instructions: List<String>) -> String)? = null
+) {
+  protected abstract val instructions: List<Instructions>
 
-  internal fun build(): Instructions =
-    InstructionsImpl(
-      includeDefaultInstructions = includeDefaultInstructions,
-      instructions = this,
-      combineBlock = combine,
-    )
+  protected open fun combine(instructions: List<String>): String =
+    instructions.joinToString(separator = "\n\n")
+
+  public fun create(instructions: Instructions): Instructions =
+    Instructions {
+      combine(
+        buildList {
+          if (includeDefaultInstructions) {
+            add(
+              """
+                # The system
+  
+                You're a part of a multi-agent system.
+                You can consult other agents.
+                When consulting other agents, succinctly tell them what to do or what you need.
+                Don't tell them how to do their job.
+              """.trimIndent(),
+            )
+          }
+          this@InstructionsBuilder.instructions.forEach { add(it.get()) }
+          add(instructions.get())
+        },
+      )
+    }
 }
-
-public fun instructions(
-  includeDefaultInstructions: Boolean,
-  block: InstructionsBuilder.() -> Unit = {},
-): Instructions =
-  InstructionsBuilder(
-    includeDefaultInstructions = includeDefaultInstructions,
-  ).apply(block).build()
