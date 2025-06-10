@@ -166,7 +166,7 @@ val chatbot: Agent =
         Your task is to use tools to comprehensively answer the user's question.
       """.trimIndent(),
     )
-    tools += consult("order_tracker")
+    tools += Consult("order_tracker")
   }
 
 val orderTracker: Agent =
@@ -183,7 +183,7 @@ val orderTracker: Agent =
         Your role is to track orders.
       """.trimIndent(),
     )
-    tools += tool(TrackOrderTool)
+    tools += TrackOrderTool
   }
 
 val network: Network =
