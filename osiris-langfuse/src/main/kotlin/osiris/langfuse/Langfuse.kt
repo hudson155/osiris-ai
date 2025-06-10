@@ -4,6 +4,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.basicAuth
 import io.ktor.http.ContentType
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import kairo.protectedString.ProtectedString
 import kairo.rest.client.KairoClient
 import kairo.rest.client.createKairoClient
@@ -11,12 +13,13 @@ import kairo.rest.serialization.JacksonConverter
 import kairo.serialization.jsonMapper
 import kairo.serialization.property.allowUnknownProperties
 
-@Suppress("UseDataClass")
 public class Langfuse(
   private val url: String,
   public val publicKey: String,
-  public val privateKey: ProtectedString,
+  public val secretKey: ProtectedString,
 ) {
+  public val properties: ConcurrentMap<String, Any> = ConcurrentHashMap()
+
   public val client: KairoClient =
     createKairoClient {
       install(ContentNegotiation) {
@@ -32,7 +35,7 @@ public class Langfuse(
       defaultRequest {
         url(this@Langfuse.url)
         @OptIn(ProtectedString.Access::class)
-        basicAuth(publicKey, privateKey.value)
+        basicAuth(publicKey, secretKey.value)
       }
     }
 }
