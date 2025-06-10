@@ -25,7 +25,7 @@ public abstract class Network(
   ): Flow<Event> {
     val listeners = listeners.map { it.create() }
     return channelFlow {
-      val context = ExecutionContext(this@Network)
+      val context = ExecutionContext(this@Network, this)
       withContext(context) {
         val agentName = requireNotNull(entrypoint ?: this@Network.entrypoint) { "Network must set an entrypoint." }
         val agent = context.getAgent(agentName)
