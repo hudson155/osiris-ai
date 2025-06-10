@@ -3,6 +3,7 @@ package osiris.langfuseTracing
 import java.time.Instant
 import kotlin.uuid.Uuid
 import osiris.event.AgentEvent
+import osiris.event.ChatEvent
 import osiris.event.Event
 import osiris.event.ExecutionEvent
 
@@ -32,7 +33,7 @@ internal class BatchBuilder(
 
   private fun traceCreate(): TraceCreate =
     TraceCreate(
-      id = Uuid.Companion.random(),
+      id = Uuid.random(),
       timestamp = now,
       body = TraceCreate.Body(
         id = traceId,
@@ -43,18 +44,18 @@ internal class BatchBuilder(
   @Suppress("LongMethod")
   private fun events(): List<IngestionEvent<*>> {
     val stack = mutableListOf<Pair<Uuid, Event>>()
-    return buildList<IngestionEvent<*>> {
+    return buildList {
       events.forEach { event ->
         when (event) {
           is ExecutionEvent.Start -> {
-            stack += Pair(Uuid.Companion.random(), event)
+            stack += Pair(Uuid.random(), event)
           }
           is ExecutionEvent.End -> {
             val (id, start) = stack.removeLast()
             start as ExecutionEvent.Start
             add(
               SpanCreate(
-                id = Uuid.Companion.random(),
+                id = Uuid.random(),
                 timestamp = now,
                 body = SpanCreate.Body(
                   id = id,
@@ -68,14 +69,14 @@ internal class BatchBuilder(
             )
           }
           is AgentEvent.Start -> {
-            stack += Pair(Uuid.Companion.random(), event)
+            stack += Pair(Uuid.random(), event)
           }
           is AgentEvent.End -> {
             val (id, start) = stack.removeLast()
             start as AgentEvent.Start
             add(
               SpanCreate(
-                id = Uuid.Companion.random(),
+                id = Uuid.random(),
                 timestamp = now,
                 body = SpanCreate.Body(
                   id = id,
@@ -84,6 +85,27 @@ internal class BatchBuilder(
                   startTime = start.at,
                   endTime = end.at,
                   name = start.agent.name,
+                ),
+              ),
+            )
+          }
+          is ChatEvent.Start -> {
+            stack += Pair(Uuid.random(), event)
+          }
+          is ChatEvent.End -> {
+            val (id, start) = stack.removeLast()
+            start as ChatEvent.Start
+            add(
+              GenerationCreate(
+                id = Uuid.random(),
+                timestamp = now,
+                body = GenerationCreate.Body(
+                  id = id,
+                  traceId = traceId,
+                  parentObservationId = stack.lastOrNull()?.first,
+                  startTime = start.at,
+                  endTime = end.at,
+                  model = start.request.modelName(),
                 ),
               ),
             )

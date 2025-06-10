@@ -8,6 +8,7 @@ import osiris.langfuseTracing.IngestionEvent.Body
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
+  JsonSubTypes.Type(GenerationCreate::class, "generation-create"),
   JsonSubTypes.Type(SpanCreate::class, "span-create"),
   JsonSubTypes.Type(TraceCreate::class, "trace-create"),
 )
