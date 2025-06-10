@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import osiris.event.ChatMessageEvent
 import osiris.event.Event
+import osiris.event.MessageEvent
 
 public suspend fun Flow<Event>.get(): AiMessage =
   this
-    .filterIsInstance<ChatMessageEvent>()
+    .filterIsInstance<MessageEvent>()
     .map { it.message }
     .filterIsInstance<AiMessage>()
     .first { !it.hasToolExecutionRequests() }
