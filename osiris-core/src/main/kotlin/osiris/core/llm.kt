@@ -47,7 +47,6 @@ public fun llm(
         val executionResponses = toolExecutor.execute(tools, this, executionRequests)
         logger.debug { "Executed tools: $executionResponses." }
         executionResponses.forEach { send(ChatMessageEvent(it)) }
-        yield()
         messages += executionResponses
       } else {
         logger.debug { "Chat request: $chatRequest." }
@@ -55,9 +54,9 @@ public fun llm(
         logger.debug { "Chat response: $chatResponse." }
         val aiMessage = chatResponse.aiMessage()
         send(ChatMessageEvent(aiMessage))
-        yield()
         messages += aiMessage
       }
+      yield()
     }
   }
 }
