@@ -1,7 +1,7 @@
 package osiris.agentic
 
 internal class NetworkImpl(
-  override val entrypoint: String?,
+  override val entrypoint: String,
   agents: List<Agent>,
   override val listeners: List<Listener>,
 ) : Network(agents)
@@ -13,7 +13,7 @@ public class NetworkBuilder internal constructor() {
 
   internal fun build(): Network =
     NetworkImpl(
-      entrypoint = entrypoint,
+      entrypoint = requireNotNull(entrypoint) { "Network must set an entrypoint." },
       agents = agents,
       listeners = listeners,
     )
