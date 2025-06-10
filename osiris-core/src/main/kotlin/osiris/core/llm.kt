@@ -43,7 +43,7 @@ public fun llm(
       if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
         val executionRequests = lastMessage.toolExecutionRequests()
         logger.debug { "Executing tools: $executionRequests." }
-        val executionResponses = toolExecutor.execute(tools, executionRequests)
+        val executionResponses = toolExecutor.execute(tools, this, executionRequests)
         logger.debug { "Executed tools: $executionResponses." }
         executionResponses.forEach { emit(ChatMessageEvent(it)) }
         messages += executionResponses
