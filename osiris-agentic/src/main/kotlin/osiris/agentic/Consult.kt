@@ -20,8 +20,9 @@ public class Consult(
 
   private val agent: LazySupplier<Agent> =
     LazySupplier {
-      val context = getExecutionContext()
-      return@LazySupplier context.getAgent(agentName)
+      with(getExecutionContext()) {
+        getAgent(agentName)
+      }
     }
 
   override val description: LazySupplier<String?> =
