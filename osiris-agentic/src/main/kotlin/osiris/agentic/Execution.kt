@@ -2,7 +2,6 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.ChatMessage
 import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.flow.FlowCollector
 
 @Suppress("LongParameterList")
 public class Execution internal constructor(
