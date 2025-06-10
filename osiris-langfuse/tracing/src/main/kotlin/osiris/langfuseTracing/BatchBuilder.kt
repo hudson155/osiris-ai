@@ -108,7 +108,8 @@ internal class BatchBuilder(
                   endTime = event.at,
                   name = "Chat: ${event.response.modelName()}",
                   model = event.response.modelName(),
-                  input = LangfuseMessage.extract(start, event),
+                  input = LangfuseMessage.extract(start.request.messages()),
+                  output = LangfuseMessage.extract(listOf(event.response.aiMessage())),
                 ),
               ),
             )

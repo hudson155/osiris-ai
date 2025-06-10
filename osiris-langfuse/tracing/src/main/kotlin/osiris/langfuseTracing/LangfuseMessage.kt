@@ -3,10 +3,10 @@ package osiris.langfuseTracing
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import dev.langchain4j.data.message.AiMessage
+import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.data.message.UserMessage
-import osiris.event.ChatEvent
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "role")
 @JsonSubTypes(
@@ -55,9 +55,8 @@ internal sealed class LangfuseMessage {
 
   internal companion object {
     @Suppress("LongMethod")
-    fun extract(start: ChatEvent.Start, end: ChatEvent.End): List<LangfuseMessage> {
-      val messages = start.request.messages() + end.response.aiMessage()
-      return messages.mapNotNull { message ->
+    fun extract(messages: List<ChatMessage>): List<LangfuseMessage> =
+      messages.mapNotNull { message ->
         when (message) {
           is AiMessage -> run {
             val content = message.text()
@@ -99,6 +98,5 @@ internal sealed class LangfuseMessage {
           else -> null
         }
       }
-    }
   }
 }
