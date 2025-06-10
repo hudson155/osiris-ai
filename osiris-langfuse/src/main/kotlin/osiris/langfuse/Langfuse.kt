@@ -15,7 +15,7 @@ import kairo.serialization.property.allowUnknownProperties
 public class Langfuse(
   private val url: String,
   public val publicKey: String,
-  public val privateKey: ProtectedString,
+  public val secretKey: ProtectedString,
 ) {
   public val client: KairoClient =
     createKairoClient {
@@ -32,7 +32,7 @@ public class Langfuse(
       defaultRequest {
         url(this@Langfuse.url)
         @OptIn(ProtectedString.Access::class)
-        basicAuth(publicKey, privateKey.value)
+        basicAuth(publicKey, secretKey.value)
       }
     }
 }

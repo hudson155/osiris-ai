@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
 import osiris.event.Event
+import osiris.event.ExecutionEvent
 
 public abstract class Network(
   agents: List<Agent>,
@@ -24,7 +25,9 @@ public abstract class Network(
       withContext(context) {
         val agentName = requireNotNull(entrypoint ?: this@Network.entrypoint) { "Network must set an entrypoint." }
         val agent = context.getAgent(agentName)
+        send(ExecutionEvent.Start(agentName))
         agent.execute(messages).collect(::send)
+        send(ExecutionEvent.End(agentName))
       }
     }
 }
