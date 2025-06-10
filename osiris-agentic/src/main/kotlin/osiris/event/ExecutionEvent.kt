@@ -5,7 +5,7 @@ import osiris.agentic.Network
 
 public sealed class ExecutionEvent : Event() {
   public data class Start(
-    val at: Instant,
+    override val at: Instant,
     val network: Network,
     val input: String?,
   ) : ExecutionEvent() {
@@ -21,7 +21,7 @@ public sealed class ExecutionEvent : Event() {
   }
 
   public data class End(
-    val at: Instant,
+    override val at: Instant,
     val output: String?,
   ) : ExecutionEvent() {
     @Suppress("ForbiddenMethodCall")

@@ -19,9 +19,9 @@ public abstract class ToolExecutor {
       val toolName = executionRequest.name()
       val input = executionRequest.arguments()
       val tool = requireNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
-      send(ToolEvent.Start(tool = tool, id = id, input = input))
+      send(ToolEvent.Start(tool, id, input))
       val output = tool.execute(input)
-      send(ToolEvent.End(tool = tool, id = id, input = input, output = output))
+      send(ToolEvent.End(output))
       return ToolExecutionResultMessage(id, toolName, output)
     }
   }

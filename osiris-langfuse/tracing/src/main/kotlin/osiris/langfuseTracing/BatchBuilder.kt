@@ -6,6 +6,7 @@ import osiris.event.AgentEvent
 import osiris.event.ChatEvent
 import osiris.event.Event
 import osiris.event.ExecutionEvent
+import osiris.event.ToolEvent
 
 internal class BatchBuilder(
   private val traceId: Uuid,
@@ -94,6 +95,29 @@ internal class BatchBuilder(
                   model = event.response.modelName(),
                   input = LangfuseMessage.extract(start.request.messages()),
                   output = LangfuseMessage.extract(listOf(event.response.aiMessage())),
+                ),
+              ),
+            )
+          }
+          is ToolEvent.Start -> {
+            stack += Pair(Uuid.random(), event)
+          }
+          is ToolEvent.End -> {
+            val (id, start) = stack.removeLast()
+            start as ToolEvent.Start
+            add(
+              SpanCreate(
+                id = Uuid.random(),
+                timestamp = now,
+                body = SpanCreate.Body(
+                  id = id,
+                  traceId = traceId,
+                  parentObservationId = stack.lastOrNull()?.first,
+                  startTime = start.at,
+                  endTime = event.at,
+                  name = "Tool: ${start.tool.name}",
+                  input = start.input,
+                  output = event.output,
                 ),
               ),
             )

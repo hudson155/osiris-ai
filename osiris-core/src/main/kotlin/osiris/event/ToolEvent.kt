@@ -1,22 +1,36 @@
 package osiris.event
 
+import java.time.Instant
 import osiris.core.Tool
 
 public sealed class ToolEvent : Event() {
-  public abstract val tool: Tool<*, *>
-  public abstract val id: String
-  public abstract val input: String
-
   public data class Start(
-    override val tool: Tool<*, *>,
-    override val id: String,
-    override val input: String,
-  ) : ToolEvent()
+    override val at: Instant,
+    val tool: Tool<*, *>,
+    val id: String,
+    val input: String,
+  ) : ToolEvent() {
+    @Suppress("ForbiddenMethodCall")
+    public constructor(
+      tool: Tool<*, *>,
+      id: String,
+      input: String,
+    ) : this(
+      at = Instant.now(),
+      tool = tool,
+      id = id,
+      input = input,
+    )
+  }
 
   public data class End(
-    override val tool: Tool<*, *>,
-    override val id: String,
-    override val input: String,
+    override val at: Instant,
     val output: String,
-  ) : ToolEvent()
+  ) : ToolEvent() {
+    @Suppress("ForbiddenMethodCall")
+    public constructor(output: String) : this(
+      at = Instant.now(),
+      output = output,
+    )
+  }
 }
