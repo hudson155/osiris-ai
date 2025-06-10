@@ -13,7 +13,7 @@ import osiris.openAi.openAi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class EcommerceChatbotTest {
   private val network: Network =
-    network {
+    network("network") {
       entrypoint = ecommerceChatbot.name
       agents += ecommerceChatbot
       agents += ecommerceOrderTracker

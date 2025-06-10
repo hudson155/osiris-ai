@@ -187,7 +187,7 @@ val orderTracker: Agent =
   }
 
 val network: Network =
-  network {
+  network("network") {
     entrypoint = chatbot.name
     agents += chatbot
     agents += orderTracker

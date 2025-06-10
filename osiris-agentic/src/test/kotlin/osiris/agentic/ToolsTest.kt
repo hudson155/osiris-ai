@@ -13,7 +13,7 @@ import osiris.openAi.openAi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ToolsTest {
   private val network: Network =
-    network {
+    network("network") {
       entrypoint = weatherAgent.name
       agents += weatherAgent
     }

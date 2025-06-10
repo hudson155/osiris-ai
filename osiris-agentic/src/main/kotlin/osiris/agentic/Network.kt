@@ -11,6 +11,7 @@ import osiris.event.Event
 import osiris.event.ExecutionEvent
 
 public abstract class Network(
+  public val name: String,
   agents: List<Agent>,
 ) {
   protected abstract val entrypoint: String
