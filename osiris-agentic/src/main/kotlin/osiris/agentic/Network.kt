@@ -15,15 +15,16 @@ public abstract class Network(
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
-  protected open val listeners: List<(event: Event) -> Unit> = emptyList()
+  protected open val listeners: List<Listener> = emptyList()
 
   public constructor(vararg agents: Agent) : this(agents.toList())
 
   public fun run(
     messages: List<ChatMessage>,
     entrypoint: String? = null,
-  ): Flow<Event> =
-    channelFlow {
+  ): Flow<Event> {
+    val listeners = listeners.map { it.create() }
+    return channelFlow {
       val context = ExecutionContext(this@Network)
       withContext(context) {
         val agentName = requireNotNull(entrypoint ?: this@Network.entrypoint) { "Network must set an entrypoint." }
@@ -35,4 +36,5 @@ public abstract class Network(
     }.onEach { event ->
       listeners.forEach { it(event) }
     }
+  }
 }
