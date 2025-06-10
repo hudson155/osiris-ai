@@ -19,8 +19,6 @@ public abstract class Network(
 
   protected open val listeners: List<Listener> = emptyList()
 
-  public constructor(vararg agents: Agent) : this(agents.toList())
-
   public fun run(
     messages: List<ChatMessage>,
     entrypoint: String? = null,
