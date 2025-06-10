@@ -35,4 +35,7 @@ public abstract class Network(
       listeners.forEach { it(event) }
     }
   }
+
+  override fun toString(): String =
+    "Network(name=$name)"
 }
