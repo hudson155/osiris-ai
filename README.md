@@ -16,7 +16,7 @@ val modelFactory: ModelFactory =
 val messages = listOf(UserMessage("What's 2+2?"))
 val (response) = llm(modelFactory.openAi("gpt-4.1-nano"), messages)
 
-response.response<String>()
+response.convert<String>()
 // 2 + 2 equals 4.
 ```
 
@@ -30,7 +30,7 @@ response.response<String>()
 val messages = listOf(UserMessage("What's 2+2?"))
 val (response) = llm(modelFactory.openAi("gpt-4.1-nano"), messages)
 
-response.response<String>()
+response.convert<String>()
 // 2 + 2 equals 4.
 ```
 
@@ -65,7 +65,7 @@ val (response) = llm(
   tools = listOf(WeatherTool),
 )
 
-response.response<String>()
+response.convert<String>()
 // The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
 ```
 
@@ -92,7 +92,7 @@ val (response) = llm(
   responseType = Person::class,
 )
 
-response.response<Person>()
+response.convert<Person>()
 // Person(name=Jeff Hudson, age=29)
 ```
 
