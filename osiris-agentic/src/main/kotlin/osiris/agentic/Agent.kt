@@ -14,6 +14,7 @@ import osiris.core.llm
 import osiris.core.response
 import osiris.event.AgentEvent
 import osiris.event.Event
+import osiris.event.deriveText
 
 public abstract class Agent(
   public val name: String,
@@ -30,14 +31,14 @@ public abstract class Agent(
   public suspend fun execute(messages: List<ChatMessage>): Flow<Event> =
     with(getExecutionContext()) {
       flow {
-        emit(AgentEvent.Start(this@Agent))
-        llm(
+        emit(AgentEvent.Start(this@Agent, deriveText(messages)))
+        val response = llm(
           messages = buildList {
             addAll(messages)
             instructions?.let { add(SystemMessage(it.get())) }
           },
         ).onEach(::emit).response().first()
-        emit(AgentEvent.End())
+        emit(AgentEvent.End(deriveText(response)))
       }
     }
 
