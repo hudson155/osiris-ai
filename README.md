@@ -42,20 +42,20 @@ response.response<String>()
 
 ```kotlin
 object WeatherTool : Tool<WeatherTool.Input, WeatherTool.Output>("weather") {
-   data class Input(
-      @LlmSchema.Description("The city to get the weather for.")
-      val location: String,
-   )
+  data class Input(
+    @LlmSchema.Description("The city to get the weather for.")
+    val location: String,
+  )
 
-   data class Output(
-      val temperature: String,
-      val conditions: String,
-   )
+  data class Output(
+    val temperature: String,
+    val conditions: String,
+  )
 
-   override val description: String = "Gets the weather."
+  override val description: String = "Gets the weather."
 
-   override suspend fun execute(input: Input): Output =
-      TODO("Your implementation.")
+  override suspend fun execute(input: Input): Output =
+    TODO("Your implementation.")
 }
 
 val messages = listOf(UserMessage("What's the weather in Calgary?"))
@@ -108,7 +108,7 @@ val messages = listOf(
 )
 val (response) = llm(
   model = modelFactory.openAi("gpt-4.1-nano"),
-   messages = messages,
+  messages = messages,
   tools = listOf(WeatherTool),
 )
 
@@ -140,7 +140,7 @@ val instructionsBuilder: InstructionsBuilder =
     add(
       """
         # Ecommerce store
-   
+
         The user is a customer at an ecommerce store.
       """.trimIndent(),
     )
@@ -204,9 +204,9 @@ plugins {
 }
 
 repositories {
-   maven {
-      url = uri("artifactregistry://us-central1-maven.pkg.dev/airborne-software/maven")
-   }
+  maven {
+    url = uri("artifactregistry://us-central1-maven.pkg.dev/airborne-software/maven")
+  }
 }
 
 dependencies {
