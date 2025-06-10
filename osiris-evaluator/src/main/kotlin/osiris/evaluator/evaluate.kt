@@ -5,11 +5,8 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.nulls.shouldNotBeNull
-import kotlinx.coroutines.flow.first
 import osiris.core.convert
 import osiris.core.llm
-import osiris.core.response
 
 public suspend fun evaluate(
   model: ChatModel,
@@ -23,12 +20,12 @@ public suspend fun evaluate(
       $criteria
     """.trimIndent(),
   )
-  val response = llm(
+  val (response) = llm(
     model = model,
     messages = messages + systemMessage,
     responseType = Eval::class,
   )
-  val eval = response.response().first().convert<Eval>().shouldNotBeNull()
+  val eval = response.convert<Eval>()
   withClue(eval.failureReason) {
     eval.matchesCriteria.shouldBeTrue()
   }
