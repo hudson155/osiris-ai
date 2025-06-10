@@ -1,23 +1,24 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.ChatMessage
+import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.FlowCollector
 
 @Suppress("LongParameterList")
 public class Execution internal constructor(
   internal val network: Network,
-  collector: FlowCollector<Event>,
+  producer: ProducerScope<Event>,
   messages: List<ChatMessage>,
   private val entrypoint: String,
-) : FlowCollector<Event> by collector {
+) : ProducerScope<Event> by producer {
   public val messages: MutableList<ChatMessage> = messages.toMutableList()
 
   internal suspend fun execute() {
-    emit(Event.Start(this@Execution))
+    send(Event.Start(this@Execution))
     val agent = requireNotNull(network.agents[entrypoint]) { "No agent with name $entrypoint." }
-    emit(Event.AgentStart(agent))
+    send(Event.AgentStart(agent))
     agent.execute(this@Execution)
-    emit(Event.AgentEnd(agent))
-    emit(Event.End(this@Execution))
+    send(Event.AgentEnd(agent))
+    send(Event.End(this@Execution))
   }
 }
