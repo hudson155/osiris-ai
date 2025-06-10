@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import osiris.core.Tool
-import osiris.core.aiResponses
+import osiris.core.response
 import osiris.core.llm
 import osiris.event.AgentEvent
 import osiris.event.Event
@@ -40,7 +40,7 @@ public abstract class Agent(
           tools = tools,
           responseType = responseType,
           block = { llm() },
-        ).onEach(::emit).aiResponses().first()
+        ).onEach(::emit).response().first()
         emit(AgentEvent.End(this@Agent))
       }
     }

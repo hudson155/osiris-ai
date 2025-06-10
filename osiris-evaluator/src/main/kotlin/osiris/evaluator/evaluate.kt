@@ -7,7 +7,7 @@ import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import kotlinx.coroutines.flow.first
-import osiris.core.aiResponses
+import osiris.core.response
 import osiris.core.convert
 import osiris.core.llm
 
@@ -28,7 +28,7 @@ public suspend fun evaluate(
     messages = messages + systemMessage,
     responseType = Eval::class,
   )
-  val eval = response.aiResponses().first().convert<Eval>().shouldNotBeNull()
+  val eval = response.response().first().convert<Eval>().shouldNotBeNull()
   withClue(eval.failureReason) {
     eval.matchesCriteria.shouldBeTrue()
   }

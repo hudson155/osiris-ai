@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import osiris.event.Event
 import osiris.event.MessageEvent
 
-public fun Flow<Event>.aiResponses(): Flow<AiMessage> =
+public fun Flow<Event>.response(): Flow<AiMessage> =
   this
     .filterIsInstance<MessageEvent>()
     .map { it.message }

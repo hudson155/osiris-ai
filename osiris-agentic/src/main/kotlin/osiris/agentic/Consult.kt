@@ -5,7 +5,7 @@ import kairo.lazySupplier.LazySupplier
 import kotlinx.coroutines.flow.first
 import osiris.agentic.Consult.Input
 import osiris.core.Tool
-import osiris.core.aiResponses
+import osiris.core.response
 import osiris.schema.LlmSchema
 
 public class Consult(
@@ -35,7 +35,7 @@ public class Consult(
     val agent = agent.get()
     val response = agent.execute(
       messages = listOf(AiMessage(input.message)),
-    ).aiResponses().first()
+    ).response().first()
     return response.text()
   }
 }

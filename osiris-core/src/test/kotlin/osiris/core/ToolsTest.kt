@@ -18,7 +18,7 @@ internal class ToolsTest {
       model = testModelFactory.openAi("gpt-4.1-nano"),
       tools = listOf(WeatherTool),
       messages = messages,
-    ).aiResponses().first()
+    ).response().first()
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
       messages = messages + response,

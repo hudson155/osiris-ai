@@ -18,6 +18,6 @@ internal class MathTest {
         SystemMessage("Do the math. Return only the answer (nothing else)."),
       ),
     )
-    response.aiResponses().first().convert<String>().shouldBe("4")
+    response.response().first().convert<String>().shouldBe("4")
   }
 }
