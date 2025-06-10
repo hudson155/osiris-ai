@@ -7,8 +7,8 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.onEach
 import osiris.core.get
 import osiris.core.llm
-import osiris.event.MessageEvent
 import osiris.event.Event
+import osiris.event.MessageEvent
 
 public abstract class Agent(
   public val name: String,
