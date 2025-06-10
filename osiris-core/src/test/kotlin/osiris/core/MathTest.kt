@@ -31,7 +31,7 @@ internal class MathTest {
   }
 
   private fun verifyResponse(response: List<ChatMessage>) {
-    response.response<String>().shouldBe("4")
+    response.convert<String>().shouldBe("4")
   }
 
   private fun verifyTrace(trace: List<Span<*>>) {

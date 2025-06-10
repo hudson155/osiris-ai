@@ -31,7 +31,7 @@ internal class StructuredOutputTest {
   }
 
   private fun verifyResponse(response: List<ChatMessage>) {
-    response.response<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
+    response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 
   private fun verifyTrace(trace: List<Span<*>>) {
