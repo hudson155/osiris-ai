@@ -1,3 +1,7 @@
 package osiris.event
 
-public abstract class Event
+import java.time.Instant
+
+public abstract class Event {
+  public abstract val at: Instant
+}

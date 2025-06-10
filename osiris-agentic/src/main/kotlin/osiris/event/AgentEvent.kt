@@ -5,7 +5,7 @@ import osiris.agentic.Agent
 
 public sealed class AgentEvent : Event() {
   public data class Start(
-    val at: Instant,
+    override val at: Instant,
     val agent: Agent,
     val input: String?,
   ) : AgentEvent() {
@@ -21,7 +21,7 @@ public sealed class AgentEvent : Event() {
   }
 
   public data class End(
-    val at: Instant,
+    override val at: Instant,
     val output: String?,
   ) : AgentEvent() {
     @Suppress("ForbiddenMethodCall")

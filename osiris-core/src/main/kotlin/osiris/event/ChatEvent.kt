@@ -6,7 +6,7 @@ import java.time.Instant
 
 public sealed class ChatEvent : Event() {
   public data class Start(
-    val at: Instant,
+    override val at: Instant,
     val request: ChatRequest,
   ) : ChatEvent() {
     @Suppress("ForbiddenMethodCall")
@@ -17,7 +17,7 @@ public sealed class ChatEvent : Event() {
   }
 
   public data class End(
-    val at: Instant,
+    override val at: Instant,
     val response: ChatResponse,
   ) : ChatEvent() {
     @Suppress("ForbiddenMethodCall")
