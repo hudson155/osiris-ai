@@ -1,14 +1,20 @@
 package osiris.core
 
 import dev.langchain4j.data.message.AiMessage
-import dev.langchain4j.data.message.ChatMessage
 import kairo.serialization.util.readValueSpecial
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import osiris.event.ChatMessageEvent
+import osiris.event.Event
 
-public suspend fun Flow<ChatMessage>.get(): AiMessage =
-  filterIsInstance<AiMessage>().first { !it.hasToolExecutionRequests() }
+public suspend fun Flow<Event>.get(): AiMessage =
+  this
+    .filterIsInstance<ChatMessageEvent>()
+    .map { it.message }
+    .filterIsInstance<AiMessage>()
+    .first { !it.hasToolExecutionRequests() }
 
 public inline fun <reified Response : Any> AiMessage.convert(): Response? =
   text()?.let { llmMapper.readValueSpecial<Response>(it) }

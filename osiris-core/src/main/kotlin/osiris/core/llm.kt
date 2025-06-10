@@ -11,9 +11,9 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import osiris.event.ChatMessageEvent
+import osiris.event.Event
 import osiris.schema.llmSchema
 import osiris.schema.llmSchemaName
 
@@ -27,7 +27,7 @@ public fun llm(
   responseType: KClass<*>? = null,
   toolExecutor: ToolExecutor = ToolExecutor.Default(),
   block: ChatRequest.Builder.() -> Unit = {},
-): Flow<ChatMessage> {
+): Flow<Event> {
   @Suppress("NoNameShadowing")
   val messages = messages.toMutableList()
   return flow {
@@ -45,14 +45,14 @@ public fun llm(
         logger.debug { "Executing tools: $executionRequests." }
         val executionResponses = toolExecutor.execute(tools, executionRequests)
         logger.debug { "Executed tools: $executionResponses." }
-        emitAll(executionResponses.asFlow())
+        executionResponses.forEach { emit(ChatMessageEvent(it)) }
         messages += executionResponses
       } else {
         logger.debug { "Chat request: $chatRequest." }
         val chatResponse = model.chat(chatRequest)
         logger.debug { "Chat response: $chatResponse." }
         val aiMessage = chatResponse.aiMessage()
-        emit(aiMessage)
+        emit(ChatMessageEvent(aiMessage))
         messages += aiMessage
       }
     }
