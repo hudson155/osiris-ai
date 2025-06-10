@@ -37,7 +37,7 @@ public abstract class Agent(
             instructions?.let { add(SystemMessage(it.get())) }
           },
         ).onEach(::emit).response().first()
-        emit(AgentEvent.End(this@Agent))
+        emit(AgentEvent.End())
       }
     }
 

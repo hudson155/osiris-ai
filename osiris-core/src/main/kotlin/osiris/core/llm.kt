@@ -18,7 +18,7 @@ import osiris.event.MessageEvent
 import osiris.schema.llmSchema
 import osiris.schema.llmSchemaName
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "SuspiciousCollectionReassignment")
 public fun llm(
   model: ChatModel,
   messages: List<ChatMessage>,
@@ -28,7 +28,7 @@ public fun llm(
   block: ChatRequest.Builder.() -> Unit = {},
 ): Flow<Event> {
   @Suppress("NoNameShadowing")
-  val messages = messages.toMutableList()
+  var messages = messages
   return channelFlow {
     withContext(LlmContext(this)) {
       while (true) {
@@ -45,9 +45,9 @@ public fun llm(
           messages += executionResponses
           executionResponses.forEach { send(MessageEvent(it)) }
         } else {
-          send(ChatEvent.Start(request = chatRequest))
+          send(ChatEvent.Start(chatRequest))
           val chatResponse = model.chat(chatRequest)
-          send(ChatEvent.End(request = chatRequest, response = chatResponse))
+          send(ChatEvent.End(chatResponse))
           val aiMessage = chatResponse.aiMessage()
           messages += aiMessage
           send(MessageEvent(aiMessage))

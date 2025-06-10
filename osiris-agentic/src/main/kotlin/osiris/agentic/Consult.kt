@@ -1,6 +1,6 @@
 package osiris.agentic
 
-import dev.langchain4j.data.message.AiMessage
+import dev.langchain4j.data.message.UserMessage
 import kairo.lazySupplier.LazySupplier
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.onEach
@@ -36,7 +36,7 @@ public class Consult(
     val context = getExecutionContext()
     val agent = agent.get()
     val response = agent.execute(
-      messages = listOf(AiMessage(input.message)),
+      messages = listOf(UserMessage(input.message)),
     ).onEach(context::send).response().last()
     return response.text()
   }
