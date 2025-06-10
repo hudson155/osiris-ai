@@ -7,7 +7,6 @@ dependencies {
   api(project(":osiris-core"))
 
   api(libs.kairoCoroutines)
-  implementation(libs.kairoLogging)
 
   testImplementation(project(":osiris-evaluator"))
   testImplementation(project(":osiris-open-ai"))
