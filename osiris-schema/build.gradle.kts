@@ -6,6 +6,4 @@ plugins {
 dependencies {
   implementation(libs.kairoReflect)
   implementation(libs.langchain)
-
-  testImplementation(project(":osiris-testing"))
 }
