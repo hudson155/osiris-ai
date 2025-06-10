@@ -4,7 +4,7 @@ import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import kairo.serialization.util.readValueSpecial
 
-public inline fun <reified Response : Any> List<ChatMessage>.response(): Response? {
+public inline fun <reified Response : Any> List<ChatMessage>.response(): Response {
   val message = asReversed().filterIsInstance<AiMessage>().first { !it.hasToolExecutionRequests() }
-  return message.text()?.let { llmMapper.readValueSpecial<Response>(it) }
+  return checkNotNull(llmMapper.readValueSpecial<Response>(message.text()))
 }

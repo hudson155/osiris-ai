@@ -2,8 +2,8 @@ package osiris.core
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.UserMessage
-import io.kotest.core.config.LogLevel
 import io.kotest.matchers.collections.shouldMatchEach
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
@@ -45,8 +45,16 @@ internal class ToolsTest {
   private fun verifyTrace(trace: List<Span<*>>) {
     trace.shouldMatchEach(
       { it.details.shouldBeInstanceOf<ChatEvent>() },
-      { it.details.shouldBeInstanceOf<ToolEvent>().input.shouldBe(WeatherTool.Input("Calgary")) },
-      { it.details.shouldBeInstanceOf<ToolEvent>().input.shouldBe(WeatherTool.Input("Edmonton")) },
+      { message ->
+        message.details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>().should { details ->
+          details.input.shouldBe(WeatherTool.Input("Calgary"))
+        }
+      },
+      { message ->
+        message.details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>().should { details ->
+          details.input.shouldBe(WeatherTool.Input("Edmonton"))
+        }
+      },
       { it.details.shouldBeInstanceOf<ChatEvent>() },
     )
   }

@@ -26,11 +26,7 @@ public suspend inline fun <T> trace(
     val start = Instant.now()
     val result = block()
     val end = Instant.now()
-    spans += Span(
-      start = start,
-      end = end,
-      details = span(block()),
-    )
+    spans += Span(start = start, end = end, details = span(block()))
     return result
   }
 }

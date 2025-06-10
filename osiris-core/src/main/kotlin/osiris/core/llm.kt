@@ -14,7 +14,7 @@ import osiris.schema.llmSchemaName
 import osiris.span.ChatEvent
 import osiris.span.Span
 
-@Suppress("LongParameterList", "SuspiciousCollectionReassignment")
+@Suppress("LongParameterList")
 public suspend fun llm(
   model: ChatModel,
   messages: List<ChatMessage>,

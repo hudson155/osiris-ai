@@ -13,14 +13,10 @@ val modelFactory: ModelFactory =
     openAiApiKey = ProtectedString("...")
   }
 
-val response = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
-  messages = listOf(
-    UserMessage("What's 2+2?"),
-  ),
-).response().first()
+val messages = listOf(UserMessage("What's 2+2?"))
+val (response) = llm(modelFactory.openAi("gpt-4.1-nano"), messages)
 
-response.convert<String>()
+response.response<String>()
 // 2 + 2 equals 4.
 ```
 
@@ -31,14 +27,10 @@ response.convert<String>()
 <summary>Basic usage</summary>
 
 ```kotlin
-val response = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
-  messages = listOf(
-    UserMessage("What's 2+2?"),
-  ),
-).response().first()
+val messages = listOf(UserMessage("What's 2+2?"))
+val (response) = llm(modelFactory.openAi("gpt-4.1-nano"), messages)
 
-response.convert<String>()
+response.response<String>()
 // 2 + 2 equals 4.
 ```
 
@@ -50,31 +42,30 @@ response.convert<String>()
 
 ```kotlin
 object WeatherTool : Tool<WeatherTool.Input, WeatherTool.Output>("weather") {
-  data class Input(
-    @LlmSchema.Description("The city to get the weather for.")
-    val location: String,
-  )
+   data class Input(
+      @LlmSchema.Description("The city to get the weather for.")
+      val location: String,
+   )
 
-  data class Output(
-    val temperature: String,
-    val conditions: String,
-  )
+   data class Output(
+      val temperature: String,
+      val conditions: String,
+   )
 
-  override val description: String = "Gets the weather."
+   override val description: String = "Gets the weather."
 
-  override suspend fun execute(input: Input): Output =
-    TODO("Your implementation.")
+   override suspend fun execute(input: Input): Output =
+      TODO("Your implementation.")
 }
 
-val response = llm(
+val messages = listOf(UserMessage("What's the weather in Calgary?"))
+val (response) = llm(
   model = modelFactory.openAi("gpt-4.1-nano"),
+  messages = messages,
   tools = listOf(WeatherTool),
-  messages = listOf(
-    UserMessage("What's the weather in Calgary?"),
-  ),
-).response().first()
+)
 
-response.convert<String>()
+response.response<String>()
 // The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
 ```
 
@@ -91,16 +82,17 @@ data class Person(
   val age: Int,
 )
 
-val response = llm(
+val messages = listOf(
+  UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
+  SystemMessage("Provide a JSON representation of the person matching this description."),
+)
+val (response) = llm(
   model = modelFactory.openAi("gpt-4.1-nano"),
+  messages = messages,
   responseType = Person::class,
-  messages = listOf(
-    UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
-    SystemMessage("Provide a JSON representation of the person matching this description."),
-  ),
-).response().first()
+)
 
-response.convert<Person>()
+response.response<Person>()
 // Person(name=Jeff Hudson, age=29)
 ```
 
@@ -111,17 +103,18 @@ response.convert<Person>()
 <summary>Evals</summary>
 
 ```kotlin
-val response = llm(
+val messages = listOf(
+  UserMessage("What's the weather in Calgary?"),
+)
+val (response) = llm(
   model = modelFactory.openAi("gpt-4.1-nano"),
+   messages = messages,
   tools = listOf(WeatherTool),
-  messages = listOf(
-    UserMessage("What's the weather in Calgary?"),
-  ),
-).response().first()
+)
 
 evaluate(
   model = modelFactory.openAi("o3-mini"),
-  response = response.convert<String>(),
+  messages = messages + response,
   criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
 )
 ```
