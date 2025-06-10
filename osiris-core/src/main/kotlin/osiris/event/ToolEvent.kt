@@ -5,7 +5,7 @@ import osiris.core.Tool
 public sealed class ToolEvent {
   public abstract val tool: Tool<*, *>
   public abstract val id: String
-  public abstract val input: Any
+  public abstract val input: String
 
   public data class Start(
     val tool: Tool<*, *>,

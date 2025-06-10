@@ -9,14 +9,14 @@ import osiris.event.ToolEvent
 public abstract class ToolExecutor {
   public abstract suspend fun execute(
     tools: List<Tool<*, *>>,
-    flowCollector: FlowCollector<Event>,
+    collector: FlowCollector<Event>,
     executionRequests: List<ToolExecutionRequest>,
   ): List<ToolExecutionResultMessage>
 
   public class Default : ToolExecutor() {
     override suspend fun execute(
       tools: List<Tool<*, *>>,
-      flowCollector: FlowCollector<Event>,
+      collector: FlowCollector<Event>,
       executionRequests: List<ToolExecutionRequest>,
     ): List<ToolExecutionResultMessage> =
       executionRequests.map { executionRequest ->
@@ -24,9 +24,9 @@ public abstract class ToolExecutor {
         val toolName = executionRequest.name()
         val input = executionRequest.arguments()
         val tool = requireNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
-        flowCollector.emit(ToolEvent.Start(tool = tool, id = id, input = input))
+        collector.emit(ToolEvent.Start(tool = tool, id = id, input = input))
         val output = tool.execute(input)
-        flowCollector.emit(ToolEvent.End(tool = tool, id = id, input = input, output = output))
+        collector.emit(ToolEvent.End(tool = tool, id = id, input = input, output = output))
         return@map ToolExecutionResultMessage(id, toolName, output)
       }
   }
