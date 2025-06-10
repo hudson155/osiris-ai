@@ -11,7 +11,8 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.yield
 import osiris.event.ChatMessageEvent
 import osiris.event.Event
 import osiris.schema.llmSchema
@@ -30,7 +31,7 @@ public fun llm(
 ): Flow<Event> {
   @Suppress("NoNameShadowing")
   val messages = messages.toMutableList()
-  return flow {
+  return channelFlow {
     while (true) {
       logger.debug { "Messages: $messages." }
       val chatRequest = buildChatRequest(
@@ -45,16 +46,17 @@ public fun llm(
         logger.debug { "Executing tools: $executionRequests." }
         val executionResponses = toolExecutor.execute(tools, this, executionRequests)
         logger.debug { "Executed tools: $executionResponses." }
-        executionResponses.forEach { emit(ChatMessageEvent(it)) }
+        executionResponses.forEach { send(ChatMessageEvent(it)) }
         messages += executionResponses
       } else {
         logger.debug { "Chat request: $chatRequest." }
         val chatResponse = model.chat(chatRequest)
         logger.debug { "Chat response: $chatResponse." }
         val aiMessage = chatResponse.aiMessage()
-        emit(ChatMessageEvent(aiMessage))
+        send(ChatMessageEvent(aiMessage))
         messages += aiMessage
       }
+      yield()
     }
   }
 }

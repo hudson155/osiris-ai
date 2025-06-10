@@ -29,7 +29,7 @@ public class Consult internal constructor(
   }
 
   private suspend fun handleEvent(event: Event) {
-    if (event.shouldPropagate) execution.emit(event)
+    if (event.shouldPropagate) execution.send(event)
   }
 }
 
