@@ -6,12 +6,13 @@ import kairo.reflect.KairoType
 import kairo.serialization.util.kairoWriteSpecial
 import kairo.serialization.util.readValueSpecial
 import osiris.schema.llmSchema
+import osiris.span.ToolEvent
 
-public abstract class Tool<in Input : Any, out Output : Any>(
+public abstract class Tool<Input : Any, Output : Any>(
   public val name: String,
 ) {
-  private val inputType: KairoType<Input> = KairoType.from(Tool::class, 0, this::class)
-  private val outputType: KairoType<Output> = KairoType.from(Tool::class, 1, this::class)
+  internal val inputType: KairoType<Input> = KairoType.from(Tool::class, 0, this::class)
+  internal val outputType: KairoType<Output> = KairoType.from(Tool::class, 1, this::class)
 
   public open val description: LazySupplier<out String?> =
     LazySupplier { null }
@@ -25,10 +26,12 @@ public abstract class Tool<in Input : Any, out Output : Any>(
       }.build()
     }
 
-  public suspend fun execute(string: String): String {
+  public suspend fun execute(id: String, string: String): String {
     val input = checkNotNull(llmMapper.readValueSpecial(string, inputType))
     val output = execute(input)
-    return llmMapper.kairoWriteSpecial(output, outputType)
+    return trace({ ToolEvent(this, id, input, it) }) {
+      llmMapper.kairoWriteSpecial(output, outputType)
+    }
   }
 
   public abstract suspend fun execute(input: Input): Output

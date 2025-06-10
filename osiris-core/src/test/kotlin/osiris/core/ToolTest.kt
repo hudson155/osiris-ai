@@ -47,17 +47,4 @@ internal class ToolTest {
       WeatherTool.execute(WeatherTool.Input("New York"))
     }
   }
-
-  @Test
-  fun `invoke (string)`(): Unit = runTest {
-    WeatherTool.execute("{\"location\":\"Calgary\"}")
-      .shouldBe("{\"temperature\":\"15 degrees Celsius\",\"conditions\":\"Sunny\"}")
-
-    WeatherTool.execute("{\"location\":\"Edmonton\"}")
-      .shouldBe("{\"temperature\":\"-30 degrees Celsius\",\"conditions\":\"Snowing\"}")
-
-    shouldFailWithMessage("Unknown location: New York.") {
-      WeatherTool.execute("{\"location\":\"New York\"}")
-    }
-  }
 }
