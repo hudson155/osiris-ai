@@ -16,5 +16,7 @@ internal data class SpanCreate(
     val startTime: Instant,
     val endTime: Instant,
     val name: String,
+    val input: String?,
+    val output: String?,
   ) : IngestionEvent.Body()
 }

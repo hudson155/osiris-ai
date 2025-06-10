@@ -68,6 +68,8 @@ internal class BatchBuilder(
                   startTime = start.at,
                   endTime = event.at,
                   name = "Agent: ${start.agent.name}",
+                  input = start.input,
+                  output = end.output,
                 ),
               ),
             )
