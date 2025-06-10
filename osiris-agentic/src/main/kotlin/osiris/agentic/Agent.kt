@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.onEach
 import osiris.core.get
 import osiris.core.llm
-import osiris.event.ChatMessageEvent
+import osiris.event.MessageEvent
 import osiris.event.Event
 
 public abstract class Agent(
@@ -40,7 +40,7 @@ public abstract class Agent(
 
   private fun handleMessage(execution: Execution, message: Event) {
     when (message) {
-      is ChatMessageEvent -> {
+      is MessageEvent -> {
         execution.messages += message.message
       }
     }

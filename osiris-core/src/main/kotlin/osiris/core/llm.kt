@@ -12,8 +12,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
-import osiris.event.ChatMessageEvent
+import osiris.event.ChatEvent
 import osiris.event.Event
+import osiris.event.MessageEvent
 import osiris.schema.llmSchema
 import osiris.schema.llmSchemaName
 
@@ -42,12 +43,14 @@ public fun llm(
           val executionRequests = lastMessage.toolExecutionRequests()
           val executionResponses = toolExecutor.execute(tools, executionRequests)
           messages += executionResponses
-          executionResponses.forEach { send(ChatMessageEvent(it)) }
+          executionResponses.forEach { send(MessageEvent(it)) }
         } else {
+          send(ChatEvent.Start(request = chatRequest))
           val chatResponse = model.chat(chatRequest)
+          send(ChatEvent.End(request = chatRequest, response = chatResponse))
           val aiMessage = chatResponse.aiMessage()
           messages += aiMessage
-          send(ChatMessageEvent(aiMessage))
+          send(MessageEvent(aiMessage))
         }
         yield()
       }
