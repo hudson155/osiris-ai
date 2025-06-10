@@ -7,18 +7,15 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.request.ResponseFormat
 import dev.langchain4j.model.chat.request.ResponseFormatType
 import dev.langchain4j.model.chat.request.json.JsonSchema
-import io.github.oshai.kotlinlogging.KLogger
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import osiris.event.ChatMessageEvent
 import osiris.event.Event
 import osiris.schema.llmSchema
 import osiris.schema.llmSchemaName
-
-private val logger: KLogger = KotlinLogging.logger {}
 
 @Suppress("LongParameterList")
 public fun llm(
@@ -32,31 +29,28 @@ public fun llm(
   @Suppress("NoNameShadowing")
   val messages = messages.toMutableList()
   return channelFlow {
-    while (true) {
-      logger.debug { "Messages: $messages." }
-      val chatRequest = buildChatRequest(
-        messages = messages,
-        tools = tools,
-        responseType = responseType,
-        block = block,
-      )
-      val lastMessage = chatRequest.messages().lastOrNull()
-      if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
-        val executionRequests = lastMessage.toolExecutionRequests()
-        logger.debug { "Executing tools: $executionRequests." }
-        val executionResponses = toolExecutor.execute(tools, this, executionRequests)
-        logger.debug { "Executed tools: $executionResponses." }
-        executionResponses.forEach { send(ChatMessageEvent(it)) }
-        messages += executionResponses
-      } else {
-        logger.debug { "Chat request: $chatRequest." }
-        val chatResponse = model.chat(chatRequest)
-        logger.debug { "Chat response: $chatResponse." }
-        val aiMessage = chatResponse.aiMessage()
-        send(ChatMessageEvent(aiMessage))
-        messages += aiMessage
+    withContext(LlmContext(this)) {
+      while (true) {
+        val chatRequest = buildChatRequest(
+          messages = messages,
+          tools = tools,
+          responseType = responseType,
+          block = block,
+        )
+        val lastMessage = chatRequest.messages().lastOrNull()
+        if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
+          val executionRequests = lastMessage.toolExecutionRequests()
+          val executionResponses = toolExecutor.execute(tools, executionRequests)
+          messages += executionResponses
+          executionResponses.forEach { send(ChatMessageEvent(it)) }
+        } else {
+          val chatResponse = model.chat(chatRequest)
+          val aiMessage = chatResponse.aiMessage()
+          messages += aiMessage
+          send(ChatMessageEvent(aiMessage))
+        }
+        yield()
       }
-      yield()
     }
   }
 }
