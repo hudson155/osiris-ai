@@ -1,15 +1,15 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.AiMessage
-import kotlinx.coroutines.flow.onEach
+import kairo.lazySupplier.LazySupplier
+import kotlinx.coroutines.flow.first
 import osiris.agentic.Consult.Input
 import osiris.core.Tool
+import osiris.core.aiResponses
 import osiris.schema.LlmSchema
 
-public class Consult internal constructor(
+public class Consult(
   private val agentName: String,
-  override val description: String?,
-  private val execution: Execution,
 ) : Tool<Input, String>("consult_$agentName") {
   public data class Input(
     @LlmSchema.Description("The message to the agent.")
@@ -18,30 +18,23 @@ public class Consult internal constructor(
     val progressUpdateForUser: String,
   )
 
+  private val agent: LazySupplier<Agent> =
+    LazySupplier {
+      val context = getExecutionContext()
+      return@LazySupplier context.getAgent(agentName)
+    }
+
+  override val description: LazySupplier<String?> =
+    LazySupplier {
+      val agent = agent.get()
+      return@LazySupplier agent.description
+    }
+
   override suspend fun execute(input: Input): String {
-    val network = execution.network
-    val flow = network.run(
+    val agent = agent.get()
+    val response = agent.execute(
       messages = listOf(AiMessage(input.message)),
-      entrypoint = agentName,
-    )
-    val response = flow.onEach { handleEvent(it) }.getResponse()
+    ).aiResponses().first()
     return response.text()
   }
-
-  private suspend fun handleEvent(event: Event) {
-    if (event.shouldPropagate) execution.send(event)
-  }
 }
-
-public fun consult(
-  agentName: String,
-  description: String? = null,
-): ToolProvider =
-  ToolProvider { execution ->
-    val agent = requireNotNull(execution.network.agents[agentName]) { "No agent with name $agentName." }
-    return@ToolProvider Consult(
-      agentName = agentName,
-      description = description ?: agent.description,
-      execution = execution,
-    )
-  }

@@ -6,8 +6,9 @@ import dev.langchain4j.model.chat.ChatModel
 import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
+import kotlinx.coroutines.flow.first
+import osiris.core.aiResponses
 import osiris.core.convert
-import osiris.core.get
 import osiris.core.llm
 
 public suspend fun evaluate(
@@ -27,7 +28,7 @@ public suspend fun evaluate(
     messages = messages + systemMessage,
     responseType = Eval::class,
   )
-  val eval = response.get().convert<Eval>().shouldNotBeNull()
+  val eval = response.aiResponses().first().convert<Eval>().shouldNotBeNull()
   withClue(eval.failureReason) {
     eval.matchesCriteria.shouldBeTrue()
   }

@@ -2,10 +2,12 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import osiris.core.aiResponses
 import osiris.core.convert
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -21,7 +23,7 @@ internal class StructuredOutputTest {
     val messages = listOf(
       UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
     )
-    val response = network.run(messages).onEach(::logEvent).getResponse()
+    val response = network.run(messages).onEach(::logEvent).aiResponses().last()
     response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 }

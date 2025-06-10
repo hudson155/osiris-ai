@@ -3,6 +3,7 @@ package osiris.core
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
@@ -17,6 +18,6 @@ internal class MathTest {
         SystemMessage("Do the math. Return only the answer (nothing else)."),
       ),
     )
-    response.get().convert<String>().shouldBe("4")
+    response.aiResponses().first().convert<String>().shouldBe("4")
   }
 }
