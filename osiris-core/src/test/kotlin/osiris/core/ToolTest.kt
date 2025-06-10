@@ -36,7 +36,7 @@ internal class ToolTest {
   }
 
   @Test
-  fun `invoke (typed)`(): Unit = runTest {
+  fun invoke(): Unit = runTest {
     WeatherTool.execute(WeatherTool.Input(location = "Calgary"))
       .shouldBe(WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
 
