@@ -7,6 +7,7 @@ public sealed class ExecutionEvent : Event() {
     val at: Instant,
     val name: String,
   ) : ExecutionEvent() {
+    @Suppress("ForbiddenMethodCall")
     public constructor(name: String) : this(
       at = Instant.now(),
       name = name,
@@ -17,6 +18,7 @@ public sealed class ExecutionEvent : Event() {
     val at: Instant,
     val name: String,
   ) : ExecutionEvent() {
+    @Suppress("ForbiddenMethodCall")
     public constructor(name: String) : this(
       at = Instant.now(),
       name = name,

@@ -59,6 +59,7 @@ private fun buildBatch(traceId: Uuid, events: List<Event>): BatchIngestion {
   val start = events.first() as ExecutionEvent.Start
   val end = events.last() as ExecutionEvent.End
   check(end.name == start.name)
+  @Suppress("ForbiddenMethodCall")
   val now = Instant.now()
   val batch = BatchIngestion(
     batch = listOf(
