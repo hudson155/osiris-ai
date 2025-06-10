@@ -22,9 +22,8 @@ public abstract class Network(
     channelFlow {
       val context = ExecutionContext(this@Network)
       withContext(context) {
-        val agent = context.getAgent(
-          agentName = requireNotNull(entrypoint ?: this@Network.entrypoint) { "Network must set an entrypoint." },
-        )
+        val agentName = requireNotNull(entrypoint ?: this@Network.entrypoint) { "Network must set an entrypoint." }
+        val agent = context.getAgent(agentName)
         agent.execute(messages).collect(::send)
       }
     }

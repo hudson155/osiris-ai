@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import osiris.core.response
 import osiris.core.convert
+import osiris.core.response
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MathTest {

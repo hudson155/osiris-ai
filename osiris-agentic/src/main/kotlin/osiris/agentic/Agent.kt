@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import osiris.core.Tool
-import osiris.core.response
 import osiris.core.llm
+import osiris.core.response
 import osiris.event.AgentEvent
 import osiris.event.Event
 
@@ -32,18 +32,23 @@ public abstract class Agent(
       flow {
         emit(AgentEvent.Start(this@Agent))
         llm(
-          model = model,
           messages = buildList {
             addAll(messages)
             instructions?.let { add(SystemMessage(it.get())) }
           },
-          tools = tools,
-          responseType = responseType,
-          block = { llm() },
         ).onEach(::emit).response().first()
         emit(AgentEvent.End(this@Agent))
       }
     }
+
+  private fun llm(messages: List<ChatMessage>): Flow<Event> =
+    llm(
+      model = model,
+      messages = messages,
+      tools = tools,
+      responseType = responseType,
+      block = { llm() },
+    )
 
   override fun toString(): String =
     "Agent(name=$name)"
