@@ -6,9 +6,11 @@ import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import osiris.core.Tool
+import osiris.core.aiResponses
 import osiris.core.llm
 import osiris.event.AgentEvent
 import osiris.event.Event
@@ -29,18 +31,16 @@ public abstract class Agent(
     with(getExecutionContext()) {
       flow {
         emit(AgentEvent.Start(this@Agent))
-        emitAll(
-          llm(
-            model = model,
-            messages = buildList {
-              addAll(messages)
-              instructions?.let { add(SystemMessage(it.get())) }
-            },
-            tools = tools,
-            responseType = responseType,
-            block = { llm() },
-          )
-        )
+        llm(
+          model = model,
+          messages = buildList {
+            addAll(messages)
+            instructions?.let { add(SystemMessage(it.get())) }
+          },
+          tools = tools,
+          responseType = responseType,
+          block = { llm() },
+        ).onEach(::emit).aiResponses().first()
         emit(AgentEvent.End(this@Agent))
       }
     }
