@@ -1,23 +1,22 @@
 package osiris.event
 
-import dev.langchain4j.data.message.ChatMessage
-import dev.langchain4j.data.message.UserMessage
 import java.time.Instant
+import osiris.agentic.Network
 
 public sealed class ExecutionEvent : Event() {
   public data class Start(
     val at: Instant,
-    val entrypoint: String,
+    val network: Network,
     val input: String?,
   ) : ExecutionEvent() {
     @Suppress("ForbiddenMethodCall")
     public constructor(
-      entrypoint: String,
-      messages: List<ChatMessage>,
+      network: Network,
+      input: String?,
     ) : this(
       at = Instant.now(),
-      entrypoint = entrypoint,
-      input = (messages.last() as? UserMessage)?.singleText(),
+      network = network,
+      input = input,
     )
   }
 
