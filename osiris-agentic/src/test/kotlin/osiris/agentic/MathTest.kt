@@ -13,7 +13,7 @@ import osiris.core.response
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MathTest {
   private val network: Network =
-    network {
+    network("network") {
       entrypoint = mathAgent.name
       agents += mathAgent
     }

@@ -1,23 +1,28 @@
 package osiris.agentic
 
+@Suppress("LongParameterList")
 internal class NetworkImpl(
+  name: String,
   override val entrypoint: String,
   agents: List<Agent>,
   override val listeners: List<Listener>,
-) : Network(agents)
+) : Network(name, agents)
 
-public class NetworkBuilder internal constructor() {
+public class NetworkBuilder internal constructor(
+  private val name: String,
+) {
   public var entrypoint: String? = null
   public val agents: MutableList<Agent> = mutableListOf()
   public val listeners: MutableList<Listener> = mutableListOf()
 
   internal fun build(): Network =
     NetworkImpl(
-      entrypoint = requireNotNull(entrypoint) { "Network must set an entrypoint." },
+      name = name,
+      entrypoint = requireNotNull(entrypoint) { "Network $name must set an entrypoint." },
       agents = agents,
       listeners = listeners,
     )
 }
 
-public fun network(block: NetworkBuilder.() -> Unit): Network =
-  NetworkBuilder().apply(block).build()
+public fun network(name: String, block: NetworkBuilder.() -> Unit): Network =
+  NetworkBuilder(name).apply(block).build()
