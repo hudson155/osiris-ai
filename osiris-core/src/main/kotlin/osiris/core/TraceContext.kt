@@ -18,6 +18,7 @@ public class TraceContext : AbstractCoroutineContextElement(key) {
 public suspend fun getTraceContext(): TraceContext =
   checkNotNull(coroutineContext[TraceContext.key])
 
+@Suppress("ForbiddenMethodCall")
 public suspend inline fun <T> trace(
   span: (T) -> Span.Details,
   block: () -> T,
