@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import osiris.event.MessageEvent
 import osiris.event.Event
+import osiris.event.MessageEvent
 
 public suspend fun Flow<Event>.get(): AiMessage =
   this
