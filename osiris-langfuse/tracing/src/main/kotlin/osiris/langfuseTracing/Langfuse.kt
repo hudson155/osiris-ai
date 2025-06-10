@@ -7,7 +7,6 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
-import java.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,7 @@ public fun Langfuse.trace(): (event: Event) -> Unit {
     events += event
     if (event is ExecutionEvent.End) {
       CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-        val batch = buildBatch(traceId, events)
+        val batch = BatchBuilder(traceId, events).build()
         client.request {
           method = HttpMethod.Post
           url("ingestion")
@@ -35,37 +34,4 @@ public fun Langfuse.trace(): (event: Event) -> Unit {
       }
     }
   }
-}
-
-private fun buildBatch(traceId: Uuid, events: List<Event>): BatchIngestion {
-  val start = events.first() as ExecutionEvent.Start
-  val end = events.last() as ExecutionEvent.End
-  check(end.name == start.name)
-  @Suppress("ForbiddenMethodCall")
-  val now = Instant.now()
-  val batch = BatchIngestion(
-    batch = listOf(
-      TraceCreate(
-        id = Uuid.random(),
-        timestamp = now,
-        body = TraceCreate.Body(
-          id = traceId,
-          timestamp = start.at,
-        ),
-      ),
-      SpanCreate(
-        id = Uuid.random(),
-        timestamp = now,
-        body = SpanCreate.Body(
-          id = Uuid.random(),
-          traceId = traceId,
-          parentObservationId = null,
-          startTime = start.at,
-          endTime = end.at,
-          name = start.name,
-        ),
-      ),
-    ),
-  )
-  return batch
 }
