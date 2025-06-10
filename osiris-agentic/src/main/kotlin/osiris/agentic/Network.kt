@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import osiris.core.response
 import osiris.event.Event
 import osiris.event.ExecutionEvent
+import osiris.event.deriveText
 
 public abstract class Network(
   public val name: String,
@@ -26,9 +27,9 @@ public abstract class Network(
       val context = ExecutionContext(this@Network, this)
       withContext(context) {
         val agent = context.getAgent(entrypoint)
-        send(ExecutionEvent.Start(entrypoint, messages))
+        send(ExecutionEvent.Start(this@Network, deriveText(messages)))
         val response = agent.execute(messages).onEach(::send).response().last()
-        send(ExecutionEvent.End(response.text()))
+        send(ExecutionEvent.End(deriveText(response)))
       }
     }.onEach { event ->
       listeners.forEach { it(event) }
