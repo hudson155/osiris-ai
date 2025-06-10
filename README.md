@@ -18,7 +18,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's 2+2?"),
   ),
-).get()
+).response().first()
 
 response.convert<String>()
 // 2 + 2 equals 4.
@@ -36,7 +36,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's 2+2?"),
   ),
-).get()
+).response().first()
 
 response.convert<String>()
 // 2 + 2 equals 4.
@@ -72,7 +72,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),
-).get()
+).response().first()
 
 response.convert<String>()
 // The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
@@ -98,7 +98,7 @@ val response = llm(
     UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
     SystemMessage("Provide a JSON representation of the person matching this description."),
   ),
-).get()
+).response().first()
 
 response.convert<Person>()
 // Person(name=Jeff Hudson, age=29)
@@ -117,7 +117,7 @@ val response = llm(
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),
-).get()
+).response().first()
 
 evaluate(
   model = modelFactory.openAi("o3-mini"),
@@ -166,7 +166,7 @@ val chatbot: Agent =
         Your task is to use tools to comprehensively answer the user's question.
       """.trimIndent(),
     )
-    tools += consult("order_tracker")
+    tools += Consult("order_tracker")
   }
 
 val orderTracker: Agent =
@@ -183,7 +183,7 @@ val orderTracker: Agent =
         Your role is to track orders.
       """.trimIndent(),
     )
-    tools += tool(TrackOrderTool)
+    tools += TrackOrderTool
   }
 
 val network: Network =
@@ -196,7 +196,8 @@ val network: Network =
 val messages = listOf(
   UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
 )
-network.run(messages).getResponse().convert<String>()
+val response = network.run(messages).response().last()
+response.convert<String>()
 // Your order with ID ord_0 has not been shipped yet, and your order with ID ord_1 is currently in transit.
 ```
 

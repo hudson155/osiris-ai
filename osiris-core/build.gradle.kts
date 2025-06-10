@@ -7,6 +7,7 @@ dependencies {
   api(project(":osiris-schema"))
 
   api(libs.kairoCoroutines)
+  api(libs.kairoLazySupplier)
   api(libs.kairoProtectedString)
   implementation(libs.kairoReflect)
   implementation(libs.kairoSerialization)

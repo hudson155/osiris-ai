@@ -3,6 +3,7 @@ package osiris.core
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
@@ -18,6 +19,6 @@ internal class StructuredOutputTest {
         SystemMessage("Provide a JSON representation of the person matching this description."),
       ),
     )
-    response.get().convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
+    response.response().first().convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 }

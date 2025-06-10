@@ -16,5 +16,5 @@ internal val ecommerceOrderTracker: Agent =
         Your role is to track orders.
       """.trimIndent()
     }
-    tools += tool(TrackOrderTool)
+    tools += TrackOrderTool
   }

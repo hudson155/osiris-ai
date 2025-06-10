@@ -1,6 +1,7 @@
 package osiris.agentic
 
 import io.kotest.assertions.fail
+import kairo.lazySupplier.LazySupplier
 import osiris.agentic.WeatherTool.Input
 import osiris.agentic.WeatherTool.Output
 import osiris.core.Tool
@@ -17,7 +18,8 @@ internal object WeatherTool : Tool<Input, Output>("weather") {
     val conditions: String,
   )
 
-  override val description: String = "Gets the weather."
+  override val description: LazySupplier<String> =
+    LazySupplier { "Gets the weather." }
 
   override suspend fun execute(input: Input): Output =
     when (val location = input.location) {

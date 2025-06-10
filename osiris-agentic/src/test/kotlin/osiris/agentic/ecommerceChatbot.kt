@@ -15,5 +15,5 @@ internal val ecommerceChatbot: Agent =
         Your task is to use tools to comprehensively answer the user's question.
       """.trimIndent()
     }
-    tools += consult("ecommerce_order_tracker")
+    tools += Consult("ecommerce_order_tracker")
   }

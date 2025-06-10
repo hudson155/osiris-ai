@@ -15,12 +15,12 @@ internal class ToolTest {
 
   @Test
   fun description(): Unit = runTest {
-    WeatherTool.description.shouldBe("Gets the weather.")
+    WeatherTool.description.get().shouldBe("Gets the weather.")
   }
 
   @Test
   fun toolSpecification(): Unit = runTest {
-    WeatherTool.toolSpecification
+    WeatherTool.toolSpecification.get()
       .shouldBe(
         ToolSpecification.builder().apply {
           name("weather")

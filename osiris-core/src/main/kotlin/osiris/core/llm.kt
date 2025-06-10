@@ -59,7 +59,7 @@ public fun llm(
 }
 
 @Suppress("LongParameterList")
-private fun buildChatRequest(
+private suspend fun buildChatRequest(
   messages: List<ChatMessage>,
   tools: List<Tool<*, *>>,
   responseType: KClass<*>?,
@@ -68,7 +68,7 @@ private fun buildChatRequest(
   ChatRequest.builder().apply {
     messages(messages)
     if (tools.isNotEmpty()) {
-      toolSpecifications(tools.map { it.toolSpecification })
+      toolSpecifications(tools.map { it.toolSpecification.get() })
     }
     if (responseType != null) {
       val jsonSchema = JsonSchema.builder().apply {

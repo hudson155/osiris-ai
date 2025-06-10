@@ -2,6 +2,7 @@ package osiris.core
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.UserMessage
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.evaluator.evaluate
@@ -17,7 +18,7 @@ internal class ToolsTest {
       model = testModelFactory.openAi("gpt-4.1-nano"),
       tools = listOf(WeatherTool),
       messages = messages,
-    ).get()
+    ).response().first()
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
       messages = messages + response,

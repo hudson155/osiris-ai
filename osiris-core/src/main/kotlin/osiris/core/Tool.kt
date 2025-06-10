@@ -1,6 +1,7 @@
 package osiris.core
 
 import dev.langchain4j.agent.tool.ToolSpecification
+import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
 import kairo.serialization.util.kairoWriteSpecial
 import kairo.serialization.util.readValueSpecial
@@ -12,15 +13,17 @@ public abstract class Tool<in Input : Any, out Output : Any>(
   private val inputType: KairoType<Input> = KairoType.from(Tool::class, 0, this::class)
   private val outputType: KairoType<Output> = KairoType.from(Tool::class, 1, this::class)
 
-  public open val description: String? = null
+  public open val description: LazySupplier<out String?> =
+    LazySupplier { null }
 
-  public val toolSpecification: ToolSpecification by lazy {
-    ToolSpecification.builder().apply {
-      name(name)
-      if (description != null) description(description)
-      parameters(llmSchema(inputType.kotlinClass))
-    }.build()
-  }
+  public val toolSpecification: LazySupplier<ToolSpecification> =
+    LazySupplier {
+      ToolSpecification.builder().apply {
+        name(name)
+        description.get()?.let { description(it) }
+        parameters(llmSchema(inputType.kotlinClass))
+      }.build()
+    }
 
   public suspend fun execute(string: String): String {
     val input = checkNotNull(llmMapper.readValueSpecial(string, inputType))
