@@ -8,54 +8,46 @@ import dev.langchain4j.model.chat.request.ResponseFormat
 import dev.langchain4j.model.chat.request.ResponseFormatType
 import dev.langchain4j.model.chat.request.json.JsonSchema
 import kotlin.reflect.KClass
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
-import osiris.event.ChatEvent
-import osiris.event.Event
-import osiris.event.MessageEvent
 import osiris.schema.llmSchema
 import osiris.schema.llmSchemaName
+import osiris.span.ChatEvent
+import osiris.span.Span
 
-@Suppress("LongParameterList", "SuspiciousCollectionReassignment")
-public fun llm(
+@Suppress("LongParameterList")
+public suspend fun llm(
   model: ChatModel,
   messages: List<ChatMessage>,
   tools: List<Tool<*, *>> = emptyList(),
   responseType: KClass<*>? = null,
   toolExecutor: ToolExecutor = ToolExecutor.Default(),
   block: ChatRequest.Builder.() -> Unit = {},
-): Flow<Event> {
-  @Suppress("NoNameShadowing")
-  var messages = messages
-  return channelFlow {
-    withContext(LlmContext(this)) {
-      while (true) {
-        val chatRequest = buildChatRequest(
-          messages = messages,
-          tools = tools,
-          responseType = responseType,
-          block = block,
-        )
-        val lastMessage = chatRequest.messages().lastOrNull()
-        if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
-          val executionRequests = lastMessage.toolExecutionRequests()
-          val executionResponses = toolExecutor.execute(tools, executionRequests)
-          messages += executionResponses
-          executionResponses.forEach { send(MessageEvent(it)) }
-        } else {
-          send(ChatEvent.Start(chatRequest))
-          val chatResponse = model.chat(chatRequest)
-          send(ChatEvent.End(chatResponse))
-          val aiMessage = chatResponse.aiMessage()
-          messages += aiMessage
-          send(MessageEvent(aiMessage))
+): Pair<List<ChatMessage>, List<Span<*>>> {
+  val response = mutableListOf<ChatMessage>()
+  val traceContext = TraceContext()
+  withContext(traceContext) {
+    while (response.lastOrNull()?.let { it is AiMessage && !it.hasToolExecutionRequests() } != true) {
+      val chatRequest = buildChatRequest(
+        messages = messages + response,
+        tools = tools,
+        responseType = responseType,
+        block = block,
+      )
+      val lastMessage = chatRequest.messages().lastOrNull()
+      if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
+        val executionRequests = lastMessage.toolExecutionRequests()
+        val executionResponses = toolExecutor.execute(tools, executionRequests)
+        response += executionResponses
+      } else {
+        val chatResponse = trace({ ChatEvent(chatRequest, it) }) {
+          model.chat(chatRequest)
         }
-        yield()
+        val aiMessage = chatResponse.aiMessage()
+        response += aiMessage
       }
     }
   }
+  return Pair(response, traceContext.spans)
 }
 
 @Suppress("LongParameterList")

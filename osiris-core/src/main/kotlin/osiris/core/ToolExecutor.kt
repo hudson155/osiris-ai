@@ -2,7 +2,6 @@ package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.ToolExecutionResultMessage
-import osiris.event.ToolEvent
 
 public abstract class ToolExecutor {
   public abstract suspend fun execute(
@@ -14,16 +13,11 @@ public abstract class ToolExecutor {
     tools: List<Tool<*, *>>,
     executionRequest: ToolExecutionRequest,
   ): ToolExecutionResultMessage {
-    with(getLlmContext()) {
-      val id = executionRequest.id()
-      val toolName = executionRequest.name()
-      val input = executionRequest.arguments()
-      val tool = requireNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
-      send(ToolEvent.Start(tool, id, input))
-      val output = tool.execute(input)
-      send(ToolEvent.End(output))
-      return ToolExecutionResultMessage(id, toolName, output)
-    }
+    val id = executionRequest.id()
+    val toolName = executionRequest.name()
+    val tool = requireNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
+    val output = tool.execute(id, executionRequest.arguments())
+    return ToolExecutionResultMessage(id, toolName, output)
   }
 
   public class Default : ToolExecutor() {

@@ -6,6 +6,7 @@ import kairo.reflect.KairoType
 import kairo.serialization.util.kairoWriteSpecial
 import kairo.serialization.util.readValueSpecial
 import osiris.schema.llmSchema
+import osiris.span.ToolEvent
 
 public abstract class Tool<in Input : Any, out Output : Any>(
   public val name: String,
@@ -25,10 +26,12 @@ public abstract class Tool<in Input : Any, out Output : Any>(
       }.build()
     }
 
-  public suspend fun execute(string: String): String {
+  internal suspend fun execute(id: String, string: String): String {
     val input = checkNotNull(llmMapper.readValueSpecial(string, inputType))
     val output = execute(input)
-    return llmMapper.kairoWriteSpecial(output, outputType)
+    return trace({ ToolEvent(this, id, input, it) }) {
+      llmMapper.kairoWriteSpecial(output, outputType)
+    }
   }
 
   public abstract suspend fun execute(input: Input): Output
