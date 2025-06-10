@@ -1,6 +1,5 @@
 package osiris.agentic
 
-import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
@@ -8,6 +7,8 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.onEach
 import osiris.core.get
 import osiris.core.llm
+import osiris.event.ChatMessageEvent
+import osiris.event.Event
 
 public abstract class Agent(
   public val name: String,
@@ -37,8 +38,12 @@ public abstract class Agent(
     flow.onEach { handleMessage(execution, it) }.get()
   }
 
-  private fun handleMessage(execution: Execution, message: ChatMessage) {
-    execution.messages += message
+  private fun handleMessage(execution: Execution, message: Event) {
+    when (message) {
+      is ChatMessageEvent -> {
+        execution.messages += message.message
+      }
+    }
   }
 
   override fun toString(): String =
