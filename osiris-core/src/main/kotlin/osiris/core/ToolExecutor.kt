@@ -2,6 +2,11 @@ package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.ToolExecutionResultMessage
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 public abstract class ToolExecutor {
   public abstract suspend fun execute(
@@ -20,7 +25,19 @@ public abstract class ToolExecutor {
     return ToolExecutionResultMessage(id, toolName, output)
   }
 
-  public class Default : ToolExecutor() {
+  public class Dispatcher(
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+  ) : ToolExecutor() {
+    override suspend fun execute(
+      tools: List<Tool<*, *>>,
+      executionRequests: List<ToolExecutionRequest>,
+    ): List<ToolExecutionResultMessage> =
+      coroutineScope {
+        executionRequests.map { async(dispatcher) { execute(tools, it) } }.awaitAll()
+      }
+  }
+
+  public class Serial : ToolExecutor() {
     override suspend fun execute(
       tools: List<Tool<*, *>>,
       executionRequests: List<ToolExecutionRequest>,

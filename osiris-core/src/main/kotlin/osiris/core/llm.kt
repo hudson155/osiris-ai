@@ -20,7 +20,7 @@ public suspend fun llm(
   messages: List<ChatMessage>,
   tools: List<Tool<*, *>> = emptyList(),
   responseType: KClass<*>? = null,
-  toolExecutor: ToolExecutor = ToolExecutor.Default(),
+  toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
   block: ChatRequest.Builder.() -> Unit = {},
 ): Pair<List<ChatMessage>, List<Span<*>>> {
   val response = mutableListOf<ChatMessage>()
