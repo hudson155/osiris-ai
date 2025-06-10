@@ -17,12 +17,10 @@ public sealed class AgentEvent : Event() {
 
   public data class End(
     val at: Instant,
-    val agent: Agent,
   ) : AgentEvent() {
     @Suppress("ForbiddenMethodCall")
-    public constructor(agent: Agent) : this(
+    public constructor() : this(
       at = Instant.now(),
-      agent = agent,
     )
   }
 }

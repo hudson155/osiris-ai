@@ -12,5 +12,7 @@ internal data class TraceCreate(
   internal data class Body(
     override val id: Uuid,
     val timestamp: Instant,
+    val input: String?,
+    val output: String?,
   ) : IngestionEvent.Body()
 }

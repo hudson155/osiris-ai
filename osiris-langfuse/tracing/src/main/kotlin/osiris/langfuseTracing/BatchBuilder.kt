@@ -20,7 +20,6 @@ internal class BatchBuilder(
   init {
     check(events.filterIsInstance<ExecutionEvent.Start>().size == 1)
     check(events.filterIsInstance<ExecutionEvent.End>().size == 1)
-    check(end.name == start.name)
   }
 
   fun build(): BatchIngestion =
@@ -38,6 +37,8 @@ internal class BatchBuilder(
       body = TraceCreate.Body(
         id = traceId,
         timestamp = start.at,
+        input = start.input,
+        output = end.output,
       ),
     )
 
@@ -63,7 +64,7 @@ internal class BatchBuilder(
                   parentObservationId = stack.lastOrNull()?.first,
                   startTime = start.at,
                   endTime = event.at,
-                  name = start.name,
+                  name = "Execution: ${start.entrypoint}",
                 ),
               ),
             )
@@ -84,7 +85,7 @@ internal class BatchBuilder(
                   parentObservationId = stack.lastOrNull()?.first,
                   startTime = start.at,
                   endTime = event.at,
-                  name = start.agent.name,
+                  name = "Agent: ${start.agent.name}",
                 ),
               ),
             )
@@ -105,7 +106,9 @@ internal class BatchBuilder(
                   parentObservationId = stack.lastOrNull()?.first,
                   startTime = start.at,
                   endTime = event.at,
+                  name = "Chat: ${event.response.modelName()}",
                   model = event.response.modelName(),
+                  input = LangfuseMessage.extract(start, event),
                 ),
               ),
             )

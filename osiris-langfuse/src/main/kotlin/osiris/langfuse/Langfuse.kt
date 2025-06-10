@@ -1,5 +1,6 @@
 package osiris.langfuse
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.basicAuth
@@ -25,7 +26,9 @@ public class Langfuse(
           converter = JacksonConverter(
             mapper = jsonMapper {
               allowUnknownProperties = true
-            }.build(),
+            }.build {
+              serializationInclusion(JsonInclude.Include.NON_NULL)
+            },
           ),
         )
       }
