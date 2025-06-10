@@ -5,7 +5,6 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.nulls.shouldNotBeNull
 import osiris.core.convert
 import osiris.core.llm
 
@@ -26,7 +25,7 @@ public suspend fun evaluate(
     messages = messages + systemMessage,
     responseType = Eval::class,
   )
-  val eval = response.convert<Eval>().shouldNotBeNull()
+  val eval = response.convert<Eval>()
   withClue(eval.failureReason) {
     eval.matchesCriteria.shouldBeTrue()
   }
