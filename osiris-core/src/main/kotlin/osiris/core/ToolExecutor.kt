@@ -10,12 +10,12 @@ import kotlinx.coroutines.coroutineScope
 
 public abstract class ToolExecutor {
   public abstract suspend fun execute(
-    tools: List<Tool<*, *>>,
+    tools: List<Tool<*>>,
     executionRequests: List<ToolExecutionRequest>,
   ): List<ToolExecutionResultMessage>
 
   protected suspend fun execute(
-    tools: List<Tool<*, *>>,
+    tools: List<Tool<*>>,
     executionRequest: ToolExecutionRequest,
   ): ToolExecutionResultMessage {
     val id = executionRequest.id()
@@ -29,7 +29,7 @@ public abstract class ToolExecutor {
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
   ) : ToolExecutor() {
     override suspend fun execute(
-      tools: List<Tool<*, *>>,
+      tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
     ): List<ToolExecutionResultMessage> =
       coroutineScope {
@@ -39,7 +39,7 @@ public abstract class ToolExecutor {
 
   public class Serial : ToolExecutor() {
     override suspend fun execute(
-      tools: List<Tool<*, *>>,
+      tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
     ): List<ToolExecutionResultMessage> =
       executionRequests.map { execute(tools, it) }

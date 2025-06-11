@@ -21,7 +21,7 @@ public abstract class Agent(
 ) {
   internal open val description: String? = null
   protected open val instructions: Instructions? = null
-  protected open val tools: List<Tool<*, *>> = emptyList()
+  protected open val tools: List<Tool<*>> = emptyList()
   protected open val responseType: KClass<*>? = null
 
   protected open fun ChatRequest.Builder.llm(): Unit = Unit

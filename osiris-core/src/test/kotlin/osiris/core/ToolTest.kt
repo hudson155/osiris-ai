@@ -4,6 +4,7 @@ import dev.langchain4j.agent.tool.ToolSpecification
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import io.kotest.assertions.shouldFailWithMessage
 import io.kotest.matchers.shouldBe
+import kairo.serialization.util.readValueSpecial
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
@@ -38,9 +39,11 @@ internal class ToolTest {
   @Test
   fun invoke(): Unit = runTest {
     WeatherTool.execute(WeatherTool.Input(location = "Calgary"))
+      .let { llmMapper.readValueSpecial<WeatherTool.Output>(it) }
       .shouldBe(WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
 
     WeatherTool.execute(WeatherTool.Input(location = "Edmonton"))
+      .let { llmMapper.readValueSpecial<WeatherTool.Output>(it) }
       .shouldBe(WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
 
     shouldFailWithMessage("Unknown location: New York.") {

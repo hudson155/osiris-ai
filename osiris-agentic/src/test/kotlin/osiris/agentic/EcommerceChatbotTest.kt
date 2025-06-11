@@ -66,17 +66,17 @@ internal class EcommerceChatbotTest {
       }
       shouldForExactly(6) { it.shouldBeInstanceOf<ChatEvent>() }
       shouldForOne { details ->
-        details.shouldBeInstanceOf<ToolEvent<*, *>>()
+        details.shouldBeInstanceOf<ToolEvent>()
         details.tool.shouldBe(TrackOrderTool)
         details.input.shouldBe(TrackOrderTool.Input("ord_0"))
       }
       shouldForOne { details ->
-        details.shouldBeInstanceOf<ToolEvent<*, *>>()
+        details.shouldBeInstanceOf<ToolEvent>()
         details.tool.shouldBe(TrackOrderTool)
         details.input.shouldBe(TrackOrderTool.Input("ord_1"))
       }
       shouldForExactly(2) { details ->
-        details.shouldBeInstanceOf<ToolEvent<*, *>>()
+        details.shouldBeInstanceOf<ToolEvent>()
         details.tool.shouldBeInstanceOf<Consult>()
       }
       shouldHaveSize(14)

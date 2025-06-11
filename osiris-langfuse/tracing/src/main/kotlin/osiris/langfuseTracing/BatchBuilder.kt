@@ -66,7 +66,7 @@ internal class BatchBuilder(
                 output = LangfuseMessage.extract(listOf(details.response.aiMessage())),
               ),
             )
-          is ToolEvent<*, *> ->
+          is ToolEvent ->
             SpanCreate(
               id = Uuid.random(),
               timestamp = now,
@@ -78,7 +78,7 @@ internal class BatchBuilder(
                 endTime = span.end,
                 name = "Tool: ${details.tool.name}",
                 input = llmMapper.kairoWrite(details.input),
-                output = llmMapper.kairoWrite(details.output),
+                output = details.output,
               ),
             )
           else -> null

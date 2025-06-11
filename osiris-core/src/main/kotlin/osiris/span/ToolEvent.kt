@@ -2,9 +2,9 @@ package osiris.span
 
 import osiris.core.Tool
 
-public data class ToolEvent<Input : Any, out Output : Any>(
-  val tool: Tool<Input, Output>,
+public data class ToolEvent(
+  val tool: Tool<*>,
   val id: String,
-  val input: Input,
-  val output: Output,
+  val input: Any,
+  val output: String,
 ) : Span.Details()
