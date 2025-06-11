@@ -2,8 +2,9 @@ package osiris.core
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.UserMessage
-import io.kotest.matchers.collections.shouldMatchEach
-import io.kotest.matchers.should
+import io.kotest.inspectors.shouldForExactly
+import io.kotest.inspectors.shouldForOne
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
@@ -43,19 +44,17 @@ internal class ToolsTest {
   }
 
   private fun verifyTrace(trace: List<Span<*>>) {
-    trace.shouldMatchEach(
-      { it.details.shouldBeInstanceOf<ChatEvent>() },
-      { message ->
-        message.details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>().should { details ->
-          details.input.shouldBe(WeatherTool.Input("Calgary"))
-        }
-      },
-      { message ->
-        message.details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>().should { details ->
-          details.input.shouldBe(WeatherTool.Input("Edmonton"))
-        }
-      },
-      { it.details.shouldBeInstanceOf<ChatEvent>() },
-    )
+    with(trace.map { it.details }) {
+      shouldForExactly(2) { it.shouldBeInstanceOf<ChatEvent>() }
+      shouldForOne { details ->
+        details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>()
+        details.input.shouldBe(WeatherTool.Input("Calgary"))
+      }
+      shouldForOne { details ->
+        details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>()
+        details.input.shouldBe(WeatherTool.Input("Edmonton"))
+      }
+      shouldHaveSize(4)
+    }
   }
 }
