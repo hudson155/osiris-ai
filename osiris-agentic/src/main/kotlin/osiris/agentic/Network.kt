@@ -3,6 +3,10 @@ package osiris.agentic
 import dev.langchain4j.data.message.ChatMessage
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import osiris.core.TraceContext
 import osiris.core.trace
@@ -20,11 +24,10 @@ public abstract class Network(
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
-  // protected open val listeners: List<Listener> = emptyList() // TODO: Revisit this.
+  protected open val tracers: List<Tracer> = emptyList()
 
   public suspend fun run(messages: List<ChatMessage>): Pair<List<ChatMessage>, List<Span<*>>> {
     logger.debug { "Started execution: (name=$name, messages=$messages)." }
-    // val listeners = listeners.map { it.create() } // TODO: Revisit this.
     val traceContext = TraceContext.create()
     return withContext(traceContext) {
       val response = trace({ ExecutionEvent(this@Network, deriveText(messages), deriveText(it)) }) {
@@ -37,6 +40,10 @@ public abstract class Network(
       return@withContext Pair(response, traceContext.spans)
     }.also { response ->
       logger.debug { "Ended execution: (name=$name, response=$response)." }
+      val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+      tracers.forEach { tracer ->
+        scope.launch { tracer.trace(traceContext.spans) }
+      }
     }
   }
 

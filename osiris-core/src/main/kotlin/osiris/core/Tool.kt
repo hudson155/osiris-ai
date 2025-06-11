@@ -33,10 +33,10 @@ public abstract class Tool<in Input : Any, out Output : Any>(
   internal suspend fun execute(id: String, inputString: String): String {
     logger.debug { "Started tool: (name=$name, id=$id, input=$inputString)." }
     val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
-    val output = execute(input)
-    return trace({ ToolEvent(this, id, input, it) }) {
-      llmMapper.kairoWriteSpecial(output, outputType)
-    }.also { outputString ->
+    val output = trace({ ToolEvent(this, id, input, it) }) {
+      execute(input)
+    }
+    return llmMapper.kairoWriteSpecial(output, outputType).also { outputString ->
       logger.debug { "Ended tool: (name=$name, id=$id, output=$outputString)." }
     }
   }
