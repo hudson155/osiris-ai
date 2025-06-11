@@ -47,11 +47,13 @@ internal class ToolsTest {
     with(trace.map { it.details }) {
       shouldForExactly(2) { it.shouldBeInstanceOf<ChatEvent>() }
       shouldForOne { details ->
-        details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>()
+        details.shouldBeInstanceOf<ToolEvent<*, *>>()
+        details.tool.shouldBe(WeatherTool)
         details.input.shouldBe(WeatherTool.Input("Calgary"))
       }
       shouldForOne { details ->
-        details.shouldBeInstanceOf<ToolEvent<WeatherTool.Input, WeatherTool.Output>>()
+        details.shouldBeInstanceOf<ToolEvent<*, *>>()
+        details.tool.shouldBe(WeatherTool)
         details.input.shouldBe(WeatherTool.Input("Edmonton"))
       }
       shouldHaveSize(4)
