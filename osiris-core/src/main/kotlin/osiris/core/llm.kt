@@ -11,8 +11,7 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.withContext
-import osiris.schema.llmSchema
-import osiris.schema.llmSchemaName
+import osiris.schema.LlmSchema
 import osiris.span.ChatEvent
 import osiris.span.Span
 
@@ -75,8 +74,8 @@ private suspend fun buildChatRequest(
     }
     if (responseType != null) {
       val jsonSchema = JsonSchema.builder().apply {
-        name(llmSchemaName(responseType))
-        rootElement(llmSchema(responseType))
+        name(LlmSchema.generateName(responseType))
+        rootElement(LlmSchema.generate(responseType))
       }.build()
       val responseFormat = ResponseFormat.builder().apply {
         type(ResponseFormatType.JSON)
