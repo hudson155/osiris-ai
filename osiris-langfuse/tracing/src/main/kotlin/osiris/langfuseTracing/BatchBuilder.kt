@@ -18,6 +18,7 @@ internal class BatchBuilder(
   @Suppress("ForbiddenMethodCall")
   private val now: Instant = Instant.now()
 
+  @Suppress("LongMethod")
   fun build(): BatchIngestion =
     BatchIngestion(
       batch = trace.mapNotNull { span ->
