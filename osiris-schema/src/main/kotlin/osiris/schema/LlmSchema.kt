@@ -25,7 +25,7 @@ public object LlmSchema {
   @Target(AnnotationTarget.TYPE, AnnotationTarget.VALUE_PARAMETER)
   public annotation class Description(val description: String)
 
-  internal class Exception(
+  internal class LlmSchemaException(
     override val message: String,
     override val cause: Throwable? = null,
   ) : IllegalArgumentException(message)
@@ -33,13 +33,13 @@ public object LlmSchema {
   public fun generateName(kClass: KClass<*>): String =
     withErrorWrapper({ "Failed to generate LLM schema name for ${kClass.qualifiedName!!}. $it" }) {
       val annotation = kClass.findAnnotation<SchemaName>()
-        ?: throw Exception("Missing @${SchemaName::class.simpleName!!}.")
+        ?: throw LlmSchemaException("Missing @${SchemaName::class.simpleName!!}.")
       return@withErrorWrapper annotation.schemaName
     }
 
   public fun generate(kClass: KClass<*>): JsonObjectSchema =
     withErrorWrapper({ "Failed to generate LLM schema for ${kClass.qualifiedName!!}. $it" }) {
-      if (!kClass.isData) throw Exception("Must be a data class or data object.")
+      if (!kClass.isData) throw LlmSchemaException("Must be a data class or data object.")
       return@withErrorWrapper objectElement(null, kClass)
     }
 
@@ -48,7 +48,7 @@ public object LlmSchema {
     return when (parseType(element, type)) {
       LlmType.Boolean -> booleanElement(description)
       LlmType.Integer -> integerElement(description)
-      LlmType.List -> listElement(description, type)
+      LlmType.List -> listElement(description, checkNotNull(type.arguments.single().type))
       LlmType.Number -> numberElement(description)
       LlmType.Object -> objectElement(description, type.classifier as KClass<*>)
       LlmType.String -> stringElement(description)
@@ -71,8 +71,7 @@ public object LlmSchema {
   ): JsonArraySchema =
     JsonArraySchema.builder().apply {
       description(description)
-      val itemType = checkNotNull(type.arguments.single().type)
-      val element = element(itemType, itemType)
+      val element = element(type, type)
       items(element)
     }.build()
 
@@ -94,7 +93,7 @@ public object LlmSchema {
           element(param, param.type)
         }
         addProperty(name, element)
-        if (param.isOptional) throw Exception("${param.name!!} must not be optional.")
+        if (param.isOptional) throw LlmSchemaException("${param.name!!} must not be optional.")
         if (!param.type.isMarkedNullable) {
           required += name
         }
@@ -123,8 +122,8 @@ public object LlmSchema {
   private fun <T> withErrorWrapper(transformMessage: (message: String) -> String, block: () -> T): T {
     try {
       return block()
-    } catch (e: Exception) {
-      throw Exception(transformMessage(e.message))
+    } catch (e: LlmSchemaException) {
+      throw LlmSchemaException(transformMessage(e.message), e)
     }
   }
 }

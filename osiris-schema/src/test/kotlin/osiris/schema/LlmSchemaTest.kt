@@ -11,7 +11,9 @@ import java.math.BigInteger
 import kairo.id.KairoId
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.schema.LlmSchema.LlmSchemaException
 
+@Suppress("CyclomaticComplexMethod", "LongMethod", "NestedScopeFunctions")
 internal class LlmSchemaTest {
   internal object NonDataObject
 
@@ -110,7 +112,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `non-data object`(): Unit = runTest {
-    shouldThrow<LlmSchema.Exception> {
+    shouldThrow<LlmSchemaException> {
       LlmSchema.generate(NonDataObject::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataObject." +
@@ -128,7 +130,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `non-data class`(): Unit = runTest {
-    shouldThrow<LlmSchema.Exception> {
+    shouldThrow<LlmSchemaException> {
       LlmSchema.generate(NonDataClass::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataClass." +
@@ -197,7 +199,7 @@ internal class LlmSchemaTest {
                     items(
                       JsonStringSchema.builder().apply {
                         description("Each string.")
-                      }.build()
+                      }.build(),
                     )
                   }.build(),
                 )
@@ -207,7 +209,7 @@ internal class LlmSchemaTest {
                   "myParamList",
                   "myStringList",
                 )
-              }.build()
+              }.build(),
             )
             addProperty(
               "myParamList",
@@ -248,7 +250,7 @@ internal class LlmSchemaTest {
                         items(
                           JsonStringSchema.builder().apply {
                             description("Each string.")
-                          }.build()
+                          }.build(),
                         )
                       }.build(),
                     )
@@ -258,7 +260,7 @@ internal class LlmSchemaTest {
                       "myParamList",
                       "myStringList",
                     )
-                  }.build()
+                  }.build(),
                 )
               }.build(),
             )
@@ -270,7 +272,7 @@ internal class LlmSchemaTest {
               "myStringList",
               "myInnerList",
             )
-          }.build()
+          }.build(),
         )
         required(
           "myParam",
@@ -283,7 +285,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, unsupported type`(): Unit = runTest {
-    shouldThrow<LlmSchema.Exception> {
+    shouldThrow<LlmSchemaException> {
       LlmSchema.generate(DataClassUnsupportedType::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedType." +
@@ -322,7 +324,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, unsupported overridden type`(): Unit = runTest {
-    shouldThrow<LlmSchema.Exception> {
+    shouldThrow<LlmSchemaException> {
       LlmSchema.generate(DataClassUnsupportedOverriddenType::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedOverriddenType." +
@@ -350,7 +352,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, optional param`(): Unit = runTest {
-    shouldThrow<LlmSchema.Exception> {
+    shouldThrow<LlmSchemaException> {
       LlmSchema.generate(DataClassOptionalParam::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassOptionalParam." +

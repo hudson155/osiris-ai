@@ -7,6 +7,7 @@ import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
+import osiris.schema.LlmSchema.LlmSchemaException
 
 internal enum class LlmType {
   Boolean,
@@ -20,12 +21,12 @@ internal enum class LlmType {
 internal fun parseType(element: KAnnotatedElement?, type: KType): LlmType {
   val annotation = element?.findAnnotation<LlmSchema.Type>()
   if (annotation != null) {
-    return when (val type = annotation.type) {
+    return when (annotation.type) {
       "boolean" -> LlmType.Boolean
       "integer" -> LlmType.Integer
       "number" -> LlmType.Number
       "string" -> LlmType.String
-      else -> throw LlmSchema.Exception("Specified unsupported type $type.")
+      else -> throw LlmSchemaException("Specified unsupported type ${annotation.type}.")
     }
   }
   if (type.classifier is KClass<*> && (type.classifier as KClass<*>).isData) return LlmType.Object
@@ -35,7 +36,7 @@ internal fun parseType(element: KAnnotatedElement?, type: KType): LlmType {
     List::class -> LlmType.List
     BigDecimal::class, Double::class, Float::class -> LlmType.Number
     KairoId::class, String::class -> LlmType.String
-    else -> throw LlmSchema.Exception(
+    else -> throw LlmSchemaException(
       "Missing @${LlmSchema.Type::class.simpleName!!}" +
         " and the type could not be inferred.",
     )
