@@ -2,12 +2,9 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.UserMessage
 import kairo.lazySupplier.LazySupplier
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.yield
 import osiris.agentic.Consult.Input
 import osiris.core.Tool
-import osiris.core.response
+import osiris.core.convert
 import osiris.schema.LlmSchema
 
 public class Consult(
@@ -34,12 +31,10 @@ public class Consult(
     }
 
   override suspend fun execute(input: Input): String {
-    val context = getExecutionContext()
     val agent = agent.get()
-    yield()
     val response = agent.execute(
       messages = listOf(UserMessage(input.message)),
-    ).onEach(context::send).response().last()
-    return response.text()
+    )
+    return response.convert()
   }
 }

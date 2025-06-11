@@ -1,7 +1,8 @@
 package osiris.agentic
 
-import osiris.event.Event
+// TODO: Revisit this.
+// public fun interface Listener {
+//   public fun create(): (event: Event) -> Unit
+// }
 
-public fun interface Listener {
-  public fun create(): (event: Event) -> Unit
-}
+// CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {

@@ -1,4 +1,4 @@
-package osiris.event
+package osiris.span
 
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage

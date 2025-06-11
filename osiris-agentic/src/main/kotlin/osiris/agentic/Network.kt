@@ -1,15 +1,11 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.ChatMessage
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
-import osiris.core.response
-import osiris.event.Event
-import osiris.event.ExecutionEvent
-import osiris.event.deriveText
+import osiris.core.TraceContext
+import osiris.core.trace
+import osiris.span.ExecutionEvent
+import osiris.span.deriveText
 
 public abstract class Network(
   public val name: String,
@@ -19,22 +15,19 @@ public abstract class Network(
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
-  protected open val listeners: List<Listener> = emptyList()
+  // protected open val listeners: List<Listener> = emptyList() // TODO: Revisit this.
 
-  public fun run(messages: List<ChatMessage>): Flow<Event> {
-    val listeners = listeners.map { it.create() }
-    return channelFlow {
-      val context = ExecutionContext(this@Network, this)
-      withContext(context) {
-        val agent = context.getAgent(entrypoint)
-        send(ExecutionEvent.Start(this@Network, deriveText(messages)))
-        val response = agent.execute(messages).onEach(::send).response().last()
-        send(ExecutionEvent.End(deriveText(response)))
+  public suspend fun run(messages: List<ChatMessage>): List<ChatMessage> =
+    // val listeners = listeners.map { it.create() } // TODO: Revisit this.
+    withContext(TraceContext.create()) {
+      trace({ ExecutionEvent(this@Network, deriveText(messages), deriveText(it)) }) {
+        val executionContext = ExecutionContext(this@Network)
+        withContext(executionContext) {
+          val agent = executionContext.getAgent(entrypoint)
+          return@withContext agent.execute(messages)
+        }
       }
-    }.onEach { event ->
-      listeners.forEach { it(event) }
     }
-  }
 
   override fun toString(): String =
     "Network(name=$name)"

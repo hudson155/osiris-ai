@@ -14,4 +14,5 @@ dependencies {
   testImplementation(libs.kairoEnvironmentVariableSupplier)
   testImplementation(libs.kairoLoggingTesting)
   testImplementation(libs.kairoSerialization)
+  testImplementation(libs.kairoTesting)
 }
