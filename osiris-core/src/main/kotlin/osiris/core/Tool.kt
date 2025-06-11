@@ -7,7 +7,7 @@ import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
 import kairo.serialization.util.kairoWriteSpecial
 import kairo.serialization.util.readValueSpecial
-import osiris.schema.llmSchema
+import osiris.schema.LlmSchema
 import osiris.span.ToolEvent
 
 private val logger: KLogger = KotlinLogging.logger {}
@@ -26,7 +26,7 @@ public abstract class Tool<in Input : Any, out Output : Any>(
       ToolSpecification.builder().apply {
         name(name)
         description.get()?.let { description(it) }
-        parameters(llmSchema(inputType.kotlinClass))
+        parameters(LlmSchema.generate(inputType.kotlinClass))
       }.build()
     }
 

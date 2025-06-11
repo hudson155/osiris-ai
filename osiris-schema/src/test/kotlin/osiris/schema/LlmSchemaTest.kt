@@ -1,6 +1,8 @@
 package osiris.schema
 
+import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
+import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
@@ -32,6 +34,39 @@ internal class LlmSchemaTest {
     val myKairoId: KairoId,
     val myString: String,
   )
+
+  internal data class DataClassNested(
+    @LlmSchema.Type("string")
+    val myParam: Int,
+    @LlmSchema.Description("My string.")
+    val myString: String,
+    @LlmSchema.Description("My outer.")
+    val myOuter: Outer,
+  ) {
+    internal data class Outer(
+      @LlmSchema.Type("string")
+      val myParam: Int,
+      @LlmSchema.Description("My string.")
+      val myString: String,
+      @LlmSchema.Description("My inner.")
+      val myInner: Inner,
+      val myParamList: List<@LlmSchema.Type("string") Int>,
+      @LlmSchema.Description("My string list.")
+      val myStringList: List<@LlmSchema.Description("Each string.") String>,
+      @LlmSchema.Description("My inner list.")
+      val myInnerList: List<@LlmSchema.Description("Each inner.") Inner>,
+    )
+
+    internal data class Inner(
+      @LlmSchema.Type("string")
+      val myParam: Int,
+      @LlmSchema.Description("My string.")
+      val myString: String,
+      val myParamList: List<@LlmSchema.Type("string") Int>,
+      @LlmSchema.Description("My string list.")
+      val myStringList: List<@LlmSchema.Description("Each string.") String>,
+    )
+  }
 
   internal data class DataClassUnsupportedType(
     val myByte: Byte,
@@ -75,16 +110,17 @@ internal class LlmSchemaTest {
 
   @Test
   fun `non-data object`(): Unit = runTest {
-    shouldThrow<IllegalArgumentException> {
-      llmSchema(NonDataObject::class)
+    shouldThrow<LlmSchema.Exception> {
+      LlmSchema.generate(NonDataObject::class)
     }.shouldHaveMessage(
-      "LLM schema osiris.schema.LlmSchemaTest.NonDataObject must be a data class or data object.",
+      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataObject." +
+        " Must be a data class or data object.",
     )
   }
 
   @Test
   fun `data object`(): Unit = runTest {
-    llmSchema(DataObject::class).shouldBe(
+    LlmSchema.generate(DataObject::class).shouldBe(
       JsonObjectSchema.builder()
         .build(),
     )
@@ -92,16 +128,17 @@ internal class LlmSchemaTest {
 
   @Test
   fun `non-data class`(): Unit = runTest {
-    shouldThrow<IllegalArgumentException> {
-      llmSchema(NonDataClass::class)
+    shouldThrow<LlmSchema.Exception> {
+      LlmSchema.generate(NonDataClass::class)
     }.shouldHaveMessage(
-      "LLM schema osiris.schema.LlmSchemaTest.NonDataClass must be a data class or data object.",
+      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataClass." +
+        " Must be a data class or data object.",
     )
   }
 
   @Test
   fun `data class, default`(): Unit = runTest {
-    llmSchema(DataClassDefault::class).shouldBe(
+    LlmSchema.generate(DataClassDefault::class).shouldBe(
       JsonObjectSchema.builder().apply {
         addBooleanProperty("myBoolean")
         addIntegerProperty("myBigInteger")
@@ -130,19 +167,134 @@ internal class LlmSchemaTest {
   }
 
   @Test
+  fun `data class, nested`(): Unit = runTest {
+    LlmSchema.generate(DataClassNested::class).shouldBe(
+      JsonObjectSchema.builder().apply {
+        addStringProperty("myParam")
+        addStringProperty("myString", "My string.")
+        addProperty(
+          "myOuter",
+          JsonObjectSchema.builder().apply {
+            description("My outer.")
+            addStringProperty("myParam")
+            addStringProperty("myString", "My string.")
+            addProperty(
+              "myInner",
+              JsonObjectSchema.builder().apply {
+                description("My inner.")
+                addStringProperty("myParam")
+                addStringProperty("myString", "My string.")
+                addProperty(
+                  "myParamList",
+                  JsonArraySchema.builder().apply {
+                    items(JsonStringSchema.builder().build())
+                  }.build(),
+                )
+                addProperty(
+                  "myStringList",
+                  JsonArraySchema.builder().apply {
+                    description("My string list.")
+                    items(
+                      JsonStringSchema.builder().apply {
+                        description("Each string.")
+                      }.build()
+                    )
+                  }.build(),
+                )
+                required(
+                  "myParam",
+                  "myString",
+                  "myParamList",
+                  "myStringList",
+                )
+              }.build()
+            )
+            addProperty(
+              "myParamList",
+              JsonArraySchema.builder().apply {
+                items(JsonStringSchema.builder().build())
+              }.build(),
+            )
+            addProperty(
+              "myStringList",
+              JsonArraySchema.builder().apply {
+                description("My string list.")
+                items(
+                  JsonStringSchema.builder().apply {
+                    description("Each string.")
+                  }.build(),
+                )
+              }.build(),
+            )
+            addProperty(
+              "myInnerList",
+              JsonArraySchema.builder().apply {
+                description("My inner list.")
+                items(
+                  JsonObjectSchema.builder().apply {
+                    description("Each inner.")
+                    addStringProperty("myParam")
+                    addStringProperty("myString", "My string.")
+                    addProperty(
+                      "myParamList",
+                      JsonArraySchema.builder().apply {
+                        items(JsonStringSchema.builder().build())
+                      }.build(),
+                    )
+                    addProperty(
+                      "myStringList",
+                      JsonArraySchema.builder().apply {
+                        description("My string list.")
+                        items(
+                          JsonStringSchema.builder().apply {
+                            description("Each string.")
+                          }.build()
+                        )
+                      }.build(),
+                    )
+                    required(
+                      "myParam",
+                      "myString",
+                      "myParamList",
+                      "myStringList",
+                    )
+                  }.build()
+                )
+              }.build(),
+            )
+            required(
+              "myParam",
+              "myString",
+              "myInner",
+              "myParamList",
+              "myStringList",
+              "myInnerList",
+            )
+          }.build()
+        )
+        required(
+          "myParam",
+          "myString",
+          "myOuter",
+        )
+      }.build(),
+    )
+  }
+
+  @Test
   fun `data class, unsupported type`(): Unit = runTest {
-    shouldThrow<IllegalArgumentException> {
-      llmSchema(DataClassUnsupportedType::class)
+    shouldThrow<LlmSchema.Exception> {
+      LlmSchema.generate(DataClassUnsupportedType::class)
     }.shouldHaveMessage(
-      "LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedType::myByte" +
-        " is missing @Type," +
-        " and the type could not be inferred.",
+      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedType." +
+        " Missing @Type and the type could not be inferred" +
+        " for property myByte.",
     )
   }
 
   @Test
   fun `data class, type specified`(): Unit = runTest {
-    llmSchema(DataClassTypeSpecified::class).shouldBe(
+    LlmSchema.generate(DataClassTypeSpecified::class).shouldBe(
       JsonObjectSchema.builder().apply {
         addBooleanProperty("myBoolean")
         addIntegerProperty("myInteger")
@@ -160,7 +312,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, type overridden`(): Unit = runTest {
-    llmSchema(DataClassTypeOverridden::class).shouldBe(
+    LlmSchema.generate(DataClassTypeOverridden::class).shouldBe(
       JsonObjectSchema.builder().apply {
         addStringProperty("myParam")
         required("myParam")
@@ -170,17 +322,17 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, unsupported overridden type`(): Unit = runTest {
-    shouldThrow<IllegalArgumentException> {
-      llmSchema(DataClassUnsupportedOverriddenType::class)
+    shouldThrow<LlmSchema.Exception> {
+      LlmSchema.generate(DataClassUnsupportedOverriddenType::class)
     }.shouldHaveMessage(
-      "LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedOverriddenType::myParam" +
-        " specified an unsupported type: byte.",
+      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedOverriddenType." +
+        " Specified unsupported type byte for property myParam.",
     )
   }
 
   @Test
   fun `data class, with descriptions`(): Unit = runTest {
-    llmSchema(DataClassWithDescriptions::class).shouldBe(
+    LlmSchema.generate(DataClassWithDescriptions::class).shouldBe(
       JsonObjectSchema.builder().apply {
         addBooleanProperty("myBoolean", "My boolean.")
         addIntegerProperty("myInt", "My int.")
@@ -198,11 +350,11 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, optional param`(): Unit = runTest {
-    shouldThrow<IllegalArgumentException> {
-      llmSchema(DataClassOptionalParam::class)
+    shouldThrow<LlmSchema.Exception> {
+      LlmSchema.generate(DataClassOptionalParam::class)
     }.shouldHaveMessage(
-      "LLM schema for osiris.schema.LlmSchemaTest.DataClassOptionalParam::myBoolean" +
-        " must not be optional.",
+      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassOptionalParam." +
+        " myBoolean must not be optional.",
     )
   }
 }
