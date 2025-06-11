@@ -4,6 +4,8 @@ import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import osiris.core.Tool
 import osiris.core.getTraceContext
@@ -11,6 +13,8 @@ import osiris.core.llm
 import osiris.core.trace
 import osiris.span.AgentEvent
 import osiris.span.deriveText
+
+private val logger: KLogger = KotlinLogging.logger {}
 
 public abstract class Agent(
   public val name: String,
@@ -23,8 +27,9 @@ public abstract class Agent(
 
   protected open fun ChatRequest.Builder.llm(): Unit = Unit
 
-  public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> =
-    with(getTraceContext()) {
+  public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> {
+    logger.debug { "Started agent: (name=$name, messages=$messages)." }
+    return with(getTraceContext()) {
       trace({ AgentEvent(this@Agent, deriveText(messages), deriveText(it)) }) {
         val (response) = llm(
           model = model,
@@ -38,7 +43,10 @@ public abstract class Agent(
         )
         return@trace response
       }
+    }.also {
+      logger.debug { "Ended agent: (name=$name, messages=$it)." }
     }
+  }
 
   override fun toString(): String =
     "Agent(name=$name)"
