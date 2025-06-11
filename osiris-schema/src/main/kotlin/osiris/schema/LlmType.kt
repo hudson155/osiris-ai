@@ -18,8 +18,8 @@ internal enum class LlmType {
   String,
 }
 
-internal fun parseType(element: KAnnotatedElement?, type: KType): LlmType {
-  val annotation = element?.findAnnotation<LlmSchema.Type>()
+internal fun parseType(element: KAnnotatedElement, type: KType): LlmType {
+  val annotation = element.findAnnotation<LlmSchema.Type>()
   if (annotation != null) {
     return when (annotation.type) {
       "boolean" -> LlmType.Boolean
