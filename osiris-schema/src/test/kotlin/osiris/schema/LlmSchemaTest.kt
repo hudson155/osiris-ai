@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
 import java.math.BigDecimal
 import java.math.BigInteger
+import kairo.id.KairoId
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
@@ -28,6 +29,7 @@ internal class LlmSchemaTest {
     val myBigDecimal: BigDecimal,
     val myDouble: Double,
     val myFloat: Float,
+    val myKairoId: KairoId,
     val myString: String,
   )
 
@@ -109,6 +111,7 @@ internal class LlmSchemaTest {
         addNumberProperty("myBigDecimal")
         addNumberProperty("myDouble")
         addNumberProperty("myFloat")
+        addStringProperty("myKairoId")
         addStringProperty("myString")
         required(
           "myBoolean",
@@ -119,6 +122,7 @@ internal class LlmSchemaTest {
           "myBigDecimal",
           "myDouble",
           "myFloat",
+          "myKairoId",
           "myString",
         )
       }.build(),
