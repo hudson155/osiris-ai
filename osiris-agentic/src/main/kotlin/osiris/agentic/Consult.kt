@@ -9,7 +9,7 @@ import osiris.schema.LlmSchema
 
 public class Consult(
   private val agentName: String,
-) : Tool<Input, String>("consult_$agentName") {
+) : Tool<Input>("consult_$agentName") {
   public data class Input(
     @LlmSchema.Description("The message to the agent.")
     val message: String,

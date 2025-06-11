@@ -21,7 +21,7 @@ private val logger: KLogger = KotlinLogging.logger {}
 public suspend fun llm(
   model: ChatModel,
   messages: List<ChatMessage>,
-  tools: List<Tool<*, *>> = emptyList(),
+  tools: List<Tool<*>> = emptyList(),
   responseType: KClass<*>? = null,
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
   block: ChatRequest.Builder.() -> Unit = {},
@@ -63,7 +63,7 @@ public suspend fun llm(
 @Suppress("LongParameterList")
 private suspend fun buildChatRequest(
   messages: List<ChatMessage>,
-  tools: List<Tool<*, *>>,
+  tools: List<Tool<*>>,
   responseType: KClass<*>?,
   block: ChatRequest.Builder.() -> Unit,
 ): ChatRequest =
