@@ -3,7 +3,8 @@ package osiris.core
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
-import io.kotest.matchers.collections.shouldMatchEach
+import io.kotest.inspectors.shouldForExactly
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
@@ -35,8 +36,9 @@ internal class StructuredOutputTest {
   }
 
   private fun verifyTrace(trace: List<Span<*>>) {
-    trace.shouldMatchEach(
-      { it.details.shouldBeInstanceOf<ChatEvent>() },
-    )
+    with(trace.map { it.details }) {
+      shouldForExactly(1) { it.shouldBeInstanceOf<ChatEvent>() }
+      shouldHaveSize(1)
+    }
   }
 }
