@@ -43,8 +43,8 @@ public abstract class Agent(
         )
         return@trace response
       }
-    }.also {
-      logger.debug { "Ended agent: (name=$name, messages=$it)." }
+    }.also { response ->
+      logger.debug { "Ended agent: (name=$name, response=$response)." }
     }
   }
 

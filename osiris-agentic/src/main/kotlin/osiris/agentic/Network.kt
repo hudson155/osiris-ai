@@ -32,8 +32,8 @@ public abstract class Network(
           return@withContext agent.execute(messages)
         }
       }
-    }.also {
-      logger.debug { "Ended execution: (name=$name, messages=$it)." }
+    }.also { response ->
+      logger.debug { "Ended execution: (name=$name, response=$response)." }
     }
   }
 

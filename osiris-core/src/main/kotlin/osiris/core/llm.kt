@@ -39,7 +39,7 @@ public suspend fun llm(
         block = block,
       )
       val lastMessage = chatRequest.messages().lastOrNull()
-      logger.debug { "Last message: $lastMessage." }
+      logger.debug { "Last message: ${lastMessage ?: "null"}." }
       if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
         val executionRequests = lastMessage.toolExecutionRequests()
         logger.debug { "Tool execution requests: $executionRequests." }
