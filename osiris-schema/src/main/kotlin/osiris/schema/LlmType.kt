@@ -2,6 +2,7 @@ package osiris.schema
 
 import java.math.BigDecimal
 import java.math.BigInteger
+import kairo.id.KairoId
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.findAnnotation
@@ -31,7 +32,7 @@ internal fun parseType(kClass: KClass<*>, param: KParameter): LlmType {
     Boolean::class -> LlmType.Boolean
     BigInteger::class, Int::class, Long::class, Short::class -> LlmType.Integer
     BigDecimal::class, Double::class, Float::class -> LlmType.Number
-    String::class -> LlmType.String
+    KairoId::class, String::class -> LlmType.String
     else -> throw IllegalArgumentException(
       "LLM schema for ${kClass.qualifiedName!!}::${param.name!!}" +
         " is missing @${LlmSchema.Type::class.simpleName!!}," +

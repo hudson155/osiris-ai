@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+  implementation(libs.kairoId)
   implementation(libs.kairoReflect)
   implementation(libs.langchain)
 
