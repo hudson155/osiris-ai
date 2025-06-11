@@ -1,12 +1,16 @@
 package osiris.core
 
 import dev.langchain4j.agent.tool.ToolSpecification
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
 import kairo.serialization.util.kairoWriteSpecial
 import kairo.serialization.util.readValueSpecial
 import osiris.schema.llmSchema
 import osiris.span.ToolEvent
+
+private val logger: KLogger = KotlinLogging.logger {}
 
 public abstract class Tool<in Input : Any, out Output : Any>(
   public val name: String,
@@ -26,11 +30,14 @@ public abstract class Tool<in Input : Any, out Output : Any>(
       }.build()
     }
 
-  internal suspend fun execute(id: String, string: String): String {
-    val input = checkNotNull(llmMapper.readValueSpecial(string, inputType))
+  internal suspend fun execute(id: String, inputString: String): String {
+    logger.debug { "Started tool: (name=$name, id=$id, input=$inputString)." }
+    val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
     val output = execute(input)
     return trace({ ToolEvent(this, id, input, it) }) {
       llmMapper.kairoWriteSpecial(output, outputType)
+    }.also { outputString ->
+      logger.debug { "Ended tool: (name=$name, id=$id, output=$outputString)." }
     }
   }
 

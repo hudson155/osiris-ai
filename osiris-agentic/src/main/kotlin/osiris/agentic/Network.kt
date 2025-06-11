@@ -1,11 +1,15 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.ChatMessage
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.withContext
 import osiris.core.TraceContext
 import osiris.core.trace
 import osiris.span.ExecutionEvent
 import osiris.span.deriveText
+
+private val logger: KLogger = KotlinLogging.logger {}
 
 public abstract class Network(
   public val name: String,
@@ -17,9 +21,10 @@ public abstract class Network(
 
   // protected open val listeners: List<Listener> = emptyList() // TODO: Revisit this.
 
-  public suspend fun run(messages: List<ChatMessage>): List<ChatMessage> =
+  public suspend fun run(messages: List<ChatMessage>): List<ChatMessage> {
+    logger.debug { "Started execution: (name=$name, messages=$messages)." }
     // val listeners = listeners.map { it.create() } // TODO: Revisit this.
-    withContext(TraceContext.create()) {
+    return withContext(TraceContext.create()) {
       trace({ ExecutionEvent(this@Network, deriveText(messages), deriveText(it)) }) {
         val executionContext = ExecutionContext(this@Network)
         withContext(executionContext) {
@@ -27,7 +32,10 @@ public abstract class Network(
           return@withContext agent.execute(messages)
         }
       }
+    }.also { response ->
+      logger.debug { "Ended execution: (name=$name, response=$response)." }
     }
+  }
 
   override fun toString(): String =
     "Network(name=$name)"

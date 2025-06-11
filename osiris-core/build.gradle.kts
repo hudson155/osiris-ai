@@ -8,6 +8,7 @@ dependencies {
 
   api(libs.kairoCoroutines)
   api(libs.kairoLazySupplier)
+  implementation(libs.kairoLogging)
   api(libs.kairoProtectedString)
   implementation(libs.kairoReflect)
   implementation(libs.kairoSerialization)
