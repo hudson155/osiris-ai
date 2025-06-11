@@ -47,7 +47,7 @@ public suspend fun <T> trace(
     parentId = outerTraceContext.spanId,
     start = start,
     end = end,
-    details = span(result)
+    details = span(result),
   )
   return result
 }
