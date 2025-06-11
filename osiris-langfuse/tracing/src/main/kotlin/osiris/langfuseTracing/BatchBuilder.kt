@@ -40,9 +40,9 @@ internal class BatchBuilder(
               id = Uuid.random(),
               timestamp = now,
               body = SpanCreate.Body(
-                id = Uuid.random(), // TODO: Parent.
+                id = span.id,
                 traceId = traceId,
-                parentObservationId = null, // TODO: Wrong.
+                parentObservationId = span.parentId,
                 startTime = span.start,
                 endTime = span.end,
                 name = "Agent: ${details.agent.name}",
@@ -55,9 +55,9 @@ internal class BatchBuilder(
               id = Uuid.random(),
               timestamp = now,
               body = GenerationCreate.Body(
-                id = Uuid.random(), // TODO: Parent.
+                id = span.id,
                 traceId = traceId,
-                parentObservationId = null, // TODO: Wrong.
+                parentObservationId = span.parentId,
                 startTime = span.start,
                 endTime = span.end,
                 name = "Chat: ${details.response.modelName()}",
@@ -71,9 +71,9 @@ internal class BatchBuilder(
               id = Uuid.random(),
               timestamp = now,
               body = SpanCreate.Body(
-                id = Uuid.random(), // TODO: Parent.
+                id = span.id,
                 traceId = traceId,
-                parentObservationId = null, // TODO: Wrong.
+                parentObservationId = span.parentId,
                 startTime = span.start,
                 endTime = span.end,
                 name = "Tool: ${details.tool.name}",
