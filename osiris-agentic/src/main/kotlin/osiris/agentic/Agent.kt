@@ -5,16 +5,12 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import kotlin.reflect.KClass
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import osiris.core.Tool
+import osiris.core.getTraceContext
 import osiris.core.llm
-import osiris.core.response
-import osiris.event.AgentEvent
-import osiris.event.Event
-import osiris.event.deriveText
+import osiris.core.trace
+import osiris.span.AgentEvent
+import osiris.span.deriveText
 
 public abstract class Agent(
   public val name: String,
@@ -27,29 +23,22 @@ public abstract class Agent(
 
   protected open fun ChatRequest.Builder.llm(): Unit = Unit
 
-  @Suppress("SuspendFunWithFlowReturnType")
-  public suspend fun execute(messages: List<ChatMessage>): Flow<Event> =
-    with(getExecutionContext()) {
-      flow {
-        emit(AgentEvent.Start(this@Agent, deriveText(messages)))
-        val response = llm(
+  public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> =
+    with(getTraceContext()) {
+      trace({ AgentEvent(this@Agent, deriveText(messages), deriveText(it)) }) {
+        val (response) = llm(
+          model = model,
           messages = buildList {
             addAll(messages)
             instructions?.let { add(SystemMessage(it.get())) }
           },
-        ).onEach(::emit).response().first()
-        emit(AgentEvent.End(deriveText(response)))
+          tools = tools,
+          responseType = responseType,
+          block = { llm() },
+        )
+        return@trace response
       }
     }
-
-  private fun llm(messages: List<ChatMessage>): Flow<Event> =
-    llm(
-      model = model,
-      messages = messages,
-      tools = tools,
-      responseType = responseType,
-      block = { llm() },
-    )
 
   override fun toString(): String =
     "Agent(name=$name)"

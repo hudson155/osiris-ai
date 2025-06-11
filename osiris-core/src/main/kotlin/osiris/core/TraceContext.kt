@@ -6,12 +6,15 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import osiris.span.Span
 
-public class TraceContext : AbstractCoroutineContextElement(key) {
+public class TraceContext private constructor() : AbstractCoroutineContextElement(key) {
   public val spans: MutableList<Span<*>> = mutableListOf()
 
   public companion object {
     public val key: CoroutineContext.Key<TraceContext> =
       object : CoroutineContext.Key<TraceContext> {}
+
+    public suspend fun create(): TraceContext =
+      coroutineContext[key] ?: TraceContext()
   }
 }
 

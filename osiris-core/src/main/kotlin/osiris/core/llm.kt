@@ -24,7 +24,7 @@ public suspend fun llm(
   block: ChatRequest.Builder.() -> Unit = {},
 ): Pair<List<ChatMessage>, List<Span<*>>> {
   val response = mutableListOf<ChatMessage>()
-  val traceContext = TraceContext()
+  val traceContext = TraceContext.create()
   withContext(traceContext) {
     while (response.lastOrNull()?.let { it is AiMessage && !it.hasToolExecutionRequests() } != true) {
       val chatRequest = buildChatRequest(
