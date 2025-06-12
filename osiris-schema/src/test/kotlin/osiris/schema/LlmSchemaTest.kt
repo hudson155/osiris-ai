@@ -30,6 +30,7 @@ internal class LlmSchemaTest {
   internal data class DataClassDefault(
     val myBoolean: Boolean,
     val myBigInteger: BigInteger,
+    val myEnum: PhoneType,
     val myInt: Int,
     val myLong: Long,
     val myShort: Short,
@@ -38,7 +39,9 @@ internal class LlmSchemaTest {
     val myFloat: Float,
     val myKairoId: KairoId,
     val myString: String,
-  )
+  ) {
+    internal enum class PhoneType { Android, Flip, Iphone }
+  }
 
   internal data class DataClassNested(
     @LlmSchema.Type("string")
@@ -185,6 +188,7 @@ internal class LlmSchemaTest {
       JsonObjectSchema.builder().apply {
         addBooleanProperty("myBoolean")
         addIntegerProperty("myBigInteger")
+        addEnumProperty("myEnum", listOf("Android", "Flip", "Iphone"))
         addIntegerProperty("myInt")
         addIntegerProperty("myLong")
         addIntegerProperty("myShort")
@@ -196,6 +200,7 @@ internal class LlmSchemaTest {
         required(
           "myBoolean",
           "myBigInteger",
+          "myEnum",
           "myInt",
           "myLong",
           "myShort",

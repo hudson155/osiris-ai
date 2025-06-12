@@ -13,6 +13,7 @@ import osiris.schema.LlmSchema.LlmSchemaException
 
 internal enum class LlmType {
   Boolean,
+  Enum,
   Integer,
   List,
   Number,
@@ -38,6 +39,9 @@ internal fun parseType(element: KAnnotatedElement, kClass: KClass<*>): LlmType {
     List::class -> return LlmType.List
     BigDecimal::class, Double::class, Float::class -> return LlmType.Number
     KairoId::class, String::class -> return LlmType.String
+  }
+  if (kClass.java.isEnum) {
+    return LlmType.Enum
   }
   if (kClass.isData) {
     return LlmType.Object

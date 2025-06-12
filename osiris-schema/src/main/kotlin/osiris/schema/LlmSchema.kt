@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
+import dev.langchain4j.model.chat.request.json.JsonEnumSchema
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema
 import dev.langchain4j.model.chat.request.json.JsonNumberSchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
@@ -51,6 +52,7 @@ public object LlmSchema {
     val description = parseDescription(element)
     return when (parseType(element, kClass)) {
       LlmType.Boolean -> booleanElement(description)
+      LlmType.Enum -> enumElement(description, kClass)
       LlmType.Integer -> integerElement(description)
       LlmType.List -> listElement(description, checkNotNull(type.arguments.single().type))
       LlmType.Number -> numberElement(description)
@@ -63,6 +65,12 @@ public object LlmSchema {
   private fun booleanElement(description: String?): JsonBooleanSchema =
     JsonBooleanSchema.builder().apply {
       description(description)
+    }.build()
+
+  private fun enumElement(description: String?, kClass: KClass<*>): JsonEnumSchema =
+    JsonEnumSchema.builder().apply {
+      description(description)
+      enumValues(kClass.java.enumConstants.map { (it as Enum<*>).name })
     }.build()
 
   private fun integerElement(description: String?): JsonIntegerSchema =
