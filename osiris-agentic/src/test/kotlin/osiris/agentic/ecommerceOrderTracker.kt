@@ -11,7 +11,7 @@ internal val ecommerceOrderTracker: Agent =
     instructions = ecommerceInstructionsBuilder.create {
       """
         # Your role and task
-
+        
         You are the store's data analyst.
         Your role is to track orders.
       """.trimIndent()

@@ -26,9 +26,9 @@ internal class InstructionsTest {
     instructionsBuilder.create { "Third" }.get().shouldBe(
       """
         First
-
+        
         Second
-
+        
         Third
       """.trimIndent(),
     )
@@ -41,12 +41,12 @@ internal class InstructionsTest {
     instructionsBuilder.create { "The real instructions." }.get().shouldBe(
       """
         # The system
-
+        
         You're a part of a multi-agent system.
         You can consult other agents.
         When consulting other agents, succinctly tell them what to do or what you need.
         Don't tell them how to do their job.
-
+        
         The real instructions.
       """.trimIndent(),
     )

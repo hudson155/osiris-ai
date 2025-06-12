@@ -5,7 +5,7 @@ internal val ecommerceInstructionsBuilder: InstructionsBuilder =
     add {
       """
         # Ecommerce store
-
+        
         The user is a customer at an ecommerce store.
       """.trimIndent()
     }

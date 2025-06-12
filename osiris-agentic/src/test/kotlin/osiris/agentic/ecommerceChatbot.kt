@@ -10,7 +10,7 @@ internal val ecommerceChatbot: Agent =
     instructions = ecommerceInstructionsBuilder.create {
       """
         # Your role and task
-
+        
         You are the store's really smart AI assistant.
         Your task is to use tools to comprehensively answer the user's question.
       """.trimIndent()

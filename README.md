@@ -140,7 +140,7 @@ val instructionsBuilder: InstructionsBuilder =
     add(
       """
         # Ecommerce store
-
+        
         The user is a customer at an ecommerce store.
       """.trimIndent(),
     )
@@ -154,7 +154,7 @@ val chatbot: Agent =
     instructions = instructionsBuilder.create(
       """
         # Your role and task
-
+        
         You are the store's really smart AI assistant.
         Your task is to use tools to comprehensively answer the user's question.
       """.trimIndent(),
@@ -171,7 +171,7 @@ val orderTracker: Agent =
     instructions = instructionsBuilder.create(
       """
         # Your role and task
-
+        
         You are the store's data analyst.
         Your role is to track orders.
       """.trimIndent(),
