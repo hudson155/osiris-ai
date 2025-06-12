@@ -1,5 +1,8 @@
 package osiris.schema
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
@@ -68,6 +71,44 @@ internal class LlmSchemaTest {
       @LlmSchema.Description("My string list.")
       val myStringList: List<@LlmSchema.Description("Each string.") String>,
     )
+  }
+
+  internal data class DataClassPolymorphic(
+    val vehicle: Vehicle,
+  ) {
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+    @JsonSubTypes(
+      JsonSubTypes.Type(Vehicle.Car::class, name = "Car"),
+      JsonSubTypes.Type(Vehicle.Motorcycle::class, name = "Motorcycle"),
+      JsonSubTypes.Type(Vehicle.Bicycle::class, name = "Bicycle"),
+    )
+    internal sealed class Vehicle {
+      abstract val model: String?
+
+      abstract val wheels: Int
+
+      internal data class Car(
+        override val model: String,
+        val plate: String,
+        val capacity: Int,
+      ) : Vehicle() {
+        override val wheels: Int = 4
+      }
+
+      internal data class Motorcycle(
+        val plate: String,
+      ) : Vehicle() {
+        override val model: Nothing? = null
+
+        override val wheels: Int = 2
+      }
+
+      internal data object Bicycle : Vehicle() {
+        override val model: Nothing? = null
+
+        override val wheels: Int = 2
+      }
+    }
   }
 
   internal data class DataClassUnsupportedType(
@@ -279,6 +320,46 @@ internal class LlmSchemaTest {
           "myString",
           "myOuter",
         )
+      }.build(),
+    )
+  }
+
+  @Test
+  fun `data class, polymorphic`(): Unit = runTest {
+    LlmSchema.generate(DataClassPolymorphic::class).shouldBe(
+      JsonObjectSchema.builder().apply {
+        addProperty(
+          "vehicle",
+          JsonAnyOfSchema.builder().apply {
+            anyOf(
+              JsonObjectSchema.builder().apply {
+                addEnumProperty("type", listOf("Car"))
+                addStringProperty("model")
+                addStringProperty("plate")
+                addIntegerProperty("capacity")
+                required(
+                  "type",
+                  "model",
+                  "plate",
+                  "capacity",
+                )
+              }.build(),
+              JsonObjectSchema.builder().apply {
+                addEnumProperty("type", listOf("Motorcycle"))
+                addStringProperty("plate")
+                required(
+                  "type",
+                  "plate",
+                )
+              }.build(),
+              JsonObjectSchema.builder().apply {
+                addEnumProperty("type", listOf("Bicycle"))
+                required("type")
+              }.build(),
+            )
+          }.build(),
+        )
+        required("vehicle")
       }.build(),
     )
   }

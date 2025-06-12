@@ -1,12 +1,14 @@
 package osiris.schema
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import java.math.BigDecimal
 import java.math.BigInteger
 import kairo.id.KairoId
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
-import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
 import osiris.schema.LlmSchema.LlmSchemaException
 
 internal enum class LlmType {
@@ -15,10 +17,11 @@ internal enum class LlmType {
   List,
   Number,
   Object,
+  Polymorphic,
   String,
 }
 
-internal fun parseType(element: KAnnotatedElement, type: KType): LlmType {
+internal fun parseType(element: KAnnotatedElement, kClass: KClass<*>): LlmType {
   val annotation = element.findAnnotation<LlmSchema.Type>()
   if (annotation != null) {
     return when (annotation.type) {
@@ -29,16 +32,27 @@ internal fun parseType(element: KAnnotatedElement, type: KType): LlmType {
       else -> throw LlmSchemaException("Specified unsupported type ${annotation.type}.")
     }
   }
-  if (type.classifier is KClass<*> && (type.classifier as KClass<*>).isData) return LlmType.Object
-  return when (type.classifier) {
-    Boolean::class -> LlmType.Boolean
-    BigInteger::class, Int::class, Long::class, Short::class -> LlmType.Integer
-    List::class -> LlmType.List
-    BigDecimal::class, Double::class, Float::class -> LlmType.Number
-    KairoId::class, String::class -> LlmType.String
-    else -> throw LlmSchemaException(
-      "Missing @${LlmSchema.Type::class.simpleName!!}" +
-        " and the type could not be inferred.",
-    )
+  when (kClass) {
+    Boolean::class -> return LlmType.Boolean
+    BigInteger::class, Int::class, Long::class, Short::class -> return LlmType.Integer
+    List::class -> return LlmType.List
+    BigDecimal::class, Double::class, Float::class -> return LlmType.Number
+    KairoId::class, String::class -> return LlmType.String
   }
+  if (kClass.isData) {
+    return LlmType.Object
+  }
+  if (kClass.isSealed) {
+    if (!kClass.hasAnnotation<JsonTypeInfo>()) {
+      throw LlmSchemaException("Missing @${JsonTypeInfo::class.simpleName!!} on sealed (polymorphic) class.")
+    }
+    if (!kClass.hasAnnotation<JsonSubTypes>()) {
+      throw LlmSchemaException("Missing @${JsonSubTypes::class.simpleName!!} on sealed (polymorphic) class.")
+    }
+    return LlmType.Polymorphic
+  }
+  throw LlmSchemaException(
+    "Missing @${LlmSchema.Type::class.simpleName!!}" +
+      " and the type could not be inferred.",
+  )
 }
