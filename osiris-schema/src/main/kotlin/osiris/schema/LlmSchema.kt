@@ -1,5 +1,8 @@
 package osiris.schema
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema
@@ -44,13 +47,15 @@ public object LlmSchema {
     }
 
   private fun element(element: KAnnotatedElement, type: KType): JsonSchemaElement {
+    val kClass = type.classifier as KClass<*>
     val description = parseDescription(element)
-    return when (parseType(element, type)) {
+    return when (parseType(element, kClass)) {
       LlmType.Boolean -> booleanElement(description)
       LlmType.Integer -> integerElement(description)
       LlmType.List -> listElement(description, checkNotNull(type.arguments.single().type))
       LlmType.Number -> numberElement(description)
-      LlmType.Object -> objectElement(description, type.classifier as KClass<*>)
+      LlmType.Object -> objectElement(description, kClass)
+      LlmType.Polymorphic -> polymorphicElement(description, kClass)
       LlmType.String -> stringElement(description)
     }
   }
@@ -99,6 +104,44 @@ public object LlmSchema {
         }
       }
       required(required)
+    }.build()
+
+  private fun polymorphicElement(
+    description: String?,
+    kClass: KClass<*>,
+  ): JsonAnyOfSchema =
+    JsonAnyOfSchema.builder().apply {
+      description(description)
+      val jsonTypeInfo = checkNotNull(kClass.findAnnotation<JsonTypeInfo>())
+      if (jsonTypeInfo.use != JsonTypeInfo.Id.NAME) {
+        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have use = NAME.")
+      }
+      if (jsonTypeInfo.include != JsonTypeInfo.As.PROPERTY) {
+        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have include = PROPERTY.")
+      }
+      if (jsonTypeInfo.defaultImpl != JsonTypeInfo::class) {
+        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not specify defaultImpl.")
+      }
+      if (jsonTypeInfo.visible) {
+        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not be visible.")
+      }
+      val jsonSubTypes = checkNotNull(kClass.findAnnotation<JsonSubTypes>())
+      anyOf(
+        jsonSubTypes.value.map { subType ->
+          val delegate = objectElement(null, subType.value)
+          return@map JsonObjectSchema.builder().apply {
+            description(delegate.description())
+            addEnumProperty(jsonTypeInfo.property, listOf(subType.name))
+            addProperties(delegate.properties())
+            required(
+              buildList {
+                add(jsonTypeInfo.property)
+                addAll(delegate.required())
+              },
+            )
+          }.build()
+        },
+      )
     }.build()
 
   private fun stringElement(description: String?): JsonStringSchema =
