@@ -16,7 +16,7 @@ public abstract class InstructionsBuilder(
             add(
               """
                 # The system
-
+                
                 You're a part of a multi-agent system.
                 You can consult other agents.
                 When consulting other agents, succinctly tell them what to do or what you need.

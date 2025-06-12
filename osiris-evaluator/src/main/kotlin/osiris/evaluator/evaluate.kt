@@ -16,7 +16,7 @@ public suspend fun evaluate(
   val systemMessage = SystemMessage(
     """
       Evaluate whether the user's question was answered well according to the following criteria.
-
+      
       $criteria
     """.trimIndent(),
   )
