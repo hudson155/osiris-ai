@@ -1,6 +1,7 @@
 package osiris.core
 
 import java.time.Instant
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
@@ -11,7 +12,7 @@ import osiris.span.Span
 public class TraceContext private constructor(
   internal val spanId: Uuid? = null,
 ) : AbstractCoroutineContextElement(key) {
-  public val spans: MutableList<Span<*>> = mutableListOf()
+  public val spans: MutableList<Span<*>> = CopyOnWriteArrayList()
 
   internal fun withSpanId(spanId: Uuid): TraceContext =
     TraceContext(spanId)
