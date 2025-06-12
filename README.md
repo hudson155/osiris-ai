@@ -210,10 +210,10 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-agentic:0.12.0")
-  implementation("software.airborne.osiris:osiris-core:0.12.0")
-  implementation("software.airborne.osiris:osiris-evaluator:0.12.0")
-  implementation("software.airborne.osiris:osiris-open-ai:0.12.0")
+  implementation("software.airborne.osiris:osiris-agentic:0.13.0")
+  implementation("software.airborne.osiris:osiris-core:0.13.0")
+  implementation("software.airborne.osiris:osiris-evaluator:0.13.0")
+  implementation("software.airborne.osiris:osiris-open-ai:0.13.0")
 }
 ```
 
