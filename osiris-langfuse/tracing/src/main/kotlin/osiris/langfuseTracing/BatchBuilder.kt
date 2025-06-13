@@ -4,11 +4,11 @@ import java.time.Instant
 import kairo.serialization.util.kairoWrite
 import kotlin.uuid.Uuid
 import osiris.core.llmMapper
-import osiris.span.AgentEvent
-import osiris.span.ChatEvent
-import osiris.span.ExecutionEvent
-import osiris.span.Span
-import osiris.span.ToolEvent
+import osiris.tracing.AgentEvent
+import osiris.tracing.ChatEvent
+import osiris.tracing.ExecutionEvent
+import osiris.tracing.Span
+import osiris.tracing.ToolEvent
 
 internal class BatchBuilder(
   private val trace: List<Span<*>>,

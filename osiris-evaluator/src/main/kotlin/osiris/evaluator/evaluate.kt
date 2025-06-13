@@ -20,7 +20,7 @@ public suspend fun evaluate(
       $criteria
     """.trimIndent(),
   )
-  val (response) = llm(
+  val response = llm(
     model = model,
     messages = messages + systemMessage,
     responseType = Eval::class,

@@ -10,8 +10,8 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
-import osiris.span.ChatEvent
-import osiris.span.Span
+import osiris.tracing.ChatEvent
+import osiris.tracing.Trace
 
 internal class StructuredOutputTest {
   private val messages: List<ChatMessage> =
@@ -22,11 +22,13 @@ internal class StructuredOutputTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (response, trace) = llm(
-      model = testModelFactory.openAi("gpt-4.1-nano"),
-      messages = messages,
-      responseType = Person::class,
-    )
+    val (response, trace) = trace {
+      llm(
+        model = testModelFactory.openAi("gpt-4.1-nano"),
+        messages = messages,
+        responseType = Person::class,
+      )
+    }
     verifyResponse(response)
     verifyTrace(trace)
   }
@@ -35,8 +37,8 @@ internal class StructuredOutputTest {
     response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 
-  private fun verifyTrace(trace: List<Span<*>>) {
-    with(trace.map { it.details }) {
+  private fun verifyTrace(trace: Trace) {
+    with(trace.spans.map { it.details }) {
       shouldForExactly(1) { it.shouldBeInstanceOf<ChatEvent>() }
       shouldHaveSize(1)
     }

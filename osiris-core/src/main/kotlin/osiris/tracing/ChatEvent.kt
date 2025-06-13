@@ -1,4 +1,4 @@
-package osiris.span
+package osiris.tracing
 
 import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.response.ChatResponse

@@ -10,10 +10,8 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
-import kotlinx.coroutines.withContext
 import osiris.schema.LlmSchema
-import osiris.span.ChatEvent
-import osiris.span.Span
+import osiris.tracing.ChatEvent
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -25,39 +23,36 @@ public suspend fun llm(
   responseType: KClass<*>? = null,
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
   block: ChatRequest.Builder.() -> Unit = {},
-): Pair<List<ChatMessage>, List<Span<*>>> {
+): List<ChatMessage> {
   logger.debug { "Started LLM." }
   val response = mutableListOf<ChatMessage>()
-  val traceContext = TraceContext.create()
-  withContext(traceContext) {
-    while (response.lastOrNull()?.let { it is AiMessage && !it.hasToolExecutionRequests() } != true) {
-      val chatRequest = buildChatRequest(
-        messages = messages + response,
-        tools = tools,
-        responseType = responseType,
-        block = block,
-      )
-      val lastMessage = chatRequest.messages().lastOrNull()
-      logger.debug { "Last message: ${lastMessage ?: "null"}." }
-      if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
-        val executionRequests = lastMessage.toolExecutionRequests()
-        logger.debug { "Tool execution requests: $executionRequests." }
-        val executionResponses = toolExecutor.execute(tools, executionRequests)
-        logger.debug { "Tool execution responses: $executionResponses." }
-        response += executionResponses
-      } else {
-        logger.debug { "Chat request: $chatRequest." }
-        val chatResponse = trace({ ChatEvent(chatRequest, it) }) {
-          model.chat(chatRequest)
-        }
-        logger.debug { "Chat response: $chatResponse." }
-        val aiMessage = chatResponse.aiMessage()
-        response += aiMessage
+  while (response.lastOrNull()?.let { it is AiMessage && !it.hasToolExecutionRequests() } != true) {
+    val chatRequest = buildChatRequest(
+      messages = messages + response,
+      tools = tools,
+      responseType = responseType,
+      block = block,
+    )
+    val lastMessage = chatRequest.messages().lastOrNull()
+    logger.debug { "Last message: ${lastMessage ?: "null"}." }
+    if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
+      val executionRequests = lastMessage.toolExecutionRequests()
+      logger.debug { "Tool execution requests: $executionRequests." }
+      val executionResponses = toolExecutor.execute(tools, executionRequests)
+      logger.debug { "Tool execution responses: $executionResponses." }
+      response += executionResponses
+    } else {
+      logger.debug { "Chat request: $chatRequest." }
+      val chatResponse = trace({ ChatEvent(chatRequest, it) }) {
+        model.chat(chatRequest)
       }
+      logger.debug { "Chat response: $chatResponse." }
+      val aiMessage = chatResponse.aiMessage()
+      response += aiMessage
     }
   }
   logger.debug { "Ended LLM." }
-  return Pair(response, traceContext.spans)
+  return response
 }
 
 @Suppress("LongParameterList")

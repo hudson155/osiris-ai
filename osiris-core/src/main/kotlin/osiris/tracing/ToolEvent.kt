@@ -1,4 +1,4 @@
-package osiris.span
+package osiris.tracing
 
 import osiris.core.Tool
 
