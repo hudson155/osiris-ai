@@ -7,8 +7,12 @@ import io.kotest.inspectors.shouldForExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.event.Event
+import osiris.event.messages
 import osiris.openAi.openAi
 import osiris.tracing.ChatEvent
 import osiris.tracing.Trace
@@ -34,8 +38,8 @@ internal class StructuredOutputTest {
     verifyTrace(trace)
   }
 
-  private fun verifyResponse(response: List<ChatMessage>) {
-    response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
+  private suspend fun verifyResponse(response: Flow<Event>) {
+    response.messages.last().convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 
   private fun verifyTrace(trace: Trace) {

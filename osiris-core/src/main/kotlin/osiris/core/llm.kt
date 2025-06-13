@@ -10,6 +10,10 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import osiris.event.Event
+import osiris.event.MessageEvent
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
 import osiris.tracing.trace
@@ -24,7 +28,7 @@ public suspend fun llm(
   responseType: KClass<*>? = null,
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
   block: ChatRequest.Builder.() -> Unit = {},
-): List<ChatMessage> {
+): Flow<Event> {
   logger.debug { "Started LLM." }
   val response = mutableListOf<ChatMessage>()
   while (response.lastOrNull()?.let { it is AiMessage && !it.hasToolExecutionRequests() } != true) {
@@ -53,7 +57,7 @@ public suspend fun llm(
     }
   }
   logger.debug { "Ended LLM." }
-  return response
+  return response.map { MessageEvent(it) }.asFlow()
 }
 
 @Suppress("LongParameterList")

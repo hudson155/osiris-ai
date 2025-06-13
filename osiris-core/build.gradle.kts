@@ -7,7 +7,7 @@ dependencies {
   api(project(":osiris-schema"))
   implementation(project(":osiris-tracing"))
 
-  implementation(libs.kairoCoroutines)
+  api(libs.kairoCoroutines)
   api(libs.kairoLazySupplier)
   implementation(libs.kairoLogging)
   api(libs.kairoProtectedString)
