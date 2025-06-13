@@ -1,14 +1,19 @@
 package osiris.core
 
+import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.agent.tool.ToolSpecification
+import dev.langchain4j.data.message.ToolExecutionResultMessage
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
 import kairo.serialization.util.readValueSpecial
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import osiris.event.Event
+import osiris.event.MessageEvent
 import osiris.schema.LlmSchema
-import osiris.tracing.ToolEvent
-import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -29,17 +34,28 @@ public abstract class Tool<in Input : Any>(
       }.build()
     }
 
-  internal suspend fun execute(id: String, inputString: String): String {
+  public fun execute(executionRequest: ToolExecutionRequest): Flow<Event> {
+    val id = executionRequest.id()
+    val inputString = executionRequest.arguments()
     logger.debug { "Started tool: (name=$name, id=$id, input=$inputString)." }
     val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
-    return trace({ ToolEvent(this, id, input, it) }) {
-      execute(input)
-    }.also { outputString ->
-      logger.debug { "Ended tool: (name=$name, id=$id, output=$outputString)." }
-    }
+    val flow = execute(executionRequest, input)
+    var executionResult: ToolExecutionResultMessage? = null
+    return flow
+      .onEach { event ->
+        if (event !is MessageEvent) return@onEach
+        if (event.message !is ToolExecutionResultMessage) return@onEach
+        if (event.message.id() != id) return@onEach
+        check(executionResult == null)
+        executionResult = event.message
+      }
+      .onCompletion {
+        checkNotNull(executionResult)
+        logger.debug { "Ended tool: (name=$name, id=$id, output=${executionResult.text()})." }
+      }
   }
 
-  public abstract suspend fun execute(input: Input): String
+  public abstract fun execute(executionRequest: ToolExecutionRequest, input: Input): Flow<Event>
 
   override fun toString(): String =
     "Tool(name=$name)"

@@ -8,12 +8,12 @@ import io.kotest.inspectors.shouldForExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
 import osiris.tracing.ChatEvent
 import osiris.tracing.Trace
-import osiris.tracing.trace
 
 internal class MathTest {
   private val messages: List<ChatMessage> = listOf(
@@ -23,12 +23,10 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (events) = trace {
-      llm(
-        model = testModelFactory.openAi("gpt-4.1-nano"),
-        messages = messages,
-      )
-    }
+    val events = llm(
+      model = testModelFactory.openAi("gpt-4.1-nano"),
+      messages = messages,
+    ).toList()
     verifyResponse(events.response())
     // verifyTrace(trace)
   }
