@@ -6,7 +6,7 @@ import kairo.serialization.util.kairoWriteSpecial
 import osiris.core.WeatherTool.Input
 import osiris.schema.LlmSchema
 
-internal object WeatherTool : Tool<Input>("weather") {
+internal object WeatherTool : SimpleTool<Input>("weather") {
   internal data class Input(
     @LlmSchema.Description("The city to get the weather for. Only the city name.")
     val location: String,

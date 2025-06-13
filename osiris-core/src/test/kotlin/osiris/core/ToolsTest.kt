@@ -15,7 +15,6 @@ import osiris.openAi.openAi
 import osiris.tracing.ChatEvent
 import osiris.tracing.ToolEvent
 import osiris.tracing.Trace
-import osiris.tracing.trace
 
 internal class ToolsTest {
   private val messages: List<ChatMessage> =
@@ -25,13 +24,11 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (events) = trace {
-      llm(
-        model = testModelFactory.openAi("gpt-4.1-nano"),
-        messages = messages,
-        tools = listOf(WeatherTool),
-      )
-    }
+    val events = llm(
+      model = testModelFactory.openAi("gpt-4.1-nano"),
+      messages = messages,
+      tools = listOf(WeatherTool),
+    ).toList()
     verifyResponse(events.messages().toList())
     // verifyTrace(trace)
   }

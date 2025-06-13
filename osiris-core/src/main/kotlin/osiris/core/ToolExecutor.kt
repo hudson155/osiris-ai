@@ -1,29 +1,27 @@
 package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
-import dev.langchain4j.data.message.ToolExecutionResultMessage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import osiris.event.Event
 
 public abstract class ToolExecutor {
   public abstract fun execute(
     tools: List<Tool<*>>,
     executionRequests: List<ToolExecutionRequest>,
-  ): Flow<ToolExecutionResultMessage>
+  ): Flow<Event>
 
-  protected suspend fun execute(
+  protected fun execute(
     tools: List<Tool<*>>,
     executionRequest: ToolExecutionRequest,
-  ): ToolExecutionResultMessage {
-    val id = executionRequest.id()
+  ): Flow<Event> {
     val toolName = executionRequest.name()
-    val tool = requireNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
-    val output = tool.execute(id, executionRequest.arguments())
-    return ToolExecutionResultMessage(id, toolName, output)
+    val tool = checkNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
+    return tool.execute(executionRequest)
   }
 
   public class Dispatcher(
@@ -32,12 +30,12 @@ public abstract class ToolExecutor {
     override fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
-    ): Flow<ToolExecutionResultMessage> =
+    ): Flow<Event> =
       channelFlow {
         executionRequests.map { executionRequest ->
           launch(dispatcher) {
-            val executionResponse = execute(tools, executionRequest)
-            send(executionResponse)
+            execute(tools, executionRequest)
+              .collect { send(it) }
           }
         }
       }
@@ -47,11 +45,11 @@ public abstract class ToolExecutor {
     override fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
-    ): Flow<ToolExecutionResultMessage> =
+    ): Flow<Event> =
       flow {
         executionRequests.forEach { executionRequest ->
-          val executionResponse = execute(tools, executionRequest)
-          emit(executionResponse)
+          execute(tools, executionRequest)
+            .collect { emit(it) }
         }
       }
   }
