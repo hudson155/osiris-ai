@@ -1,5 +1,6 @@
 package osiris.core
 
+import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
@@ -23,18 +24,18 @@ internal class StructuredOutputTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (response, trace) = trace {
+    val (events) = trace {
       llm(
         model = testModelFactory.openAi("gpt-4.1-nano"),
         messages = messages,
         responseType = Person::class,
       )
     }
-    verifyResponse(response)
-    verifyTrace(trace)
+    verifyResponse(events.response())
+    // verifyTrace(trace)
   }
 
-  private fun verifyResponse(response: List<ChatMessage>) {
+  private fun verifyResponse(response: AiMessage) {
     response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
   }
 

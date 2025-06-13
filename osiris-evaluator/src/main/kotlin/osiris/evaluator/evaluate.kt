@@ -7,6 +7,7 @@ import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
 import osiris.core.convert
 import osiris.core.llm
+import osiris.core.response
 
 public suspend fun evaluate(
   model: ChatModel,
@@ -24,7 +25,7 @@ public suspend fun evaluate(
     model = model,
     messages = messages + systemMessage,
     responseType = Eval::class,
-  )
+  ).response()
   val eval = response.convert<Eval>()
   withClue(eval.failureReason) {
     eval.matchesCriteria.shouldBeTrue()
