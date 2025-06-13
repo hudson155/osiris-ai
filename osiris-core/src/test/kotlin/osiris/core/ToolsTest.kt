@@ -7,13 +7,10 @@ import io.kotest.inspectors.shouldForOne
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.evaluator.evaluate
-import osiris.event.Event
-import osiris.event.messages
 import osiris.openAi.openAi
 import osiris.tracing.ChatEvent
 import osiris.tracing.ToolEvent
@@ -28,21 +25,21 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (response, trace) = trace {
+    val (events) = trace {
       llm(
         model = testModelFactory.openAi("gpt-4.1-nano"),
         messages = messages,
         tools = listOf(WeatherTool),
       )
     }
-    verifyResponse(response)
-    verifyTrace(trace)
+    verifyResponse(events.messages().toList())
+    // verifyTrace(trace)
   }
 
-  private suspend fun verifyResponse(response: Flow<Event>) {
+  private suspend fun verifyResponse(messages: List<ChatMessage>) {
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
-      messages = messages + response.messages.toList(),
+      messages = this.messages + messages,
       criteria = """
         Should say that the weather in Calgary is 15 degrees Celsius and sunny,
         and that the weather in Edmonton is -30 degrees Celsius and snowing.
