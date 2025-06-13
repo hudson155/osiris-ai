@@ -25,8 +25,8 @@ internal class ToolsTest {
   fun test(): Unit = runTest {
     val (response, trace) = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
-      tools = listOf(WeatherTool),
       messages = messages,
+      tools = listOf(WeatherTool),
     )
     verifyResponse(response)
     verifyTrace(trace)
