@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 public abstract class ToolExecutor {
-  public abstract suspend fun execute(
+  public abstract fun execute(
     tools: List<Tool<*>>,
     executionRequests: List<ToolExecutionRequest>,
   ): Flow<ToolExecutionResultMessage>
@@ -29,7 +29,7 @@ public abstract class ToolExecutor {
   public class Dispatcher(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
   ) : ToolExecutor() {
-    override suspend fun execute(
+    override fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
     ): Flow<ToolExecutionResultMessage> =
@@ -44,7 +44,7 @@ public abstract class ToolExecutor {
   }
 
   public class Serial : ToolExecutor() {
-    override suspend fun execute(
+    override fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
     ): Flow<ToolExecutionResultMessage> =
