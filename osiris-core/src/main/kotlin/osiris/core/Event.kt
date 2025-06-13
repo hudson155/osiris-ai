@@ -13,4 +13,4 @@ public fun Flow<Event>.messages(): Flow<ChatMessage> =
   filterIsInstance<MessageEvent>().map { it.message }
 
 public suspend fun Flow<Event>.response(): AiMessage =
-  filterIsInstance<MessageEvent>().map { it.message }.last() as AiMessage
+  messages().last() as AiMessage
