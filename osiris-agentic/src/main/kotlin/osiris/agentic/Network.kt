@@ -4,6 +4,10 @@ import dev.langchain4j.data.message.ChatMessage
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import osiris.tracing.ExecutionEvent
 import osiris.tracing.TraceContext
@@ -36,6 +40,13 @@ public abstract class Network(
       }
     }
     logger.debug { "Ended execution: (name=$name, response=$response)." }
+    if (tracers.isNotEmpty()) {
+      traceContext as TraceContext
+      val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+      tracers.forEach { tracer ->
+        scope.launch { tracer.trace(traceContext.trace) }
+      }
+    }
     return response
   }
 

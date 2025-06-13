@@ -13,6 +13,8 @@ public class TraceContext(
 ) : AbstractCoroutineContextElement(key) {
   internal val spans: MutableList<Span<*>> = CopyOnWriteArrayList()
 
+  public val trace: Trace = Trace(spans)
+
   internal fun withSpanId(spanId: Uuid): TraceContext =
     TraceContext(spanId)
 
