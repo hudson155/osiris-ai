@@ -12,6 +12,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.toList
 import osiris.event.Event
 import osiris.event.MessageEvent
 import osiris.schema.LlmSchema
@@ -45,7 +46,7 @@ public suspend fun llm(
       logger.debug { "Tool execution requests: $executionRequests." }
       val executionResponses = toolExecutor.execute(tools, executionRequests)
       logger.debug { "Tool execution responses: $executionResponses." }
-      response += executionResponses
+      response += executionResponses.toList()
     } else {
       logger.debug { "Chat request: $chatRequest." }
       val chatResponse = trace({ ChatEvent(chatRequest, it) }) {

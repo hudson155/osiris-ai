@@ -4,15 +4,16 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.ToolExecutionResultMessage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 public abstract class ToolExecutor {
   public abstract suspend fun execute(
     tools: List<Tool<*>>,
     executionRequests: List<ToolExecutionRequest>,
-  ): List<ToolExecutionResultMessage>
+  ): Flow<ToolExecutionResultMessage>
 
   protected suspend fun execute(
     tools: List<Tool<*>>,
@@ -31,9 +32,14 @@ public abstract class ToolExecutor {
     override suspend fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
-    ): List<ToolExecutionResultMessage> =
-      coroutineScope {
-        executionRequests.map { async(dispatcher) { execute(tools, it) } }.awaitAll()
+    ): Flow<ToolExecutionResultMessage> =
+      channelFlow {
+        executionRequests.map { executionRequest ->
+          launch(dispatcher) {
+            val executionResponse = execute(tools, executionRequest)
+            send(executionResponse)
+          }
+        }
       }
   }
 
@@ -41,7 +47,12 @@ public abstract class ToolExecutor {
     override suspend fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
-    ): List<ToolExecutionResultMessage> =
-      executionRequests.map { execute(tools, it) }
+    ): Flow<ToolExecutionResultMessage> =
+      flow {
+        executionRequests.forEach { executionRequest ->
+          val executionResponse = execute(tools, executionRequest)
+          emit(executionResponse)
+        }
+      }
   }
 }
