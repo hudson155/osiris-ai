@@ -1,4 +1,4 @@
-package osiris.core
+package osiris.tracing
 
 import java.time.Instant
 import java.util.concurrent.CopyOnWriteArrayList
@@ -7,8 +7,6 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.withContext
-import osiris.tracing.Span
-import osiris.tracing.Trace
 
 public class TraceContext(
   internal val spanId: Uuid? = null,

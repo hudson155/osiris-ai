@@ -3,8 +3,11 @@ package osiris.agentic
 import dev.langchain4j.data.message.ChatMessage
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.withContext
-import osiris.core.trace
+import osiris.tracing.TraceContext
+import osiris.tracing.getTraceContext
+import osiris.tracing.trace
 import osiris.tracing.ExecutionEvent
 import osiris.tracing.deriveText
 
@@ -22,11 +25,14 @@ public abstract class Network(
 
   public suspend fun run(messages: List<ChatMessage>): List<ChatMessage> {
     logger.debug { "Started execution: (name=$name, messages=$messages)." }
-    val response = trace({ ExecutionEvent(this@Network, deriveText(messages), deriveText(it)) }) {
-      val executionContext = ExecutionContext(this@Network)
-      withContext(executionContext) {
-        val agent = executionContext.getAgent(entrypoint)
-        return@withContext agent.execute(messages)
+    val traceContext = if (tracers.isEmpty()) EmptyCoroutineContext else getTraceContext() ?: TraceContext()
+    val response = withContext(traceContext) {
+      trace({ ExecutionEvent(this@Network, deriveText(messages), deriveText(it)) }) {
+        val executionContext = ExecutionContext(this@Network)
+        withContext(executionContext) {
+          val agent = executionContext.getAgent(entrypoint)
+          return@withContext agent.execute(messages)
+        }
       }
     }
     logger.debug { "Ended execution: (name=$name, response=$response)." }

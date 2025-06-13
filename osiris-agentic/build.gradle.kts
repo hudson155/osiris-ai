@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
   api(project(":osiris-core"))
+  implementation(project(":osiris-tracing"))
 
   implementation(libs.kairoCoroutines)
   implementation(libs.kairoLogging)

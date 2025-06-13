@@ -12,6 +12,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
+import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
 

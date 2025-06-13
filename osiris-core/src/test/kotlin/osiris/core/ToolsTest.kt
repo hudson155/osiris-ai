@@ -13,7 +13,7 @@ import osiris.evaluator.evaluate
 import osiris.openAi.openAi
 import osiris.tracing.ChatEvent
 import osiris.tracing.ToolEvent
-import osiris.tracing.Trace
+import osiris.tracing.trace
 
 internal class ToolsTest {
   private val messages: List<ChatMessage> =

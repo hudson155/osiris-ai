@@ -10,11 +10,10 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import osiris.core.convert
-import osiris.core.trace
+import osiris.tracing.trace
 import osiris.tracing.AgentEvent
 import osiris.tracing.ChatEvent
 import osiris.tracing.ExecutionEvent
-import osiris.tracing.Trace
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class StructuredOutputTest {

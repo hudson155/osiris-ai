@@ -7,7 +7,6 @@ import osiris.core.llmMapper
 import osiris.tracing.AgentEvent
 import osiris.tracing.ChatEvent
 import osiris.tracing.ExecutionEvent
-import osiris.tracing.Span
 import osiris.tracing.ToolEvent
 
 internal class BatchBuilder(

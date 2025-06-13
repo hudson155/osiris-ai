@@ -8,6 +8,7 @@ import kairo.reflect.KairoType
 import kairo.serialization.util.readValueSpecial
 import osiris.schema.LlmSchema
 import osiris.tracing.ToolEvent
+import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
 
