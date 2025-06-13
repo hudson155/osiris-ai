@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
 import osiris.tracing.ChatEvent
+import osiris.tracing.Trace
 import osiris.tracing.trace
 
 internal class MathTest {

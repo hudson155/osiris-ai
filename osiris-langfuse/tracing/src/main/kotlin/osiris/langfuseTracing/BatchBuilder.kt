@@ -8,9 +8,10 @@ import osiris.tracing.AgentEvent
 import osiris.tracing.ChatEvent
 import osiris.tracing.ExecutionEvent
 import osiris.tracing.ToolEvent
+import osiris.tracing.Trace
 
 internal class BatchBuilder(
-  private val trace: List<Span<*>>,
+  private val trace: Trace,
 ) {
   private val traceId: Uuid = Uuid.random()
 
@@ -20,7 +21,7 @@ internal class BatchBuilder(
   @Suppress("LongMethod")
   fun build(): BatchIngestion =
     BatchIngestion(
-      batch = trace.mapNotNull { span ->
+      batch = trace.spans.mapNotNull { span ->
         when (val details = span.details) {
           is ExecutionEvent ->
             TraceCreate(

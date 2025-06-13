@@ -10,13 +10,14 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import osiris.tracing.trace
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
 import osiris.tracing.AgentEvent
 import osiris.tracing.ChatEvent
 import osiris.tracing.ExecutionEvent
 import osiris.tracing.ToolEvent
+import osiris.tracing.Trace
+import osiris.tracing.trace
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class EcommerceChatbotTest {

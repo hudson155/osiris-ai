@@ -8,8 +8,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import osiris.langfuse.Langfuse
+import osiris.tracing.Trace
 
-public suspend fun Langfuse.trace(trace: List<Span<*>>) {
+public suspend fun Langfuse.trace(trace: Trace) {
   val batch = BatchBuilder(trace).build()
   client.request {
     method = HttpMethod.Post
