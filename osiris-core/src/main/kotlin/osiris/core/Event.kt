@@ -12,5 +12,11 @@ import osiris.event.MessageEvent
 public fun Flow<Event>.messages(): Flow<ChatMessage> =
   filterIsInstance<MessageEvent>().map { it.message }
 
+public fun List<Event>.messages(): List<ChatMessage> =
+  filterIsInstance<MessageEvent>().map { it.message }
+
 public suspend fun Flow<Event>.response(): AiMessage =
+  messages().last() as AiMessage
+
+public fun List<Event>.response(): AiMessage =
   messages().last() as AiMessage

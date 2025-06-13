@@ -8,6 +8,7 @@ import io.kotest.inspectors.shouldForExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
@@ -23,14 +24,14 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (events) = trace {
+    val (events, trace) = trace {
       llm(
         model = testModelFactory.openAi("gpt-4.1-nano"),
         messages = messages,
-      )
+      ).toList()
     }
     verifyResponse(events.response())
-    // verifyTrace(trace)
+    verifyTrace(trace)
   }
 
   private fun verifyResponse(response: AiMessage) {

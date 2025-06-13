@@ -25,15 +25,15 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (events) = trace {
+    val (events, trace) = trace {
       llm(
         model = testModelFactory.openAi("gpt-4.1-nano"),
         messages = messages,
         tools = listOf(WeatherTool),
-      )
+      ).toList()
     }
     verifyResponse(events.messages().toList())
-    // verifyTrace(trace)
+    verifyTrace(trace)
   }
 
   private suspend fun verifyResponse(messages: List<ChatMessage>) {
