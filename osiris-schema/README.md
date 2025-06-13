@@ -41,13 +41,13 @@ val messages = listOf(
   UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
   SystemMessage("Provide a JSON representation of the person matching this description."),
 )
-val response = llm(
+val flow = llm(
   model = modelFactory.openAi("gpt-4.1-nano"),
   messages = messages,
   responseType = Person::class,
 )
 
-response.convert<Person>()
+flow.response().convert<Person>()
 // Person(name=Jeff Hudson, age=29)
 ```
 
