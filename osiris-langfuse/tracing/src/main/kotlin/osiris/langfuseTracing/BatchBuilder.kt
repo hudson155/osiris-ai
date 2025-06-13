@@ -4,14 +4,14 @@ import java.time.Instant
 import kairo.serialization.util.kairoWrite
 import kotlin.uuid.Uuid
 import osiris.core.llmMapper
-import osiris.span.AgentEvent
-import osiris.span.ChatEvent
-import osiris.span.ExecutionEvent
-import osiris.span.Span
-import osiris.span.ToolEvent
+import osiris.tracing.AgentEvent
+import osiris.tracing.ChatEvent
+import osiris.tracing.ExecutionEvent
+import osiris.tracing.ToolEvent
+import osiris.tracing.Trace
 
 internal class BatchBuilder(
-  private val trace: List<Span<*>>,
+  private val trace: Trace,
 ) {
   private val traceId: Uuid = Uuid.random()
 
@@ -21,7 +21,7 @@ internal class BatchBuilder(
   @Suppress("LongMethod")
   fun build(): BatchIngestion =
     BatchIngestion(
-      batch = trace.mapNotNull { span ->
+      batch = trace.spans.mapNotNull { span ->
         when (val details = span.details) {
           is ExecutionEvent ->
             TraceCreate(

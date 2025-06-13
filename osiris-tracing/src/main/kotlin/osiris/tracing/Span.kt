@@ -1,4 +1,4 @@
-package osiris.span
+package osiris.tracing
 
 import java.time.Instant
 import kotlin.uuid.Uuid

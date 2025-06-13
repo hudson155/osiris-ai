@@ -12,11 +12,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
-import osiris.span.AgentEvent
-import osiris.span.ChatEvent
-import osiris.span.ExecutionEvent
-import osiris.span.Span
-import osiris.span.ToolEvent
+import osiris.tracing.AgentEvent
+import osiris.tracing.ChatEvent
+import osiris.tracing.ExecutionEvent
+import osiris.tracing.ToolEvent
+import osiris.tracing.Trace
+import osiris.tracing.trace
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class EcommerceChatbotTest {
@@ -34,7 +35,9 @@ internal class EcommerceChatbotTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (response, trace) = network.run(messages)
+    val (response, trace) = trace {
+      network.run(messages)
+    }
     verifyResponse(response)
     verifyTrace(trace)
   }
@@ -50,8 +53,8 @@ internal class EcommerceChatbotTest {
     )
   }
 
-  private fun verifyTrace(trace: List<Span<*>>) {
-    with(trace.map { it.details }) {
+  private fun verifyTrace(trace: Trace) {
+    with(trace.spans.map { it.details }) {
       shouldForExactly(1) { details ->
         details.shouldBeInstanceOf<ExecutionEvent>()
         details.network.shouldBe(network)

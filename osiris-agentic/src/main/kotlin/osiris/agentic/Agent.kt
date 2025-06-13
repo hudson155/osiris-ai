@@ -9,9 +9,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import osiris.core.Tool
 import osiris.core.llm
-import osiris.core.trace
-import osiris.span.AgentEvent
-import osiris.span.deriveText
+import osiris.tracing.AgentEvent
+import osiris.tracing.deriveText
+import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -29,7 +29,7 @@ public abstract class Agent(
   public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> {
     logger.debug { "Started agent: (name=$name, messages=$messages)." }
     return trace({ AgentEvent(this@Agent, deriveText(messages), deriveText(it)) }) {
-      val (response) = llm(
+      llm(
         model = model,
         messages = buildList {
           addAll(messages)
@@ -39,7 +39,6 @@ public abstract class Agent(
         responseType = responseType,
         block = { llm() },
       )
-      return@trace response
     }.also { response ->
       logger.debug { "Ended agent: (name=$name, response=$response)." }
     }

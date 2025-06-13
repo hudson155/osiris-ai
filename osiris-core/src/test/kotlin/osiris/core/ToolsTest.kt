@@ -11,9 +11,10 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
-import osiris.span.ChatEvent
-import osiris.span.Span
-import osiris.span.ToolEvent
+import osiris.tracing.ChatEvent
+import osiris.tracing.ToolEvent
+import osiris.tracing.Trace
+import osiris.tracing.trace
 
 internal class ToolsTest {
   private val messages: List<ChatMessage> =
@@ -23,11 +24,13 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
-    val (response, trace) = llm(
-      model = testModelFactory.openAi("gpt-4.1-nano"),
-      messages = messages,
-      tools = listOf(WeatherTool),
-    )
+    val (response, trace) = trace {
+      llm(
+        model = testModelFactory.openAi("gpt-4.1-nano"),
+        messages = messages,
+        tools = listOf(WeatherTool),
+      )
+    }
     verifyResponse(response)
     verifyTrace(trace)
   }
@@ -43,8 +46,8 @@ internal class ToolsTest {
     )
   }
 
-  private fun verifyTrace(trace: List<Span<*>>) {
-    with(trace.map { it.details }) {
+  private fun verifyTrace(trace: Trace) {
+    with(trace.spans.map { it.details }) {
       shouldForExactly(2) { it.shouldBeInstanceOf<ChatEvent>() }
       shouldForOne { details ->
         details.shouldBeInstanceOf<ToolEvent>()

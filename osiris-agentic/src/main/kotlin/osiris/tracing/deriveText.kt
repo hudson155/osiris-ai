@@ -1,4 +1,4 @@
-package osiris.span
+package osiris.tracing
 
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
