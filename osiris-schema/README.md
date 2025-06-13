@@ -28,7 +28,7 @@ For structured output, just create a data class and specify the schema name.
 ```kotlin
 @LlmSchema.SchemaName("person") // Required!
 data class Person(
-  @LlmSchema.Description("Their full name.") // Optional.
+  @LlmSchema.Description("Their full name.") // Optional additional context for the LLM.
   val name: String,
   val age: Int,
 )
@@ -85,7 +85,7 @@ The following primitive types are supported out-of-the-box:
 
 ### Custom types
 
-To use unsupported types, add the `@LlmSchema.Type` annotation to a property.
+To use other types, add the `@LlmSchema.Type` annotation to a property.
 The value can be `boolean`, `integer`, `string`, or `number`.
 
 ```kotlin
@@ -169,6 +169,8 @@ internal sealed class Vehicle {
 ```
 
 ## Annotations
+
+These were all covered in the examples above, but just to review...
 
 - `@LlmSchema.SchemaName`:
   Some providers (such as OpenAI) require that structured output schemas specify a name.
