@@ -24,8 +24,8 @@ internal class StructuredOutputTest {
   fun test(): Unit = runTest {
     val (response, trace) = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
-      responseType = Person::class,
       messages = messages,
+      responseType = Person::class,
     )
     verifyResponse(response)
     verifyTrace(trace)
