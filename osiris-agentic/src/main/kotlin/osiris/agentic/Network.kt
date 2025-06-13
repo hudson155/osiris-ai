@@ -5,11 +5,11 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.withContext
+import osiris.tracing.ExecutionEvent
 import osiris.tracing.TraceContext
+import osiris.tracing.deriveText
 import osiris.tracing.getTraceContext
 import osiris.tracing.trace
-import osiris.tracing.ExecutionEvent
-import osiris.tracing.deriveText
 
 private val logger: KLogger = KotlinLogging.logger {}
 

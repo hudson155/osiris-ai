@@ -9,9 +9,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import osiris.core.Tool
 import osiris.core.llm
-import osiris.tracing.trace
 import osiris.tracing.AgentEvent
 import osiris.tracing.deriveText
+import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
 
