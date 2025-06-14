@@ -25,17 +25,17 @@ import osiris.schema.LlmSchema
 private val logger: KLogger = KotlinLogging.logger {}
 
 @Suppress("LongParameterList")
-public class Llm internal constructor(
-  public val model: ChatModel,
-  public val messages: List<ChatMessage>,
-  public val tools: List<Tool<*>>,
-  public val responseType: KClass<*>?,
-  public val chatRequestBlock: ChatRequest.Builder.() -> Unit,
-  public val toolExecutor: ToolExecutor,
-  public val exitCondition: ExitCondition,
+private class Llm(
+  val model: ChatModel,
+  val messages: List<ChatMessage>,
+  val tools: List<Tool<*>>,
+  val responseType: KClass<*>?,
+  val chatRequestBlock: ChatRequest.Builder.() -> Unit,
+  val toolExecutor: ToolExecutor,
+  val exitCondition: ExitCondition,
 ) {
   @Suppress("CognitiveComplexMethod")
-  public fun execute(): Flow<Event> =
+  fun execute(): Flow<Event> =
     channelFlow {
       logger.debug { "Started LLM." }
       val response: MutableList<ChatMessage> = mutableListOf()
