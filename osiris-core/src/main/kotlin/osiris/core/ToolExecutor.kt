@@ -14,7 +14,7 @@ import osiris.event.Event
  *
  * Alternatively,
  * you can choose to run them on a different coroutine dispatcher using [ToolExecutor.Dispatcher.dispatcher],
- * choose to run them sequentially using [ToolExecutor.Serial],
+ * choose to run them sequentially using [ToolExecutor.Sequential],
  * or choose to implement your own tool executor from scratch.
  */
 public abstract class ToolExecutor {
@@ -49,7 +49,7 @@ public abstract class ToolExecutor {
       }
   }
 
-  public class Serial : ToolExecutor() {
+  public class Sequential : ToolExecutor() {
     override fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
