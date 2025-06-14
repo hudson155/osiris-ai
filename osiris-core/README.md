@@ -48,7 +48,7 @@ flow.response().convert<String>()
 #### Flows
 
 Osiris uses Kotlin Flows to provide asynchronous responses with incremental updates.
-The most basic way to consume the flow is by calling `.response()`,
+The most basic way to consume the Flow is by calling `.response()`,
 which disregards everything except the final chat message.
 Refer to the [Events section](#events) for advanced Flow usage.
 
@@ -128,7 +128,7 @@ class WeatherTool : SimpleTool<WeatherTool.Input>("weather") {
 }
 ```
 
-The tool `description` is made available to the LLM.
+The tool name and description are made available to the LLM.
 
 The input schema should conform to [osiris-schema](../osiris-schema).
 Optionally use `@LlmSchema.Description` to provide additional context to the LLM.
