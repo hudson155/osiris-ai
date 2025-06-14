@@ -46,7 +46,7 @@ private class Llm(
         if (with(exitCondition) { shouldExit(response) }) break
         if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
           executeTools(lastMessage)
-            .onMessage { response += it }
+            .onMessage { response += it } // TODO: Not necessarily all messages!
             .collect(this)
         } else {
           chat(buildChatRequest(messages))
