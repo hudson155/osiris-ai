@@ -11,6 +11,7 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -23,12 +24,12 @@ import osiris.schema.LlmSchema
 private val logger: KLogger = KotlinLogging.logger {}
 
 @Suppress("LongParameterList")
-public class Llm(
+public class Llm internal constructor(
   public val model: ChatModel,
-  public val modelBlock: ChatRequest.Builder.() -> Unit,
   public val messages: List<ChatMessage>,
   public val tools: List<Tool<*>>,
   public val responseType: KClass<*>?,
+  public val chatRequestBlock: ChatRequest.Builder.() -> Unit,
   public val toolExecutor: ToolExecutor,
   public val exitCondition: ExitCondition,
 ) {
@@ -99,27 +100,61 @@ public class Llm(
         }.build()
         responseFormat(responseFormat)
       }
-      modelBlock()
+      chatRequestBlock()
     }.build()
 }
 
+/**
+ * The primary entrypoint.
+ *
+ * By default, Osiris will run LLM requests in a loop,
+ * executing tool calls until the LLM responds.
+ *
+ * Osiris uses Kotlin Flows to provide asynchronous responses with incremental updates.
+ * The most basic way to consume the Flow is by calling [response].
+ *
+ * For more information, refer to the documentation.
+ */
 @Suppress("LongParameterList")
 public fun llm(
+  /**
+   * Any Langchain4j model.
+   */
   model: ChatModel,
-  modelBlock: ChatRequest.Builder.() -> Unit = {},
+  /**
+   * The initial Langchain4j messages.
+   */
   messages: List<ChatMessage>,
+  /**
+   * The LLM can consult these tools.
+   */
   tools: List<Tool<*>> = emptyList(),
+  /**
+   * Class reference for structured output.
+   * If not provided, output will be a string.
+   */
   responseType: KClass<*>? = null,
+  /**
+   * Use this to customize the Langchain4j chat request.
+   */
+  chatRequestBlock: ChatRequest.Builder.() -> Unit = {},
+  /**
+   * By default, tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
+   */
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
+  /**
+   * By default, Osiris will run LLM requests in a loop,
+   * executing tool calls until the LLM responds.
+   */
   exitCondition: ExitCondition = ExitCondition.Default(),
 ): Flow<Event> {
   require(messages.isNotEmpty()) { "Messages cannot be empty." }
   val llm = Llm(
     model = model,
-    modelBlock = modelBlock,
     messages = messages,
     tools = tools,
     responseType = responseType,
+    chatRequestBlock = chatRequestBlock,
     toolExecutor = toolExecutor,
     exitCondition = exitCondition,
   )

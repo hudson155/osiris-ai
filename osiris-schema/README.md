@@ -1,9 +1,15 @@
 # Osiris Schemas
 
-Osiris supports automatic LLM (OpenAPI) schema generation for structured output and tool calls,
+Osiris supports automatic LLM (OpenAPI) **schema generation** for **structured output** and **tool calls**,
 so you don't need to manage schemas yourself.
 
-## Getting started
+## Installation
+
+`software.airborne.osiris:osiris-schema:0.13.0`
+
+<details>
+
+<summary>Gradle</summary>
 
 ```kotlin
 plugins {
@@ -20,6 +26,19 @@ dependencies {
   implementation("software.airborne.osiris:osiris-schema:0.13.0")
 }
 ```
+
+</details>
+
+## Annotations
+
+- `@LlmSchema.SchemaName`:
+  Some providers (such as OpenAI) require that structured output schemas specify a name.
+  This is only necessary for structured output, not for tool calls.
+- `@LlmSchema.Type`:
+  Support custom types or override the type for a supported primitive.
+  The value can be `boolean`, `integer`, `string`, or `number`.
+- `@LlmSchema.Description`:
+  Descriptions are available to the LLM, helping it understand your schema better.
 
 ## Structured output
 
@@ -41,13 +60,13 @@ val messages = listOf(
   UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
   SystemMessage("Provide a JSON representation of the person matching this description."),
 )
-val response = llm(
+val flow = llm(
   model = modelFactory.openAi("gpt-4.1-nano"),
   messages = messages,
   responseType = Person::class,
 )
 
-response.convert<Person>()
+flow.response().convert<Person>()
 // Person(name=Jeff Hudson, age=29)
 ```
 
@@ -56,7 +75,7 @@ response.convert<Person>()
 For tool calls, the `Input` data class doesn't need a schema name.
 
 ```kotlin
-object WeatherTool : Tool<WeatherTool.Input>("weather") {
+class WeatherTool : SimpleTool<WeatherTool.Input>("weather") {
   data class Input(
     @LlmSchema.Description("The city to get the weather for.")
     val location: String,
@@ -167,16 +186,3 @@ internal sealed class Vehicle {
   }
 }
 ```
-
-## Annotations
-
-These were all covered in the examples above, but just to review...
-
-- `@LlmSchema.SchemaName`:
-  Some providers (such as OpenAI) require that structured output schemas specify a name.
-  This is only necessary for structured output, not for tool calls.
-- `@LlmSchema.Type`:
-  Support custom types or override the type for a supported primitive. 
-  The value can be `boolean`, `integer`, `string`, or `number`.
-- `@LlmSchema.Description`:
-  Descriptions are available to the LLM, helping it understand your schema better.

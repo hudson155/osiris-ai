@@ -39,7 +39,7 @@ internal object LlmSchemaGenerator {
   private fun element(element: KAnnotatedElement, type: KType): JsonSchemaElement {
     val kClass = type.classifier as KClass<*>
     val description = parseDescription(element)
-    return when (parseType(element, kClass)) {
+    return when (parseLlmType(element, kClass)) {
       LlmType.Boolean -> booleanElement(description)
       LlmType.Enum -> enumElement(description, kClass)
       LlmType.Integer -> integerElement(description)

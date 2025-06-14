@@ -17,6 +17,14 @@ import osiris.schema.LlmSchema
 
 private val logger: KLogger = KotlinLogging.logger {}
 
+/**
+ * Implementations of this class are made available to the LLM as tools.
+ * The name and description are made available to the LLM,
+ * as well as the Osiris input schema.
+ *
+ * Most implementations should use [SimpleTool],
+ * which returns a string instead of a Flow.
+ */
 public abstract class Tool<in Input : Any>(
   public val name: String,
 ) {
