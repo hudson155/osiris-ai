@@ -54,6 +54,6 @@ public class Consult(
           val executionResult = ToolExecutionResultMessage.from(executionRequest, (response as AiMessage).convert())
           emit(MessageEvent(executionResult))
         }
-        .collect { emit(it) }
+        .collect(this)
     }
 }

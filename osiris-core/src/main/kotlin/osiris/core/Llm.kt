@@ -10,11 +10,12 @@ import dev.langchain4j.model.chat.request.ResponseFormatType
 import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kairo.coroutines.collect
 import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import osiris.event.Event
@@ -33,31 +34,34 @@ public class Llm internal constructor(
   public val toolExecutor: ToolExecutor,
   public val exitCondition: ExitCondition,
 ) {
-  public val response: MutableList<ChatMessage> = mutableListOf()
-
+  @Suppress("CognitiveComplexMethod")
   public fun execute(): Flow<Event> =
     channelFlow {
       logger.debug { "Started LLM." }
+      val response: MutableList<ChatMessage> = mutableListOf()
       while (true) {
         val messages = messages + response
         val lastMessage = messages.lastOrNull()
         logger.debug { "Last message: ${lastMessage ?: "null"}." }
-        if (with(exitCondition) { shouldExit() }) break
+        if (with(exitCondition) { shouldExit(response) }) break
         if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
           executeTools(lastMessage)
+            .onEach { if (it is MessageEvent) response += it.message }
+            .collect(this)
         } else {
           chat(buildChatRequest(messages))
+            .onEach { if (it is MessageEvent) response += it.message }
+            .collect(this)
         }
       }
       logger.debug { "Ended LLM." }
     }
 
-  @Suppress("SuspendFunWithCoroutineScopeReceiver")
-  private suspend fun ProducerScope<Event>.executeTools(lastMessage: AiMessage) {
+  private fun executeTools(lastMessage: AiMessage): Flow<Event> {
     val executionRequests = lastMessage.toolExecutionRequests()
     logger.debug { "Tool execution requests: $executionRequests." }
     val executionResults = mutableListOf<ToolExecutionResultMessage>()
-    toolExecutor.execute(tools, executionRequests)
+    return toolExecutor.execute(tools, executionRequests)
       .onEach { event ->
         if (event !is MessageEvent) return@onEach
         if (event.message !is ToolExecutionResultMessage) return@onEach
@@ -67,20 +71,18 @@ public class Llm internal constructor(
       .onCompletion {
         check(executionResults.size == executionRequests.size)
         logger.debug { "Tool execution responses: $executionResults." }
-        response += executionResults
+        // todo: emit
       }
-      .collect { send(it) }
   }
 
-  @Suppress("SuspendFunWithCoroutineScopeReceiver")
-  private suspend fun ProducerScope<Event>.chat(chatRequest: ChatRequest) {
-    logger.debug { "Chat request: $chatRequest." }
-    val chatResponse = model.chat(chatRequest)
-    logger.debug { "Chat response: $chatResponse." }
-    val aiMessage = chatResponse.aiMessage()
-    send(MessageEvent(aiMessage))
-    response += aiMessage
-  }
+  private fun chat(chatRequest: ChatRequest): Flow<Event> =
+    flow {
+      logger.debug { "Chat request: $chatRequest." }
+      val chatResponse = model.chat(chatRequest)
+      logger.debug { "Chat response: $chatResponse." }
+      val aiMessage = chatResponse.aiMessage()
+      emit(MessageEvent(aiMessage))
+    }
 
   private suspend fun buildChatRequest(messages: List<ChatMessage>): ChatRequest =
     ChatRequest.builder().apply {

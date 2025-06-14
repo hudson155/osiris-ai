@@ -20,7 +20,7 @@ public abstract class Network(
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
-  public suspend fun run(messages: List<ChatMessage>): Flow<Event> {
+  public fun run(messages: List<ChatMessage>): Flow<Event> {
     logger.debug { "Started execution: (name=$name, messages=$messages)." }
     val executionContext = ExecutionContext(this@Network)
     val agent = executionContext.getAgent(entrypoint)
@@ -31,7 +31,9 @@ public abstract class Network(
         if (event !is MessageEvent) return@onEach
         response = event.message
       }
-      .onCompletion { logger.debug { "Ended execution: (name=$name, response=$response)." } }
+      .onCompletion {
+        logger.debug { "Ended execution: (name=$name, response=${checkNotNull(response)})." }
+      }
   }
 
   override fun toString(): String =

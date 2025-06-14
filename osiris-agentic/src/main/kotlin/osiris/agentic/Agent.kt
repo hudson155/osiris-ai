@@ -8,6 +8,7 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import osiris.core.Tool
@@ -28,26 +29,30 @@ public abstract class Agent(
 
   protected open fun ChatRequest.Builder.chatRequest(): Unit = Unit
 
-  public suspend fun execute(messages: List<ChatMessage>): Flow<Event> {
-    logger.debug { "Started agent: (name=$name, messages=$messages)." }
-    val flow = llm(
-      model = model,
-      messages = buildList {
-        addAll(messages)
-        instructions?.let { add(SystemMessage(it.get())) }
-      },
-      tools = tools,
-      responseType = responseType,
-      chatRequestBlock = { chatRequest() },
-    )
-    var response: ChatMessage? = null
-    return flow
-      .onEach { event ->
-        if (event !is MessageEvent) return@onEach
-        response = event.message
-      }
-      .onCompletion { logger.debug { "Ended agent: (name=$name, response=$response)." } }
-  }
+  public fun execute(messages: List<ChatMessage>): Flow<Event> =
+    flow {
+      logger.debug { "Started agent: (name=$name, messages=$messages)." }
+      val flow = llm(
+        model = model,
+        messages = buildList {
+          addAll(messages)
+          instructions?.let { add(SystemMessage(it.get())) }
+        },
+        tools = tools,
+        responseType = responseType,
+        chatRequestBlock = { chatRequest() },
+      )
+      var response: ChatMessage? = null
+      flow
+        .onEach { event ->
+          if (event !is MessageEvent) return@onEach
+          response = event.message
+        }
+        .onCompletion {
+          logger.debug { "Ended agent: (name=$name, response=${checkNotNull(response)})." }
+        }
+        .collect(this)
+    }
 
   override fun toString(): String =
     "Agent(name=$name)"

@@ -280,9 +280,8 @@ val flow = llm(
     UserMessage("What's the weather in Calgary?"),
   ),
   tools = listOf(WeatherTool()),
-  exitCondition = ExitCondition {
-    val lastMessage = response.lastOrNull()
-    return@ExitCondition lastMessage != null // Exit after 1 turn.
+  exitCondition = ExitCondition { response ->
+    response.isNotEmpty() // Exit after 1 turn.
   },
 )
 
