@@ -10,9 +10,8 @@ import kairo.reflect.KairoType
 import kairo.serialization.util.readValueSpecial
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import osiris.event.Event
-import osiris.event.MessageEvent
+import osiris.event.onMessage
 import osiris.schema.LlmSchema
 
 private val logger: KLogger = KotlinLogging.logger {}
@@ -50,12 +49,11 @@ public abstract class Tool<in Input : Any>(
     val flow = execute(executionRequest, input)
     var executionResult: ToolExecutionResultMessage? = null
     return flow
-      .onEach { event ->
-        if (event !is MessageEvent) return@onEach
-        if (event.message !is ToolExecutionResultMessage) return@onEach
-        if (event.message.id() != id) return@onEach
+      .onMessage { message ->
+        if (message !is ToolExecutionResultMessage) return@onMessage
+        if (message.id() != id) return@onMessage
         check(executionResult == null)
-        executionResult = event.message
+        executionResult = message
       }
       .onCompletion {
         checkNotNull(executionResult)

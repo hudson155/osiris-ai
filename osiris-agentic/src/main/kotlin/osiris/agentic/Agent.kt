@@ -10,11 +10,10 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import osiris.core.Tool
 import osiris.core.llm
 import osiris.event.Event
-import osiris.event.MessageEvent
+import osiris.event.onMessage
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -44,10 +43,7 @@ public abstract class Agent(
       )
       var response: ChatMessage? = null
       flow
-        .onEach { event ->
-          if (event !is MessageEvent) return@onEach
-          response = event.message
-        }
+        .onMessage { response = it }
         .onCompletion {
           logger.debug { "Ended agent: (name=$name, response=${checkNotNull(response)})." }
         }

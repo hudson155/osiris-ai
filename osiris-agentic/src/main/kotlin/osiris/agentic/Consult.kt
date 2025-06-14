@@ -9,12 +9,12 @@ import kairo.lazySupplier.LazySupplier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import osiris.agentic.Consult.Input
 import osiris.core.Tool
 import osiris.core.convert
 import osiris.event.Event
 import osiris.event.MessageEvent
+import osiris.event.onMessage
 import osiris.schema.LlmSchema
 
 public class Consult(
@@ -46,10 +46,7 @@ public class Consult(
       val flow = agent.execute(listOf(UserMessage(input.message)))
       var response: ChatMessage? = null
       flow
-        .onEach { event ->
-          if (event !is MessageEvent) return@onEach
-          response = event.message
-        }
+        .onMessage { response = it }
         .onCompletion {
           val executionResult = ToolExecutionResultMessage.from(executionRequest, (response as AiMessage).convert())
           emit(MessageEvent(executionResult))

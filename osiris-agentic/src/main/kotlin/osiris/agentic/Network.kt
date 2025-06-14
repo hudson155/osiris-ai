@@ -6,9 +6,8 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import osiris.event.Event
-import osiris.event.MessageEvent
+import osiris.event.onMessage
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -27,10 +26,7 @@ public abstract class Network(
     val flow = agent.execute(messages).flowOn(executionContext)
     var response: ChatMessage? = null
     return flow
-      .onEach { event ->
-        if (event !is MessageEvent) return@onEach
-        response = event.message
-      }
+      .onMessage { response += it }
       .onCompletion {
         logger.debug { "Ended execution: (name=$name, response=${checkNotNull(response)})." }
       }

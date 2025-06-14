@@ -17,9 +17,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import osiris.event.Event
 import osiris.event.MessageEvent
+import osiris.event.onMessage
 import osiris.schema.LlmSchema
 
 private val logger: KLogger = KotlinLogging.logger {}
@@ -46,11 +46,11 @@ private class Llm(
         if (with(exitCondition) { shouldExit(response) }) break
         if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
           executeTools(lastMessage)
-            .onEach { if (it is MessageEvent) response += it.message }
+            .onMessage { response += it }
             .collect(this)
         } else {
           chat(buildChatRequest(messages))
-            .onEach { if (it is MessageEvent) response += it.message }
+            .onMessage { response += it }
             .collect(this)
         }
       }
@@ -62,11 +62,10 @@ private class Llm(
     logger.debug { "Tool execution requests: $executionRequests." }
     val executionResults = mutableListOf<ToolExecutionResultMessage>()
     return toolExecutor.execute(tools, executionRequests)
-      .onEach { event ->
-        if (event !is MessageEvent) return@onEach
-        if (event.message !is ToolExecutionResultMessage) return@onEach
-        if (event.message.id() !in executionRequests.map { it.id() }) return@onEach
-        executionResults += event.message
+      .onMessage { message ->
+        if (message !is ToolExecutionResultMessage) return@onMessage
+        if (message.id() !in executionRequests.map { it.id() }) return@onMessage
+        executionResults += message
       }
       .onCompletion {
         check(executionResults.size == executionRequests.size)
