@@ -10,10 +10,10 @@ import dev.langchain4j.data.message.AiMessage
  * This approach should fit simple use cases.
  * If you have a more complex use case, you can implement your own [ExitCondition] instead.
  */
-public abstract class ExitCondition {
-  public abstract fun Llm.shouldExit(): Boolean
+public fun interface ExitCondition {
+  public fun Llm.shouldExit(): Boolean
 
-  public class Default : ExitCondition() {
+  public class Default : ExitCondition {
     override fun Llm.shouldExit(): Boolean {
       val lastMessage = response.lastOrNull() ?: return false
       if (lastMessage !is AiMessage) return false

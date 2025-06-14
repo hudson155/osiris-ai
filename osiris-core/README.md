@@ -177,16 +177,119 @@ flow.response().convert<Person>()
 
 ### Events
 
-TODO
+Osiris uses Kotlin Flows to provide asynchronous responses with incremental updates.
+Instead of calling `.response()` on the Flow
+(which disregards everything except the final chat message),
+you can listen for events instead.
+
+```kotlin
+val flow = llm(
+  model = modelFactory.openAi("gpt-4.1-nano"),
+  messages = listOf(
+    UserMessage("What's the weather in Calgary?"),
+  ),
+  tools = listOf(WeatherTool()),
+)
+
+flow.collect { event ->
+  println(event)
+}
+// MessageEvent(message=AiMessage { toolExecutionRequests = [...] })
+// MessageEvent(message=ToolExecutionResultMessage { ... })
+// MessageEvent(message=AiMessage { text = "..." })
+```
+
+When doing this, notice that the events are not printed all at once.
+Instead, they're printed across a second or two.
+
+You can also use other Kotlin Flow operations.
 
 ### Customizing the chat request
 
-TODO
+If you need to customize the Langchain4j chat request,
+pass a custom `chatRequestBlock` to `llm()`.
+
+```kotlin
+val flow = llm(
+  model = modelFactory.openAi("gpt-4.1-nano"),
+  messages = listOf(
+    UserMessage("What's 2+2?"),
+  ),
+  chatRequestBlock = {
+    maxOutputTokens(100)
+    toolChoice(ToolChoice.AUTO)
+    // Langchain4j offers many other options.
+  },
+)
+
+flow.response().convert<String>()
+// 2 + 2 equals 4.
+```
 
 ### Custom tool executors
 
-TODO
+By default, tools are executed in parallel on Kotlin's `Dispatchers.IO` coroutine dispatcher.
+
+Alternatively, you can choose to run them on a different coroutine dispatcher.
+
+```kotlin
+val dispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
+
+val flow = llm(
+  model = modelFactory.openAi("gpt-4.1-nano"),
+  messages = listOf(
+    UserMessage("What's the weather in Calgary?"),
+  ),
+  tools = listOf(WeatherTool()),
+  toolExecutor = ToolExecutor.Dispatcher(dispatcher),
+)
+
+flow.response().convert<String>()
+// The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
+```
+
+You can run tools sequentially if you need to.
+
+```kotlin
+val flow = llm(
+  model = modelFactory.openAi("gpt-4.1-nano"),
+  messages = listOf(
+    UserMessage("What's the weather in Calgary?"),
+  ),
+  tools = listOf(WeatherTool()),
+  toolExecutor = ToolExecutor.Sequential(),
+)
+
+flow.response().convert<String>()
+// The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
+```
+
+Or you can create your own custom `ToolExecutor`.
 
 ### Custom exit conditions
 
-TODO
+By default, Osiris will run LLM requests in a loop,
+executing tool calls until the LLM responds.
+This means several round trips to the LLM.
+
+If you want to exit at a different point,
+implement a custom `ExitCondition`.
+
+```kotlin
+val flow = llm(
+  model = modelFactory.openAi("gpt-4.1-nano"),
+  messages = listOf(
+    UserMessage("What's the weather in Calgary?"),
+  ),
+  tools = listOf(WeatherTool()),
+  exitCondition = ExitCondition {
+    val lastMessage = response.lastOrNull()
+    return@ExitCondition lastMessage != null // Exit after 1 turn.
+  },
+)
+
+flow.collect { event ->
+  println(event)
+}
+// MessageEvent(message=AiMessage { toolExecutionRequests = [...] })
+```
