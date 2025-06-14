@@ -26,7 +26,7 @@ public abstract class Network(
     val flow = agent.execute(messages).flowOn(executionContext)
     var response: ChatMessage? = null
     return flow
-      .onMessage { response += it }
+      .onMessage { response = it }
       .onCompletion {
         logger.debug { "Ended execution: (name=$name, response=${checkNotNull(response)})." }
       }

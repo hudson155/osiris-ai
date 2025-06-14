@@ -68,9 +68,8 @@ private class Llm(
         executionResults += message
       }
       .onCompletion {
+        logger.debug { "Tool execution results: $executionResults." }
         check(executionResults.size == executionRequests.size)
-        logger.debug { "Tool execution responses: $executionResults." }
-        // todo: emit
       }
   }
 

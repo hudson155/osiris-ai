@@ -7,6 +7,7 @@ import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.data.message.UserMessage
 import kairo.lazySupplier.LazySupplier
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import osiris.agentic.Consult.Input
@@ -47,6 +48,7 @@ public class Consult(
       var response: ChatMessage? = null
       flow
         .onMessage { response = it }
+        .filter { it !is MessageEvent } // TODO: Propagate messages without adding them to the history.
         .onCompletion {
           val executionResult = ToolExecutionResultMessage.from(executionRequest, (response as AiMessage).convert())
           emit(MessageEvent(executionResult))
