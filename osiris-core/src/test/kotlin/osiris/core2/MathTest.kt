@@ -1,11 +1,9 @@
-package osiris.core
+package osiris.core2
 
-import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
@@ -18,14 +16,14 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
-    val events = llm(
+    val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
-    ).toList()
-    verifyResponse(events.response())
+    )
+    verifyResponse(response)
   }
 
-  private fun verifyResponse(response: AiMessage) {
+  private fun verifyResponse(response: List<ChatMessage>) {
     response.convert<String>().shouldBe("4")
   }
 }
