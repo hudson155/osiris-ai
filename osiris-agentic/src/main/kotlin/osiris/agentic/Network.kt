@@ -3,7 +3,11 @@ package osiris.agentic
 import dev.langchain4j.data.message.ChatMessage
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import osiris.event.Event
+import osiris.event.onMessage
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -15,15 +19,17 @@ public abstract class Network(
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
-  public suspend fun run(messages: List<ChatMessage>): List<ChatMessage> {
+  public fun run(messages: List<ChatMessage>): Flow<Event> {
     logger.debug { "Started execution: (name=$name, messages=$messages)." }
     val executionContext = ExecutionContext(this@Network)
-    val response = withContext(executionContext) {
-      val agent = executionContext.getAgent(entrypoint)
-      return@withContext agent.execute(messages)
-    }
-    logger.debug { "Ended execution: (name=$name, response=$response)." }
-    return response
+    val agent = executionContext.getAgent(entrypoint)
+    val flow = agent.execute(messages).flowOn(executionContext)
+    var response: ChatMessage? = null
+    return flow
+      .onMessage { response = it }
+      .onCompletion {
+        logger.debug { "Ended execution: (name=$name, response=${checkNotNull(response)})." }
+      }
   }
 
   override fun toString(): String =

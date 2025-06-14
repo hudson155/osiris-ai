@@ -6,7 +6,6 @@ plugins {
 dependencies {
   api(project(":osiris-core"))
 
-  implementation(libs.kairoCoroutines)
   implementation(libs.kairoLogging)
 
   testImplementation(project(":osiris-evaluator"))

@@ -1,6 +1,7 @@
 package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
+import kairo.coroutines.collect
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -42,8 +43,7 @@ public abstract class ToolExecutor {
       channelFlow {
         executionRequests.map { executionRequest ->
           launch(dispatcher) {
-            execute(tools, executionRequest)
-              .collect { send(it) }
+            execute(tools, executionRequest).collect(this@channelFlow)
           }
         }
       }
@@ -56,8 +56,7 @@ public abstract class ToolExecutor {
     ): Flow<Event> =
       flow {
         executionRequests.forEach { executionRequest ->
-          execute(tools, executionRequest)
-            .collect { emit(it) }
+          execute(tools, executionRequest).collect(this@flow)
         }
       }
   }
