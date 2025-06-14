@@ -8,7 +8,7 @@ import osiris.event.Event
 import osiris.event.MessageEvent
 
 public abstract class SimpleTool<in Input : Any>(name: String) : Tool<Input>(name) {
-  override fun execute(executionRequest: ToolExecutionRequest, input: Input): Flow<Event> =
+  final override fun execute(executionRequest: ToolExecutionRequest, input: Input): Flow<Event> =
     flow {
       val outputString = execute(input)
       val executionResult = ToolExecutionResultMessage.from(executionRequest, outputString)

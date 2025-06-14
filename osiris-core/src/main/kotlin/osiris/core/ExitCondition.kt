@@ -2,6 +2,14 @@ package osiris.core
 
 import dev.langchain4j.data.message.AiMessage
 
+/**
+ * By default ([Default]), Osiris will run LLM requests in a loop,
+ * executing tool calls until the LLM responds.
+ * This means several round trips to the LLM.
+ *
+ * This approach should fit simple use cases.
+ * If you have a more complex use case, you can implement your own [ExitCondition] instead.
+ */
 public abstract class ExitCondition {
   public abstract fun Llm.shouldExit(): Boolean
 

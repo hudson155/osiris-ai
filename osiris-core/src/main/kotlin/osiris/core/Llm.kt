@@ -25,10 +25,10 @@ private val logger: KLogger = KotlinLogging.logger {}
 @Suppress("LongParameterList")
 public class Llm(
   public val model: ChatModel,
-  public val modelBlock: ChatRequest.Builder.() -> Unit,
   public val messages: List<ChatMessage>,
   public val tools: List<Tool<*>>,
   public val responseType: KClass<*>?,
+  public val chatRequestBlock: ChatRequest.Builder.() -> Unit,
   public val toolExecutor: ToolExecutor,
   public val exitCondition: ExitCondition,
 ) {
@@ -99,27 +99,27 @@ public class Llm(
         }.build()
         responseFormat(responseFormat)
       }
-      modelBlock()
+      chatRequestBlock()
     }.build()
 }
 
 @Suppress("LongParameterList")
 public fun llm(
   model: ChatModel,
-  modelBlock: ChatRequest.Builder.() -> Unit = {},
   messages: List<ChatMessage>,
   tools: List<Tool<*>> = emptyList(),
   responseType: KClass<*>? = null,
+  chatRequestBlock: ChatRequest.Builder.() -> Unit = {},
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
   exitCondition: ExitCondition = ExitCondition.Default(),
 ): Flow<Event> {
   require(messages.isNotEmpty()) { "Messages cannot be empty." }
   val llm = Llm(
     model = model,
-    modelBlock = modelBlock,
     messages = messages,
     tools = tools,
     responseType = responseType,
+    chatRequestBlock = chatRequestBlock,
     toolExecutor = toolExecutor,
     exitCondition = exitCondition,
   )

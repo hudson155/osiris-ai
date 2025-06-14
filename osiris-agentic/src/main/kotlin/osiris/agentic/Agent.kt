@@ -37,7 +37,7 @@ public abstract class Agent(
         },
         tools = tools,
         responseType = responseType,
-        modelBlock = { llm() },
+        chatRequestBlock = { llm() },
       )
     }.also { response ->
       logger.debug { "Ended agent: (name=$name, response=$response)." }
