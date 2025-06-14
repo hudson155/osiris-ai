@@ -9,9 +9,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import osiris.core.Tool
 import osiris.core.llm
-import osiris.tracing.AgentEvent
-import osiris.tracing.deriveText
-import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -28,18 +25,16 @@ public abstract class Agent(
 
   public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> {
     logger.debug { "Started agent: (name=$name, messages=$messages)." }
-    return trace({ AgentEvent(this@Agent, deriveText(messages), deriveText(it)) }) {
-      llm(
-        model = model,
-        messages = buildList {
-          addAll(messages)
-          instructions?.let { add(SystemMessage(it.get())) }
-        },
-        tools = tools,
-        responseType = responseType,
-        chatRequestBlock = { llm() },
-      )
-    }.also { response ->
+    return llm(
+      model = model,
+      messages = buildList {
+        addAll(messages)
+        instructions?.let { add(SystemMessage(it.get())) }
+      },
+      tools = tools,
+      responseType = responseType,
+      chatRequestBlock = { llm() },
+    ).also { response ->
       logger.debug { "Ended agent: (name=$name, response=$response)." }
     }
   }
