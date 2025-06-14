@@ -2,6 +2,8 @@ package osiris.core
 
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 import kairo.protectedString.ProtectedString
+import osiris.core2.ModelFactory
+import osiris.core2.modelFactory
 import osiris.openAi.openAiApiKey
 
 @Suppress("UnnecessaryLet")

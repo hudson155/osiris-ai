@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import kairo.serialization.util.readValueSpecial
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.core2.llmMapper
 
 internal class ToolTest {
   @Test

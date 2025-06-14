@@ -10,6 +10,7 @@ import kairo.reflect.KairoType
 import kairo.serialization.util.readValueSpecial
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
+import osiris.core2.llmMapper
 import osiris.event.Event
 import osiris.event.onMessage
 import osiris.schema.LlmSchema

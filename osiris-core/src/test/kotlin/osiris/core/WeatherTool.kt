@@ -4,6 +4,7 @@ import io.kotest.assertions.fail
 import kairo.lazySupplier.LazySupplier
 import kairo.serialization.util.kairoWriteSpecial
 import osiris.core.WeatherTool.Input
+import osiris.core2.llmMapper
 import osiris.schema.LlmSchema
 
 internal object WeatherTool : SimpleTool<Input>("weather") {

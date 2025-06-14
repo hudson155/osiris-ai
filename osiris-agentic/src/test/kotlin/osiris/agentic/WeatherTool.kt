@@ -5,7 +5,7 @@ import kairo.lazySupplier.LazySupplier
 import kairo.serialization.util.kairoWriteSpecial
 import osiris.agentic.WeatherTool.Input
 import osiris.core.SimpleTool
-import osiris.core.llmMapper
+import osiris.core2.llmMapper
 import osiris.schema.LlmSchema
 
 internal object WeatherTool : SimpleTool<Input>("weather") {
