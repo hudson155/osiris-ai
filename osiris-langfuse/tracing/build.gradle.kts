@@ -6,5 +6,4 @@ plugins {
 dependencies {
   implementation(project(":osiris-agentic"))
   implementation(project(":osiris-langfuse"))
-  implementation(project(":osiris-tracing"))
 }

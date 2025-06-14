@@ -8,10 +8,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import osiris.langfuse.Langfuse
-import osiris.tracing.Trace
 
-public suspend fun Langfuse.trace(trace: Trace) {
-  val batch = BatchBuilder(trace).build()
+public suspend fun Langfuse.trace() {
+  val batch = BatchBuilder().build()
   client.request {
     method = HttpMethod.Post
     url("ingestion")
