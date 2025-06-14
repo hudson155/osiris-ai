@@ -1,9 +1,9 @@
 package osiris.agentic
 
 import osiris.agentic.TrackOrderTool.Input
-import osiris.core.Tool
+import osiris.core.SimpleTool
 
-internal object TrackOrderTool : Tool<Input>("track_order") {
+internal object TrackOrderTool : SimpleTool<Input>("track_order") {
   internal data class Input(
     val orderId: String,
   )

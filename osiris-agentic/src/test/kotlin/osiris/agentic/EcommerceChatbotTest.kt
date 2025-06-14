@@ -1,10 +1,12 @@
 package osiris.agentic
 
-import dev.langchain4j.data.message.ChatMessage
+import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.UserMessage
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import osiris.core.response
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
 
@@ -24,11 +26,11 @@ internal class EcommerceChatbotTest {
 
   @Test
   fun test(): Unit = runTest {
-    val response = network.run(messages)
-    verifyResponse(response)
+    val events = network.run(messages).toList()
+    verifyResponse(events.response())
   }
 
-  private suspend fun verifyResponse(response: List<ChatMessage>) {
+  private suspend fun verifyResponse(response: AiMessage) {
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
       messages = messages + response,

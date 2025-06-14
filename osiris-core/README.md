@@ -191,9 +191,7 @@ val flow = llm(
   tools = listOf(WeatherTool()),
 )
 
-flow.collect { event ->
-  println(event)
-}
+flow.collect { println(it) }
 // MessageEvent(message=AiMessage { toolExecutionRequests = [...] })
 // MessageEvent(message=ToolExecutionResultMessage { ... })
 // MessageEvent(message=AiMessage { text = "..." })
@@ -288,8 +286,6 @@ val flow = llm(
   },
 )
 
-flow.collect { event ->
-  println(event)
-}
+flow.collect { println(it) }
 // MessageEvent(message=AiMessage { toolExecutionRequests = [...] })
 ```

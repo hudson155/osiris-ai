@@ -7,8 +7,13 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import osiris.core.Tool
 import osiris.core.llm
+import osiris.event.Event
+import osiris.event.MessageEvent
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -21,11 +26,11 @@ public abstract class Agent(
   protected open val tools: List<Tool<*>> = emptyList()
   protected open val responseType: KClass<*>? = null
 
-  protected open fun ChatRequest.Builder.llm(): Unit = Unit
+  protected open fun ChatRequest.Builder.chatRequest(): Unit = Unit
 
-  public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> {
+  public suspend fun execute(messages: List<ChatMessage>): Flow<Event> {
     logger.debug { "Started agent: (name=$name, messages=$messages)." }
-    return llm(
+    val flow = llm(
       model = model,
       messages = buildList {
         addAll(messages)
@@ -33,10 +38,15 @@ public abstract class Agent(
       },
       tools = tools,
       responseType = responseType,
-      chatRequestBlock = { llm() },
-    ).also { response ->
-      logger.debug { "Ended agent: (name=$name, response=$response)." }
-    }
+      chatRequestBlock = { chatRequest() },
+    )
+    var response: ChatMessage? = null
+    return flow
+      .onEach { event ->
+        if (event !is MessageEvent) return@onEach
+        response = event.message
+      }
+      .onCompletion { logger.debug { "Ended agent: (name=$name, response=$response)." } }
   }
 
   override fun toString(): String =

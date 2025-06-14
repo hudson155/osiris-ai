@@ -38,14 +38,15 @@ public class Llm internal constructor(
   public fun execute(): Flow<Event> =
     channelFlow {
       logger.debug { "Started LLM." }
-      while (with(exitCondition) { !shouldExit() }) {
-        val chatRequest = buildChatRequest()
-        val lastMessage = chatRequest.messages().lastOrNull()
+      while (true) {
+        val messages = messages + response
+        val lastMessage = messages.lastOrNull()
         logger.debug { "Last message: ${lastMessage ?: "null"}." }
+        if (with(exitCondition) { shouldExit() }) break
         if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
           executeTools(lastMessage)
         } else {
-          chat(chatRequest)
+          chat(buildChatRequest(messages))
         }
       }
       logger.debug { "Ended LLM." }
@@ -68,9 +69,7 @@ public class Llm internal constructor(
         logger.debug { "Tool execution responses: $executionResults." }
         response += executionResults
       }
-      .collect { event ->
-        send(event)
-      }
+      .collect { send(it) }
   }
 
   @Suppress("SuspendFunWithCoroutineScopeReceiver")
@@ -83,9 +82,9 @@ public class Llm internal constructor(
     response += aiMessage
   }
 
-  private suspend fun buildChatRequest(): ChatRequest =
+  private suspend fun buildChatRequest(messages: List<ChatMessage>): ChatRequest =
     ChatRequest.builder().apply {
-      messages(messages + response)
+      messages(messages)
       if (tools.isNotEmpty()) {
         toolSpecifications(tools.map { it.toolSpecification.get() })
       }

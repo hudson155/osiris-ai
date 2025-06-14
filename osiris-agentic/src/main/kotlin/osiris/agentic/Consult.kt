@@ -1,10 +1,20 @@
 package osiris.agentic
 
+import dev.langchain4j.agent.tool.ToolExecutionRequest
+import dev.langchain4j.data.message.AiMessage
+import dev.langchain4j.data.message.ChatMessage
+import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.data.message.UserMessage
 import kairo.lazySupplier.LazySupplier
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import osiris.agentic.Consult.Input
 import osiris.core.Tool
 import osiris.core.convert
+import osiris.event.Event
+import osiris.event.MessageEvent
 import osiris.schema.LlmSchema
 
 public class Consult(
@@ -30,11 +40,20 @@ public class Consult(
       return@LazySupplier agent.description
     }
 
-  override suspend fun execute(input: Input): String {
-    val agent = agent.get()
-    val response = agent.execute(
-      messages = listOf(UserMessage(input.message)),
-    )
-    return response.convert()
-  }
+  override fun execute(executionRequest: ToolExecutionRequest, input: Input): Flow<Event> =
+    flow {
+      val agent = agent.get()
+      val flow = agent.execute(listOf(UserMessage(input.message)))
+      var response: ChatMessage? = null
+      flow
+        .onEach { event ->
+          if (event !is MessageEvent) return@onEach
+          response = event.message
+        }
+        .onCompletion {
+          val executionResult = ToolExecutionResultMessage.from(executionRequest, (response as AiMessage).convert())
+          emit(MessageEvent(executionResult))
+        }
+        .collect { emit(it) }
+    }
 }
