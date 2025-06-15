@@ -2,7 +2,10 @@ package osiris.tracing
 
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.coroutines.coroutineContext
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.withContext
 
 public class Tracer internal constructor(
   internal val listeners: List<Listener>,
@@ -27,7 +30,16 @@ public class Tracer internal constructor(
   public companion object : CoroutineContext.Key<Tracer>
 }
 
-public fun Tracer?.nested(tracer: Tracer?): Tracer? {
+public suspend fun <T> withTracer(tracer: Tracer?, block: suspend () -> T): T {
+  val nestedTracer = coroutineContext[Tracer].nested(tracer)
+  val result = withContext(nestedTracer ?: EmptyCoroutineContext) {
+    block()
+  }
+  if (nestedTracer != null && nestedTracer == tracer) nestedTracer.flush()
+  return result
+}
+
+private fun Tracer?.nested(tracer: Tracer?): Tracer? {
   if (this == null) return tracer
   if (tracer == null) return this
   check(tracer.rootSpanId == null)
