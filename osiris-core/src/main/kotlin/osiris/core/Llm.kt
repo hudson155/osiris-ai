@@ -13,6 +13,11 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
 import osiris.schema.LlmSchema
+import osiris.tracing.ChatEvent
+import osiris.tracing.TraceEvent
+import osiris.tracing.Tracer
+import osiris.tracing.trace
+import osiris.tracing.withTracer
 
 private val logger: KLogger = KotlinLogging.logger {}
 
@@ -53,9 +58,11 @@ internal class Llm(
     return executionResults
   }
 
-  private fun chat(chatRequest: ChatRequest): List<ChatMessage> {
+  private suspend fun chat(chatRequest: ChatRequest): List<ChatMessage> {
     logger.debug { "Chat request: $chatRequest." }
-    val chatResponse = model.chat(chatRequest)
+    val chatResponse = trace({ ChatEvent.Start(chatRequest) }, { ChatEvent.End(it) }) {
+      model.chat(chatRequest)
+    }
     logger.debug { "Chat response: $chatResponse." }
     val aiMessage = chatResponse.aiMessage()
     return listOf(aiMessage)
@@ -114,6 +121,11 @@ public suspend fun llm(
    */
   chatRequestBlock: ChatRequest.Builder.() -> Unit = {},
   /**
+   * Enable tracing for this request by providing a tracer.
+   * If a tracer is provided but tracing is already enabled upstack, the tracer will be ignored.
+   */
+  tracer: Tracer? = null,
+  /**
    * By default, tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
    */
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
@@ -133,5 +145,11 @@ public suspend fun llm(
     toolExecutor = toolExecutor,
     exitCondition = exitCondition,
   )
-  return llm.execute()
+  return withTracer(
+    tracer = tracer,
+    start = { TraceEvent.Start("Trace: LLM", deriveText(messages)) },
+    end = { TraceEvent.End(deriveText(it)) },
+  ) {
+    llm.execute()
+  }
 }

@@ -25,7 +25,7 @@ public abstract class Tool<in Input : Any>(
   public open val description: LazySupplier<out String?> =
     LazySupplier { null }
 
-  internal val toolSpecification: LazySupplier<ToolSpecification> =
+  public val toolSpecification: LazySupplier<ToolSpecification> =
     LazySupplier {
       ToolSpecification.builder().apply {
         name(name)
@@ -34,17 +34,17 @@ public abstract class Tool<in Input : Any>(
       }.build()
     }
 
-  internal suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
+  public suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
     logger.debug { "Started tool: $executionRequest." }
     val inputString = executionRequest.arguments()
     val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
     val outputString = execute(input)
-    val executionResponse = ToolExecutionResultMessage.from(executionRequest, outputString)
-    logger.debug { "Ended tool: $executionResponse." }
-    return executionResponse
+    val executionResult = ToolExecutionResultMessage.from(executionRequest, outputString)
+    logger.debug { "Ended tool: $executionResult." }
+    return executionResult
   }
 
-  internal abstract suspend fun execute(input: Input): String
+  public abstract suspend fun execute(input: Input): String
 
   override fun toString(): String =
     "Tool(name=$name)"

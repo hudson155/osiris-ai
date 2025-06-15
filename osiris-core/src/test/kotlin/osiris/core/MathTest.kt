@@ -7,6 +7,8 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
+import osiris.tracing.EventLogger
+import osiris.tracing.tracer
 
 internal class MathTest {
   private val messages: List<ChatMessage> = listOf(
@@ -16,9 +18,13 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
+    val tracer = tracer {
+      listen(EventLogger)
+    }
     val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
+      tracer = tracer,
     )
     verifyResponse(response)
   }

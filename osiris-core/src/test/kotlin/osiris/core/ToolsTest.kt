@@ -6,6 +6,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
+import osiris.tracing.EventLogger
+import osiris.tracing.tracer
 
 internal class ToolsTest {
   private val messages: List<ChatMessage> =
@@ -15,10 +17,14 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
+    val tracer = tracer {
+      listen(EventLogger)
+    }
     val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
       tools = listOf(WeatherTool),
+      tracer = tracer,
     )
     verifyResponse(response)
   }

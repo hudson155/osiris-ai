@@ -7,6 +7,8 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
+import osiris.tracing.EventLogger
+import osiris.tracing.tracer
 
 internal class StructuredOutputTest {
   private val messages: List<ChatMessage> =
@@ -17,10 +19,14 @@ internal class StructuredOutputTest {
 
   @Test
   fun test(): Unit = runTest {
+    val tracer = tracer {
+      listen(EventLogger)
+    }
     val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
       responseType = Person::class,
+      tracer = tracer,
     )
     verifyResponse(response)
   }
