@@ -16,7 +16,7 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
-    val response = _root_ide_package_.osiris.core2.llm(
+    val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
     )

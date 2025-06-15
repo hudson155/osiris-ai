@@ -16,12 +16,12 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
-    val events = llm(
+    val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
       tools = listOf(WeatherTool),
-    ).toList()
-    verifyResponse(events.messages())
+    )
+    verifyResponse(response)
   }
 
   private suspend fun verifyResponse(messages: List<ChatMessage>) {

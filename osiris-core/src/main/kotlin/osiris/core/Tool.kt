@@ -5,6 +5,7 @@ import dev.langchain4j.agent.tool.ToolSpecification
 import dev.langchain4j.data.message.ToolExecutionResultMessage
 import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
+import kairo.serialization.util.readValueSpecial
 import osiris.schema.LlmSchema
 
 /**
@@ -29,7 +30,14 @@ public abstract class Tool<in Input : Any>(
       }.build()
     }
 
-  public abstract suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage
+  public suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
+    val inputString = executionRequest.arguments()
+    val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
+    val outputString = execute(input)
+    return ToolExecutionResultMessage.from(executionRequest, outputString)
+  }
+
+  public abstract suspend fun execute(input: Input): String
 
   override fun toString(): String =
     "Tool(name=$name)"
