@@ -5,7 +5,6 @@ plugins {
 
 dependencies {
   api(project(":osiris-schema"))
-  implementation(project(":osiris-tracing"))
 
   api(libs.kairoCoroutines)
   api(libs.kairoLazySupplier)
