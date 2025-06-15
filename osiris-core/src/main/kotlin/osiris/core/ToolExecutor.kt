@@ -1,4 +1,4 @@
-package osiris.core2
+package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.ToolExecutionResultMessage

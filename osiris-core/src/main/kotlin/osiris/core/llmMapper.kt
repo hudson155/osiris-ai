@@ -1,4 +1,4 @@
-package osiris.core2
+package osiris.core
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import kairo.serialization.jsonMapper

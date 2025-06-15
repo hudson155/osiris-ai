@@ -1,4 +1,4 @@
-package osiris.core2
+package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.AiMessage
@@ -12,7 +12,6 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
-import osiris.core2.ToolExecutor
 import osiris.schema.LlmSchema
 
 private val logger: KLogger = KotlinLogging.logger {}
@@ -46,7 +45,7 @@ internal class Llm(
     return response
   }
 
-  private fun executeTools(executionRequests: List<ToolExecutionRequest>): List<ChatMessage> {
+  private suspend fun executeTools(executionRequests: List<ToolExecutionRequest>): List<ChatMessage> {
     logger.debug { "Tool execution requests: $executionRequests." }
     val executionResults = toolExecutor.execute(tools, executionRequests)
     logger.debug { "Tool execution results: $executionResults." }

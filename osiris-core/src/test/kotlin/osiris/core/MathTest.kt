@@ -6,7 +6,6 @@ import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import osiris.core2.convert
 import osiris.openAi.openAi
 
 internal class MathTest {

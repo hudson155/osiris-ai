@@ -1,4 +1,4 @@
-package osiris.core2
+package osiris.core
 
 import dev.langchain4j.model.chat.ChatModel
 
