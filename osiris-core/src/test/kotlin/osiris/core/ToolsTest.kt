@@ -2,7 +2,6 @@ package osiris.core
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.UserMessage
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.evaluator.evaluate
@@ -16,18 +15,18 @@ internal class ToolsTest {
 
   @Test
   fun test(): Unit = runTest {
-    val events = llm(
+    val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
       tools = listOf(WeatherTool),
-    ).toList()
-    verifyResponse(events.messages())
+    )
+    verifyResponse(response)
   }
 
-  private suspend fun verifyResponse(messages: List<ChatMessage>) {
+  private suspend fun verifyResponse(response: List<ChatMessage>) {
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
-      messages = this.messages + messages,
+      messages = messages + response,
       criteria = """
         Should say that the weather in Calgary is 15 degrees Celsius and sunny,
         and that the weather in Edmonton is -30 degrees Celsius and snowing.

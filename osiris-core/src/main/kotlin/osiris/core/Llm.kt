@@ -1,8 +1,8 @@
 package osiris.core
 
+import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
-import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.request.ResponseFormat
@@ -12,80 +12,58 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
-import osiris.event.Event
-import osiris.event.MessageEvent
 import osiris.schema.LlmSchema
 
 private val logger: KLogger = KotlinLogging.logger {}
 
 @Suppress("LongParameterList")
-public class Llm internal constructor(
-  public val model: ChatModel,
-  public val messages: List<ChatMessage>,
-  public val tools: List<Tool<*>>,
-  public val responseType: KClass<*>?,
-  public val chatRequestBlock: ChatRequest.Builder.() -> Unit,
-  public val toolExecutor: ToolExecutor,
-  public val exitCondition: ExitCondition,
+internal class Llm(
+  private val model: ChatModel,
+  private val messages: List<ChatMessage>,
+  private val tools: List<Tool<*>>,
+  private val responseType: KClass<*>?,
+  private val chatRequestBlock: ChatRequest.Builder.() -> Unit,
+  private val toolExecutor: ToolExecutor,
+  private val exitCondition: ExitCondition,
 ) {
-  public val response: MutableList<ChatMessage> = mutableListOf()
-
-  public fun execute(): Flow<Event> =
-    channelFlow {
-      logger.debug { "Started LLM." }
-      while (with(exitCondition) { !shouldExit() }) {
-        val chatRequest = buildChatRequest()
-        val lastMessage = chatRequest.messages().lastOrNull()
-        logger.debug { "Last message: ${lastMessage ?: "null"}." }
-        if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
-          executeTools(lastMessage)
-        } else {
-          chat(chatRequest)
-        }
+  suspend fun execute(): List<ChatMessage> {
+    logger.debug { "Started LLM." }
+    val response = mutableListOf<ChatMessage>()
+    while (true) {
+      val messages = messages + response
+      val lastMessage = messages.lastOrNull()
+      logger.debug { "Last message: ${lastMessage ?: "null"}." }
+      if (exitCondition.shouldExit(response)) break
+      if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
+        val executionRequests = lastMessage.toolExecutionRequests()
+        response += executeTools(executionRequests)
+      } else {
+        val chatRequest = buildChatRequest(messages)
+        response += chat(chatRequest)
       }
-      logger.debug { "Ended LLM." }
     }
-
-  @Suppress("SuspendFunWithCoroutineScopeReceiver")
-  private suspend fun ProducerScope<Event>.executeTools(lastMessage: AiMessage) {
-    val executionRequests = lastMessage.toolExecutionRequests()
-    logger.debug { "Tool execution requests: $executionRequests." }
-    val executionResults = mutableListOf<ToolExecutionResultMessage>()
-    toolExecutor.execute(tools, executionRequests)
-      .onEach { event ->
-        if (event !is MessageEvent) return@onEach
-        if (event.message !is ToolExecutionResultMessage) return@onEach
-        if (event.message.id() !in executionRequests.map { it.id() }) return@onEach
-        executionResults += event.message
-      }
-      .onCompletion {
-        check(executionResults.size == executionRequests.size)
-        logger.debug { "Tool execution responses: $executionResults." }
-        response += executionResults
-      }
-      .collect { event ->
-        send(event)
-      }
+    logger.debug { "Ended LLM." }
+    return response
   }
 
-  @Suppress("SuspendFunWithCoroutineScopeReceiver")
-  private suspend fun ProducerScope<Event>.chat(chatRequest: ChatRequest) {
+  private suspend fun executeTools(executionRequests: List<ToolExecutionRequest>): List<ChatMessage> {
+    logger.debug { "Tool execution requests: $executionRequests." }
+    val executionResults = toolExecutor.execute(tools, executionRequests)
+    logger.debug { "Tool execution results: $executionResults." }
+    return executionResults
+  }
+
+  private fun chat(chatRequest: ChatRequest): List<ChatMessage> {
     logger.debug { "Chat request: $chatRequest." }
     val chatResponse = model.chat(chatRequest)
     logger.debug { "Chat response: $chatResponse." }
     val aiMessage = chatResponse.aiMessage()
-    send(MessageEvent(aiMessage))
-    response += aiMessage
+    return listOf(aiMessage)
   }
 
-  private suspend fun buildChatRequest(): ChatRequest =
+  private suspend fun buildChatRequest(messages: List<ChatMessage>): ChatRequest =
     ChatRequest.builder().apply {
-      messages(messages + response)
+      messages(messages)
       if (tools.isNotEmpty()) {
         toolSpecifications(tools.map { it.toolSpecification.get() })
       }
@@ -110,13 +88,10 @@ public class Llm internal constructor(
  * By default, Osiris will run LLM requests in a loop,
  * executing tool calls until the LLM responds.
  *
- * Osiris uses Kotlin Flows to provide asynchronous responses with incremental updates.
- * The most basic way to consume the Flow is by calling [response].
- *
  * For more information, refer to the documentation.
  */
 @Suppress("LongParameterList")
-public fun llm(
+public suspend fun llm(
   /**
    * Any Langchain4j model.
    */
@@ -147,7 +122,7 @@ public fun llm(
    * executing tool calls until the LLM responds.
    */
   exitCondition: ExitCondition = ExitCondition.Default(),
-): Flow<Event> {
+): List<ChatMessage> {
   require(messages.isNotEmpty()) { "Messages cannot be empty." }
   val llm = Llm(
     model = model,

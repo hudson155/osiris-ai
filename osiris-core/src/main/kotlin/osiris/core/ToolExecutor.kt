@@ -1,13 +1,12 @@
 package osiris.core
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
+import dev.langchain4j.data.message.ToolExecutionResultMessage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import osiris.event.Event
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 /**
  * By default, tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
@@ -18,47 +17,44 @@ import osiris.event.Event
  * or choose to implement your own tool executor from scratch.
  */
 public abstract class ToolExecutor {
-  public abstract fun execute(
+  public abstract suspend fun execute(
     tools: List<Tool<*>>,
     executionRequests: List<ToolExecutionRequest>,
-  ): Flow<Event>
+  ): List<ToolExecutionResultMessage>
 
-  protected fun execute(
+  protected suspend fun execute(
     tools: List<Tool<*>>,
     executionRequest: ToolExecutionRequest,
-  ): Flow<Event> {
+  ): ToolExecutionResultMessage {
     val toolName = executionRequest.name()
-    val tool = checkNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
+    val tool = tools.singleNullOrThrow { it.name == toolName }
+    checkNotNull(tool) { "No tool with name: $toolName." }
     return tool.execute(executionRequest)
   }
 
   public class Dispatcher(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
   ) : ToolExecutor() {
-    override fun execute(
+    override suspend fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
-    ): Flow<Event> =
-      channelFlow {
+    ): List<ToolExecutionResultMessage> =
+      coroutineScope {
         executionRequests.map { executionRequest ->
-          launch(dispatcher) {
+          async(dispatcher) {
             execute(tools, executionRequest)
-              .collect { send(it) }
           }
-        }
+        }.awaitAll()
       }
   }
 
   public class Sequential : ToolExecutor() {
-    override fun execute(
+    override suspend fun execute(
       tools: List<Tool<*>>,
       executionRequests: List<ToolExecutionRequest>,
-    ): Flow<Event> =
-      flow {
-        executionRequests.forEach { executionRequest ->
-          execute(tools, executionRequest)
-            .collect { emit(it) }
-        }
+    ): List<ToolExecutionResultMessage> =
+      executionRequests.map { executionRequest ->
+        execute(tools, executionRequest)
       }
   }
 }
