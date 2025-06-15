@@ -6,6 +6,7 @@ import kotlin.uuid.Uuid
 public data class Event(
   val spanId: Uuid,
   val parentSpanId: Uuid?,
+  val rootSpanId: Uuid,
   val start: Start<*>,
   val end: End<*>?,
 ) {

@@ -8,6 +8,7 @@ public class TracerBuilder internal constructor(
   internal fun build(): Tracer =
     Tracer(
       listeners = listeners,
+      rootSpanId = null,
       spanId = null,
     )
 

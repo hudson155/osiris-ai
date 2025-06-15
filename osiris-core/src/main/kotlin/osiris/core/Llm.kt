@@ -11,12 +11,15 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.coroutines.coroutineContext
 import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
+import osiris.tracing.LlmEvent
 import osiris.tracing.Tracer
+import osiris.tracing.nested
 import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
@@ -135,6 +138,7 @@ public suspend fun llm(
   exitCondition: ExitCondition = ExitCondition.Default(),
 ): List<ChatMessage> {
   require(messages.isNotEmpty()) { "Messages cannot be empty." }
+  val tracer = coroutineContext[Tracer].nested(tracer)
   val llm = Llm(
     model = model,
     messages = messages,
@@ -144,7 +148,11 @@ public suspend fun llm(
     toolExecutor = toolExecutor,
     exitCondition = exitCondition,
   )
-  return withContext(tracer ?: EmptyCoroutineContext) {
-    llm.execute()
+  val response = withContext(tracer ?: EmptyCoroutineContext) {
+    trace({ LlmEvent.Start(messages) }, { LlmEvent.End(it) }) {
+      llm.execute()
+    }
   }
+  tracer?.flush()
+  return response
 }

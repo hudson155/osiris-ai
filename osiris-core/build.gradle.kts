@@ -17,6 +17,8 @@ dependencies {
   api(libs.langchain)
 
   testImplementation(project(":osiris-evaluator"))
+  testImplementation(project(":osiris-langfuse"))
+  testImplementation(project(":osiris-langfuse:tracing"))
   testImplementation(project(":osiris-open-ai"))
 
   testImplementation(libs.kairoEnvironmentVariableSupplier)

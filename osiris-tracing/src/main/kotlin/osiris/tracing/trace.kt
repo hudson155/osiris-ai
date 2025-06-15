@@ -18,16 +18,18 @@ public suspend fun <T> trace(
   if (outerTracer == null) {
     return block()
   }
+  val spanId = Uuid.random()
   val startEvent = Event(
-    spanId = Uuid.random(),
+    spanId = spanId,
     parentSpanId = outerTracer.spanId,
+    rootSpanId = outerTracer.rootSpanId ?: spanId,
     start = Event.Start(
       at = Instant.now(),
       details = start(),
     ),
     end = null,
   )
-  outerTracer.send(startEvent)
+  outerTracer.event(startEvent)
   val innerTraceContext = outerTracer.withSpanId(startEvent.spanId)
   val result = withContext(innerTraceContext) {
     block()
@@ -35,12 +37,13 @@ public suspend fun <T> trace(
   val endEvent = Event(
     spanId = startEvent.spanId,
     parentSpanId = startEvent.parentSpanId,
+    rootSpanId = startEvent.rootSpanId,
     start = startEvent.start,
     end = Event.End(
       at = Instant.now(),
       details = end(result),
     )
   )
-  outerTracer.send(endEvent)
+  outerTracer.event(endEvent)
   return result
 }

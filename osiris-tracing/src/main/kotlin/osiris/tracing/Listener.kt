@@ -1,5 +1,7 @@
 package osiris.tracing
 
-public fun interface Listener {
+public interface Listener {
   public fun event(event: Event)
+
+  public fun flush()
 }
