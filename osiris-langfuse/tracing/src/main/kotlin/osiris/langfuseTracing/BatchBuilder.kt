@@ -4,13 +4,36 @@ import java.time.Instant
 import java.util.Queue
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.uuid.Uuid
+import osiris.tracing.AgentEvent
 import osiris.tracing.ChatEvent
 import osiris.tracing.Event
 import osiris.tracing.ToolEvent
 import osiris.tracing.TraceEvent
 
+@Suppress("ForbiddenMethodCall")
 internal class BatchBuilder {
   val ingestionEvents: Queue<IngestionEvent<*>> = ConcurrentLinkedQueue()
+
+  fun agentEvent(event: Event) {
+    val start = event.start
+    val end = event.end as Event.End
+    val startDetails = start.details as AgentEvent.Start
+    val endDetails = end.details as AgentEvent.End
+    ingestionEvents += SpanCreate(
+      id = Uuid.random(),
+      timestamp = Instant.now(),
+      body = SpanCreate.Body(
+        id = event.spanId,
+        traceId = event.rootSpanId,
+        parentObservationId = event.parentSpanId,
+        startTime = start.at,
+        endTime = end.at,
+        name = "Agent: ${startDetails.agent.name}",
+        input = startDetails.input,
+        output = endDetails.output,
+      ),
+    )
+  }
 
   fun chatEvent(event: Event) {
     val start = event.start
@@ -73,7 +96,6 @@ internal class BatchBuilder {
     )
   }
 
-  @Suppress("LongMethod")
   fun build(): BatchIngestion =
     BatchIngestion(
       batch = ingestionEvents.toList(),

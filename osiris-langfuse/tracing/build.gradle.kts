@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
   implementation(project(":osiris-agentic"))
+  implementation(project(":osiris-core"))
   implementation(project(":osiris-langfuse"))
   implementation(project(":osiris-tracing"))
 }
