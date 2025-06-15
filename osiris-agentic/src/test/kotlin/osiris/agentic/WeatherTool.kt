@@ -4,11 +4,11 @@ import io.kotest.assertions.fail
 import kairo.lazySupplier.LazySupplier
 import kairo.serialization.util.kairoWriteSpecial
 import osiris.agentic.WeatherTool.Input
-import osiris.core.SimpleTool
+import osiris.core.Tool
 import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 
-internal object WeatherTool : SimpleTool<Input>("weather") {
+internal object WeatherTool : Tool<Input>("weather") {
   internal data class Input(
     @LlmSchema.Description("The city to get the weather for. Only the city name.")
     val location: String,

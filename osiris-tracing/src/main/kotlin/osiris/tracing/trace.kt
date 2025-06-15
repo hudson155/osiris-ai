@@ -9,6 +9,7 @@ public typealias BuildStart = () -> Event.Details
 
 public typealias BuildEnd<T> = (T) -> Event.Details
 
+@Suppress("ForbiddenMethodCall")
 public suspend fun <T> trace(
   start: BuildStart,
   end: BuildEnd<T>,
@@ -42,7 +43,7 @@ public suspend fun <T> trace(
     end = Event.End(
       at = Instant.now(),
       details = end(result),
-    )
+    ),
   )
   outerTracer.event(endEvent)
   return result

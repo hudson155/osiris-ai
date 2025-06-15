@@ -29,6 +29,7 @@ public class Tracer internal constructor(
   public companion object : CoroutineContext.Key<Tracer>
 }
 
+@Suppress("LongParameterList")
 public suspend fun <T> withTracer(
   tracer: Tracer?,
   start: () -> TraceEvent.Start,

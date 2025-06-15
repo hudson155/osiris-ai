@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import osiris.langfuse.Langfuse
+import osiris.tracing.AgentEvent
 import osiris.tracing.ChatEvent
 import osiris.tracing.Event
 import osiris.tracing.Listener
@@ -24,6 +25,7 @@ public fun Langfuse.trace(): Listener {
     override fun event(event: Event) {
       val end = event.end ?: return
       when (end.details) {
+        is AgentEvent.End -> batchBuilder.agentEvent(event)
         is ChatEvent.End -> batchBuilder.chatEvent(event)
         is ToolEvent.End -> batchBuilder.toolEvent(event)
         is TraceEvent.End -> batchBuilder.traceEvent(event)

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import osiris.evaluator.evaluate
 import osiris.openAi.openAi
+import osiris.tracing.EventLogger
+import osiris.tracing.tracer
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class EcommerceChatbotTest {
@@ -15,6 +17,9 @@ internal class EcommerceChatbotTest {
       entrypoint = ecommerceChatbot.name
       agents += ecommerceChatbot
       agents += ecommerceOrderTracker
+      tracer = tracer {
+        listen(EventLogger)
+      }
     }
 
   private val messages: List<UserMessage> =
