@@ -151,7 +151,7 @@ val chatbot: Agent =
     model = testModelFactory.openAi("gpt-4.1-nano") {
       temperature(0.20)
     }
-    instructions = instructionsBuilder.create(
+    instructions = instructionsBuilder.build(
       """
         # Your role and task
         
@@ -168,7 +168,7 @@ val orderTracker: Agent =
     model = testModelFactory.openAi("gpt-4.1-nano") {
       temperature(0.20)
     }
-    instructions = instructionsBuilder.create(
+    instructions = instructionsBuilder.build(
       """
         # Your role and task
         

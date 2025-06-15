@@ -9,7 +9,7 @@ internal class InstructionsTest {
   fun empty(): Unit = runTest {
     val instructionsBuilder: InstructionsBuilder =
       instructionsBuilder(includeDefaultInstructions = false) {}
-    instructionsBuilder.create { "The real instructions." }.get().shouldBe(
+    instructionsBuilder.build { "The real instructions." }.get().shouldBe(
       """
         The real instructions.
       """.trimIndent(),
@@ -23,7 +23,7 @@ internal class InstructionsTest {
         add { "First" }
         add { "Second" }
       }
-    instructionsBuilder.create { "Third" }.get().shouldBe(
+    instructionsBuilder.build { "Third" }.get().shouldBe(
       """
         First
         
@@ -38,7 +38,7 @@ internal class InstructionsTest {
   fun `default instructions`(): Unit = runTest {
     val instructionsBuilder: InstructionsBuilder =
       instructionsBuilder(includeDefaultInstructions = true)
-    instructionsBuilder.create { "The real instructions." }.get().shouldBe(
+    instructionsBuilder.build { "The real instructions." }.get().shouldBe(
       """
         # The system
         
