@@ -147,7 +147,7 @@ public suspend fun llm(
   )
   return withTracer(
     tracer = tracer,
-    start = { TraceEvent.Start("Osiris", deriveText(messages)) },
+    start = { TraceEvent.Start("Trace: LLM", deriveText(messages)) },
     end = { TraceEvent.End(deriveText(it)) },
   ) {
     llm.execute()
