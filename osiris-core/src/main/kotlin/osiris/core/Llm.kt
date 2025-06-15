@@ -121,7 +121,8 @@ public suspend fun llm(
    */
   chatRequestBlock: ChatRequest.Builder.() -> Unit = {},
   /**
-   * TODO.
+   * Enable tracing for this request by providing a tracer.
+   * If a tracer is provided but tracing is already enabled upstack, the tracer will be ignored.
    */
   tracer: Tracer? = null,
   /**
@@ -144,10 +145,8 @@ public suspend fun llm(
     toolExecutor = toolExecutor,
     exitCondition = exitCondition,
   )
-  val response = withTracer(tracer) {
-    trace({ LlmEvent.Start(messages) }, { LlmEvent.End(it) }) {
-      llm.execute()
-    }
+  val response = withTracer(tracer, { LlmEvent.Start(messages) }, { LlmEvent.End(it) }) {
+    llm.execute()
   }
   tracer?.flush()
   return response
