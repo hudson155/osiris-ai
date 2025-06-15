@@ -1,4 +1,4 @@
-package osiris.core2
+package osiris.core
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
@@ -6,6 +6,7 @@ import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.core2.convert
 import osiris.openAi.openAi
 
 internal class MathTest {
@@ -16,7 +17,7 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
-    val response = llm(
+    val response = _root_ide_package_.osiris.core2.llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
     )
