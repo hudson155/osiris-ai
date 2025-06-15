@@ -29,7 +29,12 @@ public class Tracer internal constructor(
   public companion object : CoroutineContext.Key<Tracer>
 }
 
-public suspend fun <T> withTracer(tracer: Tracer?, start: BuildStart, end: BuildEnd<T>, block: suspend () -> T): T {
+public suspend fun <T> withTracer(
+  tracer: Tracer?,
+  start: () -> TraceEvent.Start,
+  end: (T) -> TraceEvent.End,
+  block: suspend () -> T,
+): T {
   if (tracer == null || coroutineContext[Tracer] != null) return block()
   return withContext(tracer) {
     trace(start, end) {

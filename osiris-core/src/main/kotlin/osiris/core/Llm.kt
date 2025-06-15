@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
-import osiris.tracing.LlmEvent
+import osiris.tracing.TraceEvent
 import osiris.tracing.Tracer
 import osiris.tracing.trace
 import osiris.tracing.withTracer
@@ -145,9 +145,11 @@ public suspend fun llm(
     toolExecutor = toolExecutor,
     exitCondition = exitCondition,
   )
-  val response = withTracer(tracer, { LlmEvent.Start(messages) }, { LlmEvent.End(it) }) {
+  return withTracer(
+    tracer = tracer,
+    start = { TraceEvent.Start("Osiris", deriveText(messages)) },
+    end = { TraceEvent.End(deriveText(it)) },
+  ) {
     llm.execute()
   }
-  tracer?.flush()
-  return response
 }

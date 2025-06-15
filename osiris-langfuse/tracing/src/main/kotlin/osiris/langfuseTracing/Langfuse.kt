@@ -15,8 +15,8 @@ import osiris.langfuse.Langfuse
 import osiris.tracing.ChatEvent
 import osiris.tracing.Event
 import osiris.tracing.Listener
-import osiris.tracing.LlmEvent
 import osiris.tracing.ToolEvent
+import osiris.tracing.TraceEvent
 
 public fun Langfuse.trace(): Listener {
   val batchBuilder = BatchBuilder()
@@ -25,8 +25,8 @@ public fun Langfuse.trace(): Listener {
       val end = event.end ?: return
       when (end.details) {
         is ChatEvent.End -> batchBuilder.chatEvent(event)
-        is LlmEvent.End -> if (event.parentSpanId == null) batchBuilder.llmEvent(event)
         is ToolEvent.End -> batchBuilder.toolEvent(event)
+        is TraceEvent.End -> batchBuilder.traceEvent(event)
       }
     }
 

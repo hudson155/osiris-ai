@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.uuid.Uuid
 import osiris.tracing.ChatEvent
 import osiris.tracing.Event
-import osiris.tracing.LlmEvent
 import osiris.tracing.ToolEvent
+import osiris.tracing.TraceEvent
 
 internal class BatchBuilder {
   val ingestionEvents: Queue<IngestionEvent<*>> = ConcurrentLinkedQueue()
@@ -34,24 +34,6 @@ internal class BatchBuilder {
     )
   }
 
-  fun llmEvent(event: Event) {
-    val start = event.start
-    val end = event.end as Event.End
-    val startDetails = start.details as LlmEvent.Start
-    val endDetails = end.details as LlmEvent.End
-    ingestionEvents += TraceCreate(
-      id = Uuid.random(),
-      timestamp = Instant.now(),
-      body = TraceCreate.Body(
-        id = event.spanId,
-        timestamp = start.at,
-        name = "Osiris",
-        input = deriveText(startDetails.input),
-        output = deriveText(endDetails.output),
-      ),
-    )
-  }
-
   fun toolEvent(event: Event) {
     val start = event.start
     val end = event.end as Event.End
@@ -69,6 +51,24 @@ internal class BatchBuilder {
         name = "Tool: ${startDetails.tool.name}",
         input = startDetails.executionRequest.arguments(),
         output = endDetails.executionResult.text(),
+      ),
+    )
+  }
+
+  fun traceEvent(event: Event) {
+    val start = event.start
+    val end = event.end as Event.End
+    val startDetails = start.details as TraceEvent.Start
+    val endDetails = end.details as TraceEvent.End
+    ingestionEvents += TraceCreate(
+      id = Uuid.random(),
+      timestamp = Instant.now(),
+      body = TraceCreate.Body(
+        id = event.spanId,
+        timestamp = start.at,
+        name = startDetails.name,
+        input = startDetails.input,
+        output = endDetails.output,
       ),
     )
   }
