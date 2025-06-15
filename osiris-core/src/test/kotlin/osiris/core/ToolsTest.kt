@@ -23,10 +23,10 @@ internal class ToolsTest {
     verifyResponse(response)
   }
 
-  private suspend fun verifyResponse(messages: List<ChatMessage>) {
+  private suspend fun verifyResponse(response: List<ChatMessage>) {
     evaluate(
       model = testModelFactory.openAi("o3-mini"),
-      messages = this.messages + messages,
+      messages = messages + response,
       criteria = """
         Should say that the weather in Calgary is 15 degrees Celsius and sunny,
         and that the weather in Edmonton is -30 degrees Celsius and snowing.

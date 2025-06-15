@@ -6,8 +6,12 @@ import kairo.serialization.util.readValueSpecial
 
 /**
  * Helper to convert responses to the appropriate type.
+ *
+ * This assumes the last message is an [AiMessage], which is true with [ExitCondition.Default].
+ * If you customize the exit condition, this helper might not work.
  */
 public inline fun <reified Response : Any> List<ChatMessage>.convert(): Response {
   val lastMessage = last() as AiMessage
-  return checkNotNull(llmMapper.readValueSpecial<Response>(lastMessage.text()))
+  val response = llmMapper.readValueSpecial<Response>(lastMessage.text())
+  return checkNotNull(response)
 }
