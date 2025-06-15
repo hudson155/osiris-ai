@@ -1,8 +1,8 @@
 package osiris.langfuseTracing
 
-internal class BatchBuilder {
+internal class BatchBuilder() {
   fun build(): BatchIngestion =
     BatchIngestion(
-      batch = emptyList(),
+      batch = emptyList()
     )
 }

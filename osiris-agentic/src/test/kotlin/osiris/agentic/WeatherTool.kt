@@ -4,6 +4,7 @@ import io.kotest.assertions.fail
 import kairo.lazySupplier.LazySupplier
 import kairo.serialization.util.kairoWriteSpecial
 import osiris.agentic.WeatherTool.Input
+import osiris.core.SimpleTool
 import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 
