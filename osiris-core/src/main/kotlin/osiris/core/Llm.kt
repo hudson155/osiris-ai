@@ -16,18 +16,19 @@ import osiris.schema.LlmSchema
 
 private val logger: KLogger = KotlinLogging.logger {}
 
+@Suppress("LongParameterList")
 internal class Llm(
   private val model: ChatModel,
   private val messages: List<ChatMessage>,
-  val tools: List<Tool<*>>,
-  val responseType: KClass<*>?,
-  val chatRequestBlock: ChatRequest.Builder.() -> Unit,
-  val toolExecutor: ToolExecutor,
-  val exitCondition: ExitCondition,
+  private val tools: List<Tool<*>>,
+  private val responseType: KClass<*>?,
+  private val chatRequestBlock: ChatRequest.Builder.() -> Unit,
+  private val toolExecutor: ToolExecutor,
+  private val exitCondition: ExitCondition,
 ) {
   suspend fun execute(): List<ChatMessage> {
     logger.debug { "Started LLM." }
-    val response: MutableList<ChatMessage> = mutableListOf()
+    val response = mutableListOf<ChatMessage>()
     while (true) {
       val messages = messages + response
       val lastMessage = messages.lastOrNull()

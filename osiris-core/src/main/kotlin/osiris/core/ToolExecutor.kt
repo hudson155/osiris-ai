@@ -9,7 +9,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 /**
- * By default, tools are executed in parallel on [kotlinx.coroutines.Dispatchers.IO] using [ToolExecutor.Dispatcher].
+ * By default, tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
  *
  * Alternatively,
  * you can choose to run them on a different coroutine dispatcher using [ToolExecutor.Dispatcher.dispatcher],
@@ -27,8 +27,8 @@ public abstract class ToolExecutor {
     executionRequest: ToolExecutionRequest,
   ): ToolExecutionResultMessage {
     val toolName = executionRequest.name()
-    // todo: logging?
-    val tool = checkNotNull(tools.singleNullOrThrow { it.name == toolName }) { "No tool with name: $toolName." }
+    val tool = tools.singleNullOrThrow { it.name == toolName }
+    checkNotNull(tool) { "No tool with name: $toolName." }
     return tool.execute(executionRequest)
   }
 

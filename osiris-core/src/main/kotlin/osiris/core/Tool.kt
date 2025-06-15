@@ -3,10 +3,14 @@ package osiris.core
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.agent.tool.ToolSpecification
 import dev.langchain4j.data.message.ToolExecutionResultMessage
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
 import kairo.serialization.util.readValueSpecial
 import osiris.schema.LlmSchema
+
+private val logger: KLogger = KotlinLogging.logger {}
 
 /**
  * Implementations of this class are made available to the LLM as tools.
@@ -21,7 +25,7 @@ public abstract class Tool<in Input : Any>(
   public open val description: LazySupplier<out String?> =
     LazySupplier { null }
 
-  public val toolSpecification: LazySupplier<ToolSpecification> =
+  internal val toolSpecification: LazySupplier<ToolSpecification> =
     LazySupplier {
       ToolSpecification.builder().apply {
         name(name)
@@ -30,14 +34,17 @@ public abstract class Tool<in Input : Any>(
       }.build()
     }
 
-  public suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
+  internal suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
+    logger.debug { "Started tool: $executionRequest." }
     val inputString = executionRequest.arguments()
     val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
     val outputString = execute(input)
-    return ToolExecutionResultMessage.from(executionRequest, outputString)
+    val executionResponse = ToolExecutionResultMessage.from(executionRequest, outputString)
+    logger.debug { "Ended tool: $executionResponse." }
+    return executionResponse
   }
 
-  public abstract suspend fun execute(input: Input): String
+  internal abstract suspend fun execute(input: Input): String
 
   override fun toString(): String =
     "Tool(name=$name)"
