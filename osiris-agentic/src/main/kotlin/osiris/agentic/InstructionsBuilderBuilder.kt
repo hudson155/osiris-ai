@@ -39,7 +39,7 @@ public class InstructionsBuilderBuilder internal constructor(
  */
 public fun instructionsBuilder(
   /**
-   * The default instructions indicate that the Agent is part of a multi-agent system,
+   * The default instructions indicate that the agent is part of a multi-agent system,
    * indicating some basic best practices around that.
    */
   includeDefaultInstructions: Boolean,

@@ -25,7 +25,7 @@ public class AgentBuilder internal constructor(
   /**
    * The description is not used by the Agent itself.
    * Rather, when other Agents consult this Agent,
-   * the consulting agent is presented with this description in the consultation tool.
+   * the consulting Agent is presented with this description in the consultation Tool.
    */
   public var description: String? = null
 
@@ -35,7 +35,7 @@ public class AgentBuilder internal constructor(
   public var model: ChatModel? = null
 
   /**
-   * The instructions for this agent's LLM call.
+   * The instructions for this Agent's LLM call.
    */
   public var instructions: Instructions? = null
 

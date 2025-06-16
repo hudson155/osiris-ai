@@ -38,7 +38,7 @@ dependencies {
 Osiris's Agentic Framework lets you build complex agentic apps using a simple API.
 
 - **Agents** have a specific role/task,
-  and are equipped with instructions and tools specific to that role/task.
+  and are equipped with instructions and Tools specific to that role/task.
 - Agents live within a **Network**,
   which enables Agents to consult one another to complete complex tasks.
 
@@ -112,7 +112,7 @@ The user is a customer at an ecommerce store.
 ### Entrypoint Agent
 
 The first Agent will be our _entrypoint_ chatbot.
-This is the first Agent that will be visited within the network.
+This is the first Agent that will be visited within the Network.
 Sometimes this is referred to as a "manager" or "orchestrator".
 
 ```kotlin
@@ -133,7 +133,7 @@ val ecommerceChatbot =
 
 The `ecommerce_chatbot` Agent has its own set of instructions that will follow the preamble.
 It's also allowed to _consult_ a specialist Agent called `ecommerce_order_tracker`.
-We will define this agent next.
+We will define this Agent next.
 
 ### Specialist Agent
 

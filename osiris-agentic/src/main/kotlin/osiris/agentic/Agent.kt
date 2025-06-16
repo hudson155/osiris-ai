@@ -17,7 +17,7 @@ private val logger: KLogger = KotlinLogging.logger {}
 
 /**
  * Agents have a specific role/task,
- * and are equipped with instructions and tools specific to that role/task.
+ * and are equipped with instructions and Tools specific to that role/task.
  */
 public abstract class Agent(
   /**
@@ -32,12 +32,12 @@ public abstract class Agent(
   /**
    * The description is not used by the Agent itself.
    * Rather, when other Agents consult this Agent,
-   * the consulting agent is presented with this description in the consultation tool.
+   * the consulting Agent is presented with this description in the consultation Tool.
    */
   internal open val description: String? = null
 
   /**
-   * The instructions for this agent's LLM call.
+   * The instructions for this Agent's LLM call.
    */
   protected open val instructions: Instructions? = null
 
@@ -59,7 +59,7 @@ public abstract class Agent(
 
   public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> =
     trace({ AgentEvent.Start(this, deriveText(messages)) }, { AgentEvent.End(deriveText(it)) }) {
-      logger.debug { "Started agent: (name=$name, messages=$messages)." }
+      logger.debug { "Started Agent: (name=$name, messages=$messages)." }
       return@trace llm(
         model = model,
         messages = buildList {
@@ -70,7 +70,7 @@ public abstract class Agent(
         responseType = responseType,
         chatRequestBlock = { llm() },
       ).also { response ->
-        logger.debug { "Ended agent: (name=$name, response=$response)." }
+        logger.debug { "Ended Agent: (name=$name, response=$response)." }
       }
     }
 

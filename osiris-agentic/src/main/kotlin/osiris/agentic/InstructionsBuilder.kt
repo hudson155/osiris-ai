@@ -6,7 +6,7 @@ package osiris.agentic
  */
 public abstract class InstructionsBuilder(
   /**
-   * The default instructions indicate that the Agent is part of a multi-agent system,
+   * The default instructions indicate that the agent is part of a multi-agent system,
    * indicating some basic best practices around that.
    */
   private val includeDefaultInstructions: Boolean,
