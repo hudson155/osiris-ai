@@ -11,12 +11,12 @@ import osiris.tracing.ToolEvent
 import osiris.tracing.trace
 
 /**
- * By default, tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
+ * By default, Tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
  *
  * Alternatively,
  * you can choose to run them on a different coroutine dispatcher using [ToolExecutor.Dispatcher.dispatcher],
  * choose to run them sequentially using [ToolExecutor.Sequential],
- * or choose to implement your own tool executor from scratch.
+ * or choose to implement your own Tool executor from scratch.
  */
 public abstract class ToolExecutor {
   public abstract suspend fun execute(
@@ -30,7 +30,7 @@ public abstract class ToolExecutor {
   ): ToolExecutionResultMessage {
     val toolName = executionRequest.name()
     val tool = tools.singleNullOrThrow { it.name == toolName }
-    checkNotNull(tool) { "No tool with name: $toolName." }
+    checkNotNull(tool) { "No Tool with name: $toolName." }
     return trace({ ToolEvent.Start(tool, executionRequest) }, { ToolEvent.End(it) }) {
       tool.execute(executionRequest)
     }

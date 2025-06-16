@@ -93,7 +93,7 @@ internal class Llm(
  * The primary entrypoint.
  *
  * By default, Osiris will run LLM requests in a loop,
- * executing tool calls until the LLM responds.
+ * executing Tool calls until the LLM responds.
  *
  * For more information, refer to the documentation.
  */
@@ -108,7 +108,7 @@ public suspend fun llm(
    */
   messages: List<ChatMessage>,
   /**
-   * The LLM can consult these tools.
+   * The LLM can consult these Tools.
    */
   tools: List<Tool<*>> = emptyList(),
   /**
@@ -126,12 +126,12 @@ public suspend fun llm(
    */
   tracer: Tracer? = null,
   /**
-   * By default, tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
+   * By default, Tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
    */
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
   /**
    * By default, Osiris will run LLM requests in a loop,
-   * executing tool calls until the LLM responds.
+   * executing Tool calls until the LLM responds.
    */
   exitCondition: ExitCondition = ExitCondition.Default(),
 ): List<ChatMessage> {

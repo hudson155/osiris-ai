@@ -12,12 +12,28 @@ import osiris.tracing.withTracer
 
 private val logger: KLogger = KotlinLogging.logger {}
 
+/**
+ * Agents live within a Network,
+ * which enables Agents to consult one another to complete complex tasks.
+ */
 public abstract class Network(
+  /**
+   * The Agent's name identifies it.
+   */
   public val name: String,
+  /**
+   * All Agents within the Network.
+   */
   agents: List<Agent>,
 ) {
+  /**
+   * The name of the Agent to be visited first.
+   */
   protected abstract val entrypoint: String
 
+  /**
+   * Listeners help with tracing.
+   */
   protected open val listeners: List<Listener> = emptyList()
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }

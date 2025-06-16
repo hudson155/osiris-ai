@@ -15,15 +15,46 @@ import osiris.tracing.trace
 
 private val logger: KLogger = KotlinLogging.logger {}
 
+/**
+ * Agents have a specific role/task,
+ * and are equipped with instructions and tools specific to that role/task.
+ */
 public abstract class Agent(
+  /**
+   * The Agent's name uniquely identifies it within the Network.
+   */
   public val name: String,
+  /**
+   * An Agent is associated with a specific model.
+   */
   protected val model: ChatModel,
 ) {
+  /**
+   * The description is not used by the Agent itself.
+   * Rather, when other Agents consult this Agent,
+   * the consulting agent is presented with this description in the consultation tool.
+   */
   internal open val description: String? = null
+
+  /**
+   * The instructions for this agent's LLM call.
+   */
   protected open val instructions: Instructions? = null
+
+  /**
+   * Tools are passed to the LLM.
+   */
   protected open val tools: List<Tool<*>> = emptyList()
+
+  /**
+   * Class reference for structured output.
+   * If not provided, output will be a string.
+   */
   protected open val responseType: KClass<*>? = null
 
+  /**
+   * Use this to customize the Langchain4j chat request.
+   */
   protected open fun ChatRequest.Builder.llm(): Unit = Unit
 
   public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> =

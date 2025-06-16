@@ -5,7 +5,7 @@ import dev.langchain4j.data.message.ChatMessage
 
 /**
  * By default ([Default]), Osiris will run LLM requests in a loop,
- * executing tool calls until the LLM responds.
+ * executing Tool calls until the LLM responds.
  * This means several round trips to the LLM.
  *
  * This approach should fit simple use cases.
