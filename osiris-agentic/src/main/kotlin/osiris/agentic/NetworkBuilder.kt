@@ -13,19 +13,8 @@ internal class NetworkImpl(
 public class NetworkBuilder internal constructor(
   private val name: String,
 ) {
-  /**
-   * The name of the Agent to be visited first.
-   */
   public var entrypoint: String? = null
-
-  /**
-   * All Agents within the Network.
-   */
   public val agents: MutableList<Agent> = mutableListOf()
-
-  /**
-   * Listeners help with tracing.
-   */
   private val listeners: MutableList<Listener> = mutableListOf()
 
   public fun listener(listener: Listener) {
@@ -44,11 +33,5 @@ public class NetworkBuilder internal constructor(
 /**
  * Helper DSL to build an [Agent].
  */
-public fun network(
-  /**
-   * The Agent's name identifies it.
-   */
-  name: String,
-  block: NetworkBuilder.() -> Unit,
-): Network =
+public fun network(name: String, block: NetworkBuilder.() -> Unit): Network =
   NetworkBuilder(name).apply(block).build()

@@ -13,17 +13,9 @@ internal class InstructionsBuilderImpl(
   }
 }
 
-/**
- * These shared instructions are added after the default instructions,
- * but before Agent-specific instructions.
- */
 public class InstructionsBuilderBuilder internal constructor(
   private val includeDefaultInstructions: Boolean,
 ) : MutableList<Instructions> by mutableListOf() {
-  /**
-   * Instructions are typically joined by 2 newline characters,
-   * but this can be customized.
-   */
   public var combine: ((instructions: List<String>) -> String)? = null
 
   internal fun build(): InstructionsBuilder =
@@ -38,12 +30,7 @@ public class InstructionsBuilderBuilder internal constructor(
  * Helper DSL to build an [InstructionsBuilder].
  */
 public fun instructionsBuilder(
-  /**
-   * The default instructions indicate that the agent is part of a multi-agent system,
-   * indicating some basic best practices around that.
-   */
   includeDefaultInstructions: Boolean,
-
   block: InstructionsBuilderBuilder.() -> Unit = {},
 ): InstructionsBuilder =
   InstructionsBuilderBuilder(
