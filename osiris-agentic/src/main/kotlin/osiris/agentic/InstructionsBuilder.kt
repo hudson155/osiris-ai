@@ -8,7 +8,7 @@ public abstract class InstructionsBuilder(
   protected open fun combine(instructions: List<String>): String =
     instructions.joinToString(separator = "\n\n")
 
-  public fun create(instructions: Instructions): Instructions =
+  public fun build(instructions: Instructions): Instructions =
     Instructions {
       combine(
         buildList {
