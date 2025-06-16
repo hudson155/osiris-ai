@@ -3,8 +3,8 @@
 Osiris has a tight integration with [Langfuse](https://langfuse.com/).
 See [osiris-langfuse](../) for basic connectivity.
 
-This module integrates with Langfuse's prompt management product.
-https://langfuse.com/docs/prompts/get-started
+This module integrates with Langfuse's prompt management product:
+https://langfuse.com/docs/prompts/get-started.
 
 ## Installation
 
