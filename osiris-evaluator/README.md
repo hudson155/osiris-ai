@@ -55,6 +55,12 @@ fun test(): Unit = runTest {
 }
 ```
 
+The evaluation will be done by the given `model`.
+It's best to use a reasoning model here.
+
+The `criteria` can be multiple lines of text,
+but larger criteria may also be broken up into multiple evaluations on the same response.
+
 #### Failure
 
 If the eval fails, the test will fail.
