@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import osiris.core.convert
 import osiris.tracing.EventLogger
-import osiris.tracing.tracer
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MathTest {
@@ -16,9 +15,7 @@ internal class MathTest {
     network("network") {
       entrypoint = mathAgent.name
       agents += mathAgent
-      tracer = tracer {
-        listen(EventLogger)
-      }
+      listener(EventLogger)
     }
 
   private val messages: List<UserMessage> =

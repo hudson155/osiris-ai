@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import osiris.core.convert
 import osiris.tracing.EventLogger
-import osiris.tracing.tracer
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class StructuredOutputTest {
@@ -16,9 +15,7 @@ internal class StructuredOutputTest {
     network("network") {
       entrypoint = personCreator.name
       agents += personCreator
-      tracer = tracer {
-        listen(EventLogger)
-      }
+      listener(EventLogger)
     }
 
   private val messages: List<UserMessage> =

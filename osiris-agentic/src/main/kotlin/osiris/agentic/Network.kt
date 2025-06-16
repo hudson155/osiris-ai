@@ -5,6 +5,7 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.withContext
 import osiris.core.deriveText
+import osiris.tracing.Listener
 import osiris.tracing.TraceEvent
 import osiris.tracing.Tracer
 import osiris.tracing.withTracer
@@ -17,13 +18,16 @@ public abstract class Network(
 ) {
   protected abstract val entrypoint: String
 
-  protected open val tracer: Tracer? = null
+  protected open val listeners: List<Listener> = emptyList()
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
-  public suspend fun run(messages: List<ChatMessage>): List<ChatMessage> =
+  public suspend fun run(
+    messages: List<ChatMessage>,
+    listeners: List<Listener> = emptyList(),
+  ): List<ChatMessage> =
     withTracer(
-      tracer = tracer,
+      tracer = Tracer(this.listeners + listeners),
       start = { TraceEvent.Start("Trace: $name", deriveText(messages)) },
       end = { TraceEvent.End(deriveText(it)) },
     ) {

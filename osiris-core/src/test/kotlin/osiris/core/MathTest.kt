@@ -19,7 +19,7 @@ internal class MathTest {
   @Test
   fun test(): Unit = runTest {
     val tracer = tracer {
-      listen(EventLogger)
+      listener(EventLogger)
     }
     val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),

@@ -4,13 +4,9 @@ public class TracerBuilder internal constructor() {
   private val listeners: MutableList<Listener> = mutableListOf()
 
   internal fun build(): Tracer =
-    Tracer(
-      listeners = listeners,
-      rootSpanId = null,
-      spanId = null,
-    )
+    Tracer(listeners)
 
-  public fun listen(listener: Listener) {
+  public fun listener(listener: Listener) {
     listeners += listener
   }
 }

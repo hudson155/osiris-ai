@@ -6,11 +6,17 @@ import kotlin.coroutines.coroutineContext
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.withContext
 
-public class Tracer internal constructor(
+public class Tracer private constructor(
   internal val listeners: List<Listener>,
   internal val rootSpanId: Uuid?,
   internal val spanId: Uuid?,
 ) : AbstractCoroutineContextElement(Tracer), Listener {
+  public constructor(listeners: List<Listener>) : this(
+    listeners = listeners,
+    rootSpanId = null,
+    spanId = null,
+  )
+
   public override fun event(event: Event) {
     listeners.forEach { it.event(event) }
   }
