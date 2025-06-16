@@ -5,7 +5,7 @@ so you don't need to manage schemas yourself.
 
 ## Installation
 
-`software.airborne.osiris:osiris-schema:0.13.0`
+`software.airborne.osiris:osiris-schema:0.14.0`
 
 <details>
 
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-schema:0.13.0")
+  implementation("software.airborne.osiris:osiris-schema:0.14.0")
 }
 ```
 

@@ -2,12 +2,23 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.UserMessage
+import kairo.protectedString.ProtectedString
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import osiris.evaluator.evaluate
+import osiris.langfuse.Langfuse
+import osiris.langfuseTracing.trace
 import osiris.openAi.openAi
 import osiris.tracing.EventLogger
+
+@OptIn(ProtectedString.Access::class)
+private val langfuse: Langfuse =
+  Langfuse(
+    url = "https://us.cloud.langfuse.com/api/public/",
+    publicKey = "pk-lf-bd38df69-84c7-43f5-a11a-3ccf8a542d37",
+    secretKey = ProtectedString("sk-lf-e79dcff7-25af-477d-9996-28d77cfdc52a"),
+  )
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class EcommerceChatbotTest {
@@ -17,6 +28,7 @@ internal class EcommerceChatbotTest {
       agents += ecommerceChatbot
       agents += ecommerceOrderTracker
       listener(EventLogger)
+      listener(langfuse.trace())
     }
 
   private val messages: List<UserMessage> =
