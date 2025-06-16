@@ -1,13 +1,13 @@
 package osiris.agentic
 
-import osiris.tracing.Tracer
+import osiris.tracing.Listener
 
 @Suppress("LongParameterList")
 internal class NetworkImpl(
   name: String,
   override val entrypoint: String,
   agents: List<Agent>,
-  override val tracer: Tracer?,
+  override val listeners: List<Listener>,
 ) : Network(name, agents)
 
 public class NetworkBuilder internal constructor(
@@ -15,14 +15,18 @@ public class NetworkBuilder internal constructor(
 ) {
   public var entrypoint: String? = null
   public val agents: MutableList<Agent> = mutableListOf()
-  public var tracer: Tracer? = null
+  private val listeners: MutableList<Listener> = mutableListOf()
+
+  public fun listener(listener: Listener) {
+    listeners += listener
+  }
 
   internal fun build(): Network =
     NetworkImpl(
       name = name,
       entrypoint = requireNotNull(entrypoint) { "Network $name must set an entrypoint." },
       agents = agents,
-      tracer = tracer,
+      listeners = listeners,
     )
 }
 
