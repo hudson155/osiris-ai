@@ -60,7 +60,7 @@ public abstract class Agent(
   public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> =
     trace({ AgentEvent.Start(this, deriveText(messages)) }, { AgentEvent.End(deriveText(it)) }) {
       logger.debug { "Started Agent: (name=$name, messages=$messages)." }
-      return@trace llm(
+      val response = llm(
         model = model,
         messages = buildList {
           addAll(messages)
@@ -69,9 +69,9 @@ public abstract class Agent(
         tools = tools,
         responseType = responseType,
         chatRequestBlock = { llm() },
-      ).also { response ->
-        logger.debug { "Ended Agent: (name=$name, response=$response)." }
-      }
+      )
+      logger.debug { "Ended Agent: (name=$name, response=$response)." }
+      return@trace response
     }
 
   override fun toString(): String =
