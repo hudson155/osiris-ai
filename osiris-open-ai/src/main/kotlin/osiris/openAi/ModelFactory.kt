@@ -6,6 +6,9 @@ import osiris.core.ModelFactory
 
 private const val openAiApiKeyKey: String = "openAiApiKey"
 
+/**
+ * Set the OpenAI key when building the model factory.
+ */
 public var ModelFactory.openAiApiKey: ProtectedString?
   get() = properties[openAiApiKeyKey] as ProtectedString?
   set(value) {
@@ -16,6 +19,9 @@ public var ModelFactory.openAiApiKey: ProtectedString?
     properties[openAiApiKeyKey] = value
   }
 
+/**
+ * Helper DSL to create a Langchain4j OpenAI chat model using your model factory.
+ */
 public fun ModelFactory.openAi(
   modelName: String,
   block: OpenAiChatModel.OpenAiChatModelBuilder.() -> Unit = {},
