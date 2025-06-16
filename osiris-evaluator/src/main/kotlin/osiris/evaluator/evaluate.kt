@@ -8,9 +8,24 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import osiris.core.convert
 import osiris.core.llm
 
+/**
+ * Evaluates LLM responses, enabling basic evals.
+ */
 public suspend fun evaluate(
+  /**
+   * The eval will run on this model.
+   * It's best to use a reasoning model here.
+   */
   model: ChatModel,
+  /**
+   * Should include relevant message history, including the user's question and the LLM's response.
+   */
   messages: List<ChatMessage>,
+  /**
+   * The LLM's response is evaluated according to these criteria.
+   * Can be multiple lines of text,
+   * but larger criteria may also be broken up into multiple evaluations on the same response.
+   */
   criteria: String,
 ) {
   val systemMessage = SystemMessage(
