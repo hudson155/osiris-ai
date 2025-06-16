@@ -4,11 +4,6 @@ Osiris has a tight integration with [Langfuse](https://langfuse.com/).
 This module must be installed for basic Langfuse connectivity,
 but a peer module must be installed to see real functionality.
 
-- See [osiris-langfuse-prompt](./prompt)
-  for prompt management.
-- See [osiris-langfuse-tracing](./prompt)
-  for tracing.
-
 ## Installation
 
 `software.airborne.osiris:osiris-langfuse:0.14.0`
@@ -47,3 +42,20 @@ dependencies {
 ```
 
 </details>
+
+## Usage
+
+Create a Langfuse instance
+
+```kotlin
+val langfuse = Langfuse(
+  url = "https://us.cloud.langfuse.com/api/public/",
+  publicKey = "pk-lf-...",
+  secretKey = ProtectedString("sk-lf-..."),
+)
+```
+
+- See [osiris-langfuse-prompt](./prompt)
+  for prompt management.
+- See [osiris-langfuse-tracing](./prompt)
+  for tracing.
