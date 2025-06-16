@@ -1,4 +1,4 @@
-# Osiris for OpenAI
+# Osiris & Langfuse
 
 Osiris has a tight integration with [Langfuse](https://langfuse.com/).
 This module must be installed for basic Langfuse connectivity,
@@ -45,7 +45,7 @@ dependencies {
 
 ## Usage
 
-Create a Langfuse instance
+Create a Langfuse instance.
 
 ```kotlin
 val langfuse = Langfuse(
