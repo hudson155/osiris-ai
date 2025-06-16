@@ -35,12 +35,12 @@ public abstract class Tool<in Input : Any>(
     }
 
   public suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
-    logger.debug { "Started tool: $executionRequest." }
+    logger.debug { "Started Tool: $executionRequest." }
     val inputString = executionRequest.arguments()
     val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
     val outputString = execute(input)
     val executionResult = ToolExecutionResultMessage.from(executionRequest, outputString)
-    logger.debug { "Ended tool: $executionResult." }
+    logger.debug { "Ended Tool: $executionResult." }
     return executionResult
   }
 

@@ -26,6 +26,9 @@ public class InstructionsBuilderBuilder internal constructor(
     )
 }
 
+/**
+ * Helper DSL to build an [InstructionsBuilder].
+ */
 public fun instructionsBuilder(
   includeDefaultInstructions: Boolean,
   block: InstructionsBuilderBuilder.() -> Unit = {},

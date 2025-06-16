@@ -60,7 +60,7 @@ an optional way to instantiate model instances.
 To use it, add [osiris-open-ai](../osiris-open-ai) or another LLM provider.
 
 ```kotlin
-val modelFactory: ModelFactory =
+val modelFactory =
   modelFactory {
     openAiApiKey = ProtectedString("...")
   }
@@ -99,9 +99,9 @@ response.convert<String>()
 // 2 + 2 equals 4.
 ```
 
-### Using tools
+### Using Tools
 
-To make tools available to the LLM,
+To make Tools available to the LLM,
 extend the `Tool` class.
 
 ```kotlin
@@ -119,12 +119,12 @@ class WeatherTool : Tool<WeatherTool.Input>("weather") {
 }
 ```
 
-The tool name and description are made available to the LLM.
+The Tool name and description are made available to the LLM.
 
 The input schema should conform to [osiris-schema](../osiris-schema).
 Optionally use `@LlmSchema.Description` to provide additional context to the LLM.
 
-Now that you've created your tool,
+Now that you've created your Tool,
 you can make it available when you call `llm()`.
 
 ```kotlin
@@ -189,9 +189,9 @@ response.convert<String>()
 // The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
 ```
 
-### Custom tool executors
+### Custom Tool executors
 
-By default, tools are executed in parallel on Kotlin's `Dispatchers.IO` coroutine dispatcher.
+By default, Tools are executed in parallel on Kotlin's `Dispatchers.IO` coroutine dispatcher.
 
 Alternatively, you can choose to run them on a different coroutine dispatcher.
 
@@ -211,7 +211,7 @@ response.convert<String>()
 // The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
 ```
 
-You can run tools sequentially if you need to.
+You can run Tools sequentially if you need to.
 
 ```kotlin
 val response = llm(
@@ -232,7 +232,7 @@ Or you can create your own custom `ToolExecutor`.
 ### Custom exit conditions
 
 By default, Osiris will run LLM requests in a loop,
-executing tool calls until the LLM responds.
+executing Tool calls until the LLM responds.
 This means several round trips to the LLM.
 
 If you want to exit at a different point,

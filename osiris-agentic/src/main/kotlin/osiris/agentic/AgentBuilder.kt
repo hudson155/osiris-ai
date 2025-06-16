@@ -45,5 +45,8 @@ public class AgentBuilder internal constructor(
     )
 }
 
+/**
+ * Helper DSL to build an [Agent].
+ */
 public fun agent(name: String, block: AgentBuilder.() -> Unit): Agent =
   AgentBuilder(name).apply(block).build()

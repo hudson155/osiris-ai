@@ -30,5 +30,8 @@ public class NetworkBuilder internal constructor(
     )
 }
 
+/**
+ * Helper DSL to build an [Agent].
+ */
 public fun network(name: String, block: NetworkBuilder.() -> Unit): Network =
   NetworkBuilder(name).apply(block).build()
