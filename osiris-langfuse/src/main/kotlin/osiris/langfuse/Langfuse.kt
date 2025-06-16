@@ -13,7 +13,7 @@ import kairo.serialization.jsonMapper
 import kairo.serialization.property.allowUnknownProperties
 
 /**
- *
+ * https://langfuse.com/
  */
 @Suppress("UseDataClass")
 public class Langfuse(
