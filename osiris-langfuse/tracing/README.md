@@ -65,6 +65,6 @@ val network =
     entrypoint = ecommerceChatbot.name
     agents += ecommerceChatbot
     agents += ecommerceOrderTracker
-    listener(langfuse.trace())
+    listener(langfuse.trace()) // Nice!
   }
 ```
