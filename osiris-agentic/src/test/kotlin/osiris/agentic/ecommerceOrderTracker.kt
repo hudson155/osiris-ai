@@ -1,7 +1,7 @@
 package osiris.agentic
 
-import osiris.instructions.build
 import osiris.openAi.openAi
+import osiris.prompt.build
 
 internal val ecommerceOrderTracker: Agent =
   agent("ecommerce_order_tracker") {

@@ -1,7 +1,7 @@
 package osiris.agentic
 
-import osiris.instructions.InstructionsBuilder
-import osiris.instructions.instructionsBuilder
+import osiris.prompt.InstructionsBuilder
+import osiris.prompt.instructionsBuilder
 
 internal val ecommerceInstructionsBuilder: InstructionsBuilder =
   instructionsBuilder(includeDefaultInstructions = true) {
