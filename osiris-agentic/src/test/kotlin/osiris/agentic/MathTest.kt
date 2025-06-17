@@ -25,7 +25,7 @@ internal class MathTest {
 
   @Test
   fun test(): Unit = runTest {
-    val response = network.run(messages, listeners = listOf(EventLogger))
+    val response = network.run(messages)
     verifyResponse(response)
   }
 
