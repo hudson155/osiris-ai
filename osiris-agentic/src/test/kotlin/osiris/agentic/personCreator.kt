@@ -1,5 +1,6 @@
 package osiris.agentic
 
+import osiris.instructions.Instructions
 import osiris.openAi.openAi
 
 internal val personCreator: Agent =

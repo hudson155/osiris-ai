@@ -1,5 +1,6 @@
 package osiris.agentic
 
+import osiris.instructions.build
 import osiris.openAi.openAi
 
 internal val ecommerceChatbot: Agent =

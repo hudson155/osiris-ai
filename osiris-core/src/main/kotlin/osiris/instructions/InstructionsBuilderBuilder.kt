@@ -1,4 +1,4 @@
-package osiris.agentic
+package osiris.instructions
 
 internal class InstructionsBuilderImpl(
   includeDefaultInstructions: Boolean,

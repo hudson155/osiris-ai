@@ -1,8 +1,10 @@
 [versions]
+guava = "33.4.8-jre" # https://github.com/google/guava/releases
 kairo = "5.7.0" # https://github.com/hudson155/kairo/releases
 langchain = "1.0.1" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
 kairoCoroutines = { module = "software.airborne.kairo:kairo-coroutines", version.ref = "kairo" }
 kairoEnvironmentVariableSupplier = { module = "software.airborne.kairo:kairo-environment-variable-supplier", version.ref = "kairo" }
 kairoId = { module = "software.airborne.kairo:kairo-id", version.ref = "kairo" }

@@ -10,6 +10,7 @@ import kotlin.reflect.KClass
 import osiris.core.Tool
 import osiris.core.deriveText
 import osiris.core.llm
+import osiris.instructions.Instructions
 import osiris.tracing.AgentEvent
 import osiris.tracing.trace
 
