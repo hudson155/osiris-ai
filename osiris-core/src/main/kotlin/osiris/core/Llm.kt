@@ -121,8 +121,8 @@ public suspend fun llm(
    */
   chatRequestBlock: ChatRequest.Builder.() -> Unit = {},
   /**
-   * Enable tracing for this request by providing a tracer.
-   * If a tracer is provided but tracing is already enabled upstack, the tracer will be ignored.
+   * Enable tracing for this request by providing a Tracer.
+   * If a Tracer is provided but tracing is already enabled upstack, the Tracer will be ignored.
    */
   tracer: Tracer? = null,
   /**

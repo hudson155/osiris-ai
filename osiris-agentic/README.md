@@ -176,6 +176,11 @@ class TrackOrderTool : Tool<TrackOrderTool.Input>("track_order") {
 }
 ```
 
+The Tool name and description are made available to the LLM.
+
+The input schema should conform to [osiris-schema](../osiris-schema).
+Optionally use `@LlmSchema.Description` to provide additional context to the LLM.
+
 ### Network
 
 Now that we have both Agents & our Tool defined, we can put the Network together, specifying the correct entrypoint.
@@ -212,7 +217,22 @@ response.convert<String>()
 
 ### Structured output
 
-Structured output is supported the same way as in [osiris-core](../osiris-core/README.md#structured-output).
+Structured output is supported through [osiris-schema](../osiris-schema).
+
+```kotlin
+@LlmSchema.SchemaName("person")
+data class Person(
+  val name: String,
+  val age: Int,
+)
+
+val personCreator =
+  agent("person_creator") {
+    model = modelFactory.openAi("gpt-4.1-nano")
+    instructions = Instructions { "Provide a JSON representation of the person matching this description." }
+    responseType = Person::class
+  }
+```
 
 ### Asynchronous updates
 

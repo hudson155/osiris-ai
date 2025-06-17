@@ -34,10 +34,10 @@ dependencies {
 
   /**
    * Also include one of the following,
-   * depending on whether you're using the agentic framework or the core module.
+   * depending on whether you're using the core module or the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-agentic:0.14.0") 
   implementation("software.airborne.osiris:osiris-core:0.14.0")
+  implementation("software.airborne.osiris:osiris-agentic:0.14.0")
 }
 ```
 

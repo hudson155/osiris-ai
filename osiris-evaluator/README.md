@@ -26,10 +26,10 @@ dependencies {
 
   /**
    * Also include one of the following,
-   * depending on whether you're using the agentic framework or the core module.
+   * depending on whether you're using the core module or the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-agentic:0.14.0") 
   implementation("software.airborne.osiris:osiris-core:0.14.0")
+  implementation("software.airborne.osiris:osiris-agentic:0.14.0")
 }
 ```
 
@@ -52,7 +52,7 @@ fun test(): Unit = runTest {
   )
 
   evaluate(
-    model = testModelFactory.openAi("o3-mini"),
+    model = modelFactory.openAi("o3-mini"),
     messages = messages + response,
     criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
   )
