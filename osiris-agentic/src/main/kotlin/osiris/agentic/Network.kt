@@ -43,7 +43,7 @@ public abstract class Network(
     listeners: List<Listener> = emptyList(),
   ): List<ChatMessage> =
     withTracer(
-      tracer = Tracer(this.listeners + listeners),
+      tracer = createTracer(listeners),
       start = { TraceEvent.Start("Trace: $name", deriveText(messages)) },
       end = { TraceEvent.End(deriveText(it)) },
     ) {
@@ -56,6 +56,11 @@ public abstract class Network(
       logger.debug { "Ended execution: (name=$name, response=$response)." }
       return@withTracer response
     }
+
+  private fun createTracer(listeners: List<Listener>): Tracer? {
+    if (this.listeners.isEmpty() && listeners.isEmpty()) return null
+    return Tracer(this.listeners + listeners)
+  }
 
   override fun toString(): String =
     "Network(name=$name)"

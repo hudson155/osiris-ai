@@ -11,5 +11,8 @@ public class TracerBuilder internal constructor() {
   }
 }
 
+/**
+ * Helper DSL to build a [Tracer].
+ */
 public fun tracer(block: TracerBuilder.() -> Unit): Tracer =
   TracerBuilder().apply(block).build()

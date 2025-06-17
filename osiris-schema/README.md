@@ -5,29 +5,7 @@ so you don't need to manage schemas yourself.
 
 ## Installation
 
-`software.airborne.osiris:osiris-schema:0.14.0`
-
-<details>
-
-<summary>Gradle</summary>
-
-```kotlin
-plugins {
-  id("com.google.cloud.artifactregistry.gradle-plugin")
-}
-
-repositories {
-  maven {
-    url = uri("artifactregistry://us-central1-maven.pkg.dev/airborne-software/maven")
-  }
-}
-
-dependencies {
-  implementation("software.airborne.osiris:osiris-schema:0.14.0")
-}
-```
-
-</details>
+Included by default with both [osiris-core](../osiris-core) and [osiris-agentic](../osiris-agentic).
 
 ## Annotations
 
