@@ -60,8 +60,8 @@ Visit the [agentic framework](./osiris-agentic)'s documentation for more details
 
 ## Installation
 
-`software.airborne.osiris:osiris-agentic:0.14.0`\
-or `software.airborne.osiris:osiris-core:0.14.0`
+`software.airborne.osiris:osiris-core:0.14.0`\
+or `software.airborne.osiris:osiris-agentic:0.14.0`
 
 <details>
 
@@ -81,10 +81,10 @@ repositories {
 dependencies {
    /**
     * Include one of the following,
-    * depending on whether you're using the agentic framework or the core module.
+    * depending on whether you're using the core module or the agentic framework.
     */
-  implementation("software.airborne.osiris:osiris-agentic:0.14.0")
   implementation("software.airborne.osiris:osiris-core:0.14.0")
+   implementation("software.airborne.osiris:osiris-agentic:0.14.0")
 }
 ```
 
