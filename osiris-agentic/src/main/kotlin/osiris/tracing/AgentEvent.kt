@@ -2,6 +2,10 @@ package osiris.tracing
 
 import osiris.agentic.Agent
 
+/**
+ * If using the agentic framework,
+ * each agent's turn will have a span.
+ */
 public object AgentEvent {
   public data class Start(
     val agent: Agent,

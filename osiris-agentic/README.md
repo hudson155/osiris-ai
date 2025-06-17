@@ -181,18 +181,17 @@ class TrackOrderTool : Tool<TrackOrderTool.Input>("track_order") {
 Now that we have both Agents & our Tool defined, we can put the Network together, specifying the correct entrypoint.
 
 ```kotlin
-val network: Network =
+val network =
   network("network") {
     entrypoint = ecommerceChatbot.name
     agents += ecommerceChatbot
     agents += ecommerceOrderTracker
-    listener(EventLogger) // Optional: Log all events.
   }
 ```
 
 ### Make a request
 
-Make your request by calling `network.run()`.
+Make your request by calling `Network.run()`.
 
 ```kotlin
 val response = network.run(
@@ -238,3 +237,19 @@ network.runAsync(messages).collect { networkEvent ->
   }
 }
 ```
+
+### Tracing
+
+You can add tracing by adding Listeners to the Network
+
+```kotlin
+val network =
+  network("network") {
+    entrypoint = ecommerceChatbot.name
+    agents += ecommerceChatbot
+    agents += ecommerceOrderTracker
+    listener(langfuse.trace())
+  }
+```
+
+For more details, see [osiris-tracing](../osiris-tracing).

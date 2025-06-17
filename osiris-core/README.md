@@ -237,3 +237,23 @@ This means several round trips to the LLM.
 
 If you want to exit at a different point,
 implement a custom `ExitCondition`.
+
+### Tracing
+
+You can add tracing by creating a Tracer and passing it to `llm()`.
+
+```kotlin
+val tracer = tracer {
+  listener(langfuse.trace())
+}
+
+llm(
+  model = model,
+  messages = listOf(
+    UserMessage("What's 2+2?"),
+  ),
+  tracer = tracer,
+)
+```
+
+For more details, see [osiris-tracing](../osiris-tracing).

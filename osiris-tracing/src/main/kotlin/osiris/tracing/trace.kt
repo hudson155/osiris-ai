@@ -9,9 +9,19 @@ public typealias BuildStart = () -> Event.Details
 
 public typealias BuildEnd<T> = (T) -> Event.Details
 
+/**
+ * Traces a span, emitting an event at both the start and the end.
+ */
 @Suppress("ForbiddenMethodCall")
 public suspend fun <T> trace(
+  /**
+   * Creates the details for the start event, which is emitted immediately.
+   */
   start: BuildStart,
+  /**
+   * Creates the details for the end event, which is emitted when [block] completes.
+   * You can access [block]'s result.
+   */
   end: BuildEnd<T>,
   block: suspend () -> T,
 ): T {
