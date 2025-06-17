@@ -8,11 +8,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import osiris.langfuse.Langfuse
 
-/**
- * https://api.reference.langfuse.com/#tag/prompts/get/api/public/v2/prompts/{promptName}
- */
 public suspend fun Langfuse.prompt(name: String): Prompt {
   val response = client.request {
+    // https://api.reference.langfuse.com/#tag/prompts/get/api/public/v2/prompts/{promptName}
     method = HttpMethod.Get
     url("v2/prompts/$name")
     accept(ContentType.Application.Json)
