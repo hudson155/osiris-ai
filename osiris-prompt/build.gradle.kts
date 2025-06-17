@@ -4,5 +4,5 @@ plugins {
 }
 
 dependencies {
-  implementation(libs.kairoTesting)
+  testImplementation(libs.kairoTesting)
 }
