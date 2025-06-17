@@ -19,6 +19,9 @@ import osiris.tracing.Listener
 import osiris.tracing.ToolEvent
 import osiris.tracing.TraceEvent
 
+/**
+ * Enables Langfuse tracing.
+ */
 public fun Langfuse.trace(): Listener {
   val batchBuilder = BatchBuilder()
   return object : Listener {
