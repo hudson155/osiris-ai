@@ -134,6 +134,19 @@ Structured output is supported through [osiris-schema](./osiris-schema).
 - More details for [osiris-core](./osiris-core/README.md#structured-output)
 - More details for [osiris-agentic](./osiris-agentic/README.md#structured-output)
 
+### Prompt management
+
+```kotlin
+val prompt = "The odds of the Oilers winning tonight are {{odds}}."
+compilePrompt(prompt) {
+  put("odds", "42.8%")
+}
+// The odds of the Oilers winning tonight are 42.8%.
+```
+
+See [osiris-prompt](./osiris-prompt)
+for full documentation.
+
 ### Evals
 
 `evaluate()` lets you write basic evals.

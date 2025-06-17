@@ -5,4 +5,5 @@ plugins {
 
 dependencies {
   implementation(project(":osiris-langfuse"))
+  implementation(project(":osiris-prompt"))
 }
