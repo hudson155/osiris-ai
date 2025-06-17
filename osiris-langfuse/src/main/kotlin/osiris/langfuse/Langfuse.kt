@@ -12,9 +12,6 @@ import kairo.rest.serialization.JacksonConverter
 import kairo.serialization.jsonMapper
 import kairo.serialization.property.allowUnknownProperties
 
-/**
- * https://langfuse.com/
- */
 @Suppress("UseDataClass")
 public class Langfuse(
   private val url: String,
