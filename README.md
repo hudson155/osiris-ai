@@ -4,199 +4,68 @@
 > was the god of fertility, agriculture, the afterlife, the dead, resurrection, life, and vegetation
 > in ancient Egyptian religion.
 
-**Osiris AI** is a thin wrapper around [LangChain4j](https://github.com/langchain4j/langchain4j),
-allowing you to easily interact with LLMs from Kotlin.
+**Osiris AI** enables easy & robust LLM integration from Kotlin.
+There are 2 different interaction patterns.
+
+### Core module
+
+Osiris's [core module](./osiris-core) favors simplicity,
+supporting basic Kotlin-idiomatic LLM interaction.
 
 ```kotlin
-val modelFactory: ModelFactory =
-  modelFactory {
-    openAiApiKey = ProtectedString("...")
-  }
+val model = modelFactory.openAi("gpt-4.1-nano")
+val messages = listOf(
+   UserMessage("What's 2+2?"),
+)
 
-val messages = listOf(UserMessage("What's 2+2?"))
-val (response) = llm(modelFactory.openAi("gpt-4.1-nano"), messages)
+val response = llm(model, messages)
 
 response.convert<String>()
 // 2 + 2 equals 4.
 ```
 
-## Features
+Visit the [core module](./osiris-core)'s documentation for more details.
 
-<details>
+### Agentic framework
 
-<summary>Basic usage</summary>
-
-```kotlin
-val messages = listOf(UserMessage("What's 2+2?"))
-val (response) = llm(modelFactory.openAi("gpt-4.1-nano"), messages)
-
-response.convert<String>()
-// 2 + 2 equals 4.
-```
-
-</details>
-
-<details>
-
-<summary>Tools</summary>
+Osiris's [agentic framework](./osiris-agentic) lets you build complex systems.
+This is similar to the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
+or [LangGraph](https://langchain-ai.github.io/langgraph/).
+Splitting up workloads across a Network of smaller, more focused Agents
+helps deliver better responses faster responses, and improved traceability.
 
 ```kotlin
-object WeatherTool : Tool<WeatherTool.Input, WeatherTool.Output>("weather") {
-  data class Input(
-    @LlmSchema.Description("The city to get the weather for.")
-    val location: String,
-  )
+val ecommerceChatbot = agent("ecommerce_chatbot") { ... }
 
-  data class Output(
-    val temperature: String,
-    val conditions: String,
-  )
+val ecommerceOrderTracker = agent("ecommerce_order_tracker") { ... }
 
-  override val description: String = "Gets the weather."
-
-  override suspend fun execute(input: Input): Output =
-    TODO("Your implementation.")
-}
-
-val messages = listOf(UserMessage("What's the weather in Calgary?"))
-val (response) = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
-  messages = messages,
-  tools = listOf(WeatherTool),
-)
-
-response.convert<String>()
-// The weather in Calgary is sunny with a temperature of 15 degrees Celsius.
-```
-
-</details>
-
-<details>
-
-<summary>Structured output</summary>
-
-```kotlin
-@LlmSchema.SchemaName("person")
-data class Person(
-  val name: String,
-  val age: Int,
-)
-
-val messages = listOf(
-  UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
-  SystemMessage("Provide a JSON representation of the person matching this description."),
-)
-val (response) = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
-  messages = messages,
-  responseType = Person::class,
-)
-
-response.convert<Person>()
-// Person(name=Jeff Hudson, age=29)
-```
-
-</details>
-
-<details>
-
-<summary>Evals</summary>
-
-```kotlin
-val messages = listOf(
-  UserMessage("What's the weather in Calgary?"),
-)
-val (response) = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
-  messages = messages,
-  tools = listOf(WeatherTool),
-)
-
-evaluate(
-  model = modelFactory.openAi("o3-mini"),
-  messages = messages + response,
-  criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
-)
-```
-
-</details>
-
-<details>
-
-<summary>Agents</summary>
-
-```kotlin
-object TrackOrderTool : Tool<TrackOrderTool.Input, String>("track_order") {
-  data class Input(
-    val orderId: String,
-  )
-
-  override suspend fun execute(input: Input): String =
-    TODO("Your implementation.")
-}
-
-val instructionsBuilder: InstructionsBuilder =
-  instructionsBuilder(includeDefaultInstructions = true) {
-    add(
-      """
-        # Ecommerce store
-        
-        The user is a customer at an ecommerce store.
-      """.trimIndent(),
-    )
-  }
-
-val chatbot: Agent =
-  agent("chatbot") {
-    model = testModelFactory.openAi("gpt-4.1-nano") {
-      temperature(0.20)
-    }
-    instructions = instructionsBuilder.build(
-      """
-        # Your role and task
-        
-        You are the store's really smart AI assistant.
-        Your task is to use tools to comprehensively answer the user's question.
-      """.trimIndent(),
-    )
-    tools += Consult("order_tracker")
-  }
-
-val orderTracker: Agent =
-  agent("order_tracker") {
-    description = "Use to track an order."
-    model = testModelFactory.openAi("gpt-4.1-nano") {
-      temperature(0.20)
-    }
-    instructions = instructionsBuilder.build(
-      """
-        # Your role and task
-        
-        You are the store's data analyst.
-        Your role is to track orders.
-      """.trimIndent(),
-    )
-    tools += TrackOrderTool
-  }
-
-val network: Network =
+val network =
   network("network") {
-    entrypoint = chatbot.name
-    agents += chatbot
-    agents += orderTracker
+    entrypoint = ecommerceChatbot.name
+    agents += ecommerceChatbot
+    agents += ecommerceOrderTracker
   }
 
-val messages = listOf(
-  UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
+val response = network.run(
+  messages = listOf(
+    UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
+  ),
 )
-val (response) = network.run(messages)
+
 response.convert<String>()
 // Your order with ID ord_0 has not been shipped yet, and your order with ID ord_1 is currently in transit.
 ```
 
-</details>
+Visit the [agentic framework](./osiris-agentic)'s documentation for more details.
 
-## Getting started
+## Installation
+
+`software.airborne.osiris:osiris-agentic:0.14.0`\
+or `software.airborne.osiris:osiris-core:0.14.0`
+
+<details>
+
+<summary>Gradle</summary>
 
 ```kotlin
 plugins {
@@ -210,12 +79,96 @@ repositories {
 }
 
 dependencies {
+   /**
+    * Include one of the following,
+    * depending on whether you're using the agentic framework or the core module.
+    */
   implementation("software.airborne.osiris:osiris-agentic:0.14.0")
   implementation("software.airborne.osiris:osiris-core:0.14.0")
-  implementation("software.airborne.osiris:osiris-evaluator:0.14.0")
-  implementation("software.airborne.osiris:osiris-open-ai:0.14.0")
 }
 ```
+
+</details>
+
+## Features
+
+These features are supported by both
+the [core module](./osiris-core) and the [agentic framework](./osiris-agentic).
+Specifics on how to use either of those interaction patterns can be found in the respective documentation.
+
+### Automatic schema generation
+
+Osiris supports automatic LLM (OpenAPI) **schema generation** for **structured output** and **tool calls**,
+so you don't need to manage schemas yourself.
+
+A typical schema looks like this
+
+```kotlin
+@LlmSchema.SchemaName("person") // Required!
+data class Person(
+  @LlmSchema.Description("Their full name.") // Optional additional context for the LLM.
+  val name: String,
+  val age: Int,
+)
+```
+
+In addition to primitives,
+automatic schema generation also supports
+**lists**, **nested objects**, and **polymorphism**.
+
+See [osiris-schema](./osiris-schema)
+for full documentation.
+
+### Tools
+
+To make Tools available to the LLM,
+extend the `Tool` class.
+
+- More details for [osiris-core](./osiris-core/README.md#using-tools)
+- More details for [osiris-agentic](./osiris-agentic/README.md#tool)
+
+### Structured output
+
+Structured output is supported through [osiris-schema](./osiris-schema).
+
+- More details for [osiris-core](./osiris-core/README.md#structured-output)
+- More details for [osiris-agentic](./osiris-agentic/README.md#structured-output)
+
+### Evals
+
+`evaluate()` lets you write basic evals.
+
+```kotlin
+@Test
+fun test(): Unit = runTest {
+  val response = llm(
+    model = modelFactory.openAi("gpt-4.1-nano"),
+    messages = listOf(
+      UserMessage("What's the weather in Calgary?"),
+    ),
+    tools = listOf(WeatherTool()),
+  )
+
+  evaluate(
+    model = testModelFactory.openAi("o3-mini"),
+    messages = messages + response,
+    criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
+  )
+}
+```
+
+See [osiris-evaluator](./osiris-evaluator)
+for full documentation.
+
+### Tracing
+
+You can add arbitrary listeners to LLM requests and agentic executions,
+as well as pipe those listeners to tracing tools such as Langfuse.
+
+See [osiris-tracing](./osiris-tracing)
+for general tracing documentation,
+or [osiris-langfuse-tracing](./osiris-langfuse/tracing)
+for a Langfuse quickstart.
 
 ## Project information
 
@@ -224,16 +177,12 @@ dependencies {
 - Gradle 8.14
 - Kotlin 2.1
 - Java 21
-- Kairo 5.2
+- Kairo 5.7
 - Langchain4j 1.0
 
 ### Style guide
 
 Please follow the [Kairo style guide](https://github.com/hudson155/kairo/blob/main/docs/style-guide.md).
-
-### Chores
-
-See [chores](./docs/chores.md).
 
 ## Releasing
 

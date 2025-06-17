@@ -1,6 +1,6 @@
 # Osiris Tracing
 
-Osiris's **tracing module** lets you add arbitraty listeners to LLM requests and agentic executions,
+Osiris's **tracing module** lets you add arbitrary listeners to LLM requests and agentic executions,
 as well as pipe those listeners to tracing tools such as Langfuse.
 
 For Langfuse-specific tracing, see [osiris-langfuse-tracing](../osiris-langfuse/tracing).
