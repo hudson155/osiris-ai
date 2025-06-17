@@ -137,8 +137,8 @@ Structured output is supported through [osiris-schema](./osiris-schema).
 ### Prompt management
 
 ```kotlin
-val prompt = "The odds of the Oilers winning tonight are {{odds}}."
-compilePrompt(prompt) {
+val instructions = Instructions { "The odds of the Oilers winning tonight are {{odds}}." }
+instructions.compile {
   put("odds", "42.8%")
 }
 // The odds of the Oilers winning tonight are 42.8%.

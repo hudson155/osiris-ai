@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+  api(project(":osiris-prompt"))
   api(project(":osiris-schema"))
   api(project(":osiris-tracing"))
 

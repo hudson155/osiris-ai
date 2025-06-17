@@ -1,4 +1,4 @@
-package osiris.agentic
+package osiris.prompt
 
 /**
  * It's usually helpful for Agents to have a shared preamble in their instructions.
@@ -28,7 +28,7 @@ public abstract class InstructionsBuilder(
    * Create the instructions for an Agent,
    * using this builder's configuration.
    */
-  public fun build(instructions: Instructions): Instructions =
+  public fun build(instructions: List<Instructions>): Instructions =
     Instructions {
       combine(
         buildList {
@@ -45,8 +45,14 @@ public abstract class InstructionsBuilder(
             )
           }
           this@InstructionsBuilder.instructions.forEach { add(it.get()) }
-          add(instructions.get())
+          addAll(instructions.map { it.get() })
         },
       )
     }
 }
+
+public fun InstructionsBuilder.build(instructions: Instructions): Instructions =
+  build(listOf(instructions))
+
+public fun InstructionsBuilder.fromList(buildList: MutableList<Instructions>.() -> Unit): Instructions =
+  build(buildList(buildList))

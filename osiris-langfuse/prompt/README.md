@@ -61,7 +61,7 @@ Access a prompt when building your Agent.
 val ecommerceChatbot =
   agent("ecommerce_chatbot") {
     model = modelFactory.openAi("gpt-4.1-nano")
-    instructions = langfuse.prompt("ai_analyst").compile() // Nice!
+    instructions = langfuse.prompt("ai_analyst") // Nice!
     tools += Consult("ecommerce_order_tracker")
   }
 ```

@@ -1,6 +1,7 @@
 package osiris.agentic
 
 import osiris.openAi.openAi
+import osiris.prompt.Instructions
 
 internal val mathAgent: Agent =
   agent("math_agent") {

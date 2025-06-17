@@ -1,6 +1,7 @@
 package osiris.agentic
 
 import osiris.openAi.openAi
+import osiris.prompt.fromList
 
 internal val ecommerceOrderTracker: Agent =
   agent("ecommerce_order_tracker") {
@@ -8,7 +9,7 @@ internal val ecommerceOrderTracker: Agent =
     model = testModelFactory.openAi("gpt-4.1-nano") {
       temperature(0.20)
     }
-    instructions = ecommerceInstructionsBuilder.build {
+    instructions = ecommerceInstructionsBuilder.fromList {
       """
         # Your role and task
         

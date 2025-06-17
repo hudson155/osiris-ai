@@ -1,4 +1,4 @@
-package osiris.agentic
+package osiris.prompt
 
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
