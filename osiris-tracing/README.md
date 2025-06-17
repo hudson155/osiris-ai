@@ -3,7 +3,7 @@
 Osiris's **tracing module** lets you add arbitraty listeners to LLM requests and agentic executions,
 as well as pipe those listeners to tracing tools such as Langfuse.
 
-For Langfuse-specific tracing, see [langfuse-tracing](../osiris-langfuse/tracing).
+For Langfuse-specific tracing, see [osiris-langfuse-tracing](../osiris-langfuse/tracing).
 
 ## Installation
 
@@ -128,3 +128,5 @@ trace({ MyEvent.Start("start") }, { MyEvent.End(it) }) {
   return@trace "end"
 }
 ```
+
+Note: Custom events are not yet supported by [osiris-langfuse-tracing](../osiris-langfuse/tracing)

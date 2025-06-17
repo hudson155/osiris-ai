@@ -6,6 +6,8 @@ See [osiris-langfuse](../) for basic connectivity.
 This module integrates with Langfuse's tracing product:
 https://langfuse.com/docs/prompts/get-started.
 
+Note: Custom events are not yet supported by this module.
+
 ## Installation
 
 `software.airborne.osiris:osiris-langfuse-tracing:0.14.0`
