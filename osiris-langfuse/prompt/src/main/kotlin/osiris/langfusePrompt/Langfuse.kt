@@ -10,6 +10,7 @@ import osiris.langfuse.Langfuse
 
 public suspend fun Langfuse.prompt(name: String): Prompt {
   val response = client.request {
+    // https://api.reference.langfuse.com/#tag/prompts/get/api/public/v2/prompts/{promptName}
     method = HttpMethod.Get
     url("v2/prompts/$name")
     accept(ContentType.Application.Json)
