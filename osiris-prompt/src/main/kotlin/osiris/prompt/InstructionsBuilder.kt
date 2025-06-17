@@ -54,5 +54,5 @@ public abstract class InstructionsBuilder(
 public fun InstructionsBuilder.build(instructions: Instructions): Instructions =
   build(listOf(instructions))
 
-public fun InstructionsBuilder.build(buildList: MutableList<Instructions>.() -> Unit): Instructions =
+public fun InstructionsBuilder.fromList(buildList: MutableList<Instructions>.() -> Unit): Instructions =
   build(buildList(buildList))

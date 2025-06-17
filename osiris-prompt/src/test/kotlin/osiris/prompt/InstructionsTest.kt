@@ -1,7 +1,6 @@
 package osiris.prompt
 
 import io.kotest.matchers.shouldBe
-import kotlin.text.get
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 

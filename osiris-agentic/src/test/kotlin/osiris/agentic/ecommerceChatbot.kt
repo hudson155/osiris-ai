@@ -1,14 +1,14 @@
 package osiris.agentic
 
 import osiris.openAi.openAi
-import osiris.prompt.build
+import osiris.prompt.fromList
 
 internal val ecommerceChatbot: Agent =
   agent("ecommerce_chatbot") {
     model = testModelFactory.openAi("gpt-4.1-nano") {
       temperature(0.20)
     }
-    instructions = ecommerceInstructionsBuilder.build {
+    instructions = ecommerceInstructionsBuilder.fromList {
       """
         # Your role and task
         
