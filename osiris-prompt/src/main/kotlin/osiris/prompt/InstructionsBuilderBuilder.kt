@@ -1,4 +1,4 @@
-package osiris.instructions
+package osiris.prompt
 
 internal class InstructionsBuilderImpl(
   includeDefaultInstructions: Boolean,

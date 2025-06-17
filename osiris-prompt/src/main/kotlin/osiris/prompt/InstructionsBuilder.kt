@@ -1,4 +1,4 @@
-package osiris.instructions
+package osiris.prompt
 
 /**
  * It's usually helpful for Agents to have a shared preamble in their instructions.

@@ -4,5 +4,7 @@ plugins {
 }
 
 dependencies {
+  implementation(libs.guava)
+
   testImplementation(libs.kairoTesting)
 }

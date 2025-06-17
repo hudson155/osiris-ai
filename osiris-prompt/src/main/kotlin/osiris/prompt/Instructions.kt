@@ -1,4 +1,4 @@
-package osiris.instructions
+package osiris.prompt
 
 import com.google.common.io.Resources
 
