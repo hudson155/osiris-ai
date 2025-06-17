@@ -228,7 +228,7 @@ data class Person(
 
 val personCreator =
   agent("person_creator") {
-    model = testModelFactory.openAi("gpt-4.1-nano")
+    model = modelFactory.openAi("gpt-4.1-nano")
     instructions = Instructions { "Provide a JSON representation of the person matching this description." }
     responseType = Person::class
   }

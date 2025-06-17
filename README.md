@@ -150,7 +150,7 @@ fun test(): Unit = runTest {
   )
 
   evaluate(
-    model = testModelFactory.openAi("o3-mini"),
+    model = modelFactory.openAi("o3-mini"),
     messages = messages + response,
     criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
   )

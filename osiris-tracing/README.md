@@ -17,15 +17,15 @@ Included by default with both [osiris-core](../osiris-core) and [osiris-agentic]
   You can access the string input and output.
 - `AgentEvent`:
   If using the agentic framework,
-  each agent's turn will have a span.
-  You can access the agent itself,
+  each Agent's turn will have a span.
+  You can access the Agent itself,
   as well as the string input and output.
 - `ChatEvent`:
   Each separate request to the LLM will have a span.
   You can access the Langchain4j chat request and Langchain4j chat response.
 - `ToolEvent`:
   Each tool call will have a span.
-  You can access the tool,
+  You can access the Tool,
   Langchain4j execution request, and Langchain4j execution result.
 
 [Custom events](#custom-events) are also supported.
