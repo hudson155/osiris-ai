@@ -9,8 +9,8 @@ Included by default with both [osiris-core](../osiris-core) and [osiris-agentic]
 ## Usage
 
 ```kotlin
-val prompt = "The odds of the Oilers winning tonight are {{odds}}."
-compilePrompt(prompt) {
+val instructions = "The odds of the Oilers winning tonight are {{odds}}."
+instructions.compile {
   put("odds", "42.8%")
 }
 // The odds of the Oilers winning tonight are 42.8%.
