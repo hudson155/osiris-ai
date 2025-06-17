@@ -5,7 +5,7 @@ See the [**agentic module**](../osiris-agentic) if you're building an agentic fr
 
 ## Installation
 
-`software.airborne.osiris:osiris-core:0.15.0`
+`software.airborne.osiris:osiris-core:0.16.0`
 
 <details>
 
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-core:0.15.0")
+  implementation("software.airborne.osiris:osiris-core:0.16.0")
 }
 ```
 
