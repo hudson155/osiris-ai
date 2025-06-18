@@ -13,4 +13,4 @@ public fun interface Instructions {
 }
 
 public fun Instructions.Companion.fromResource(resourceName: String): Instructions =
-  Instructions { Resources.getResource(resourceName).readText() }
+  Instructions { Resources.getResource(resourceName).readText().trim() }
