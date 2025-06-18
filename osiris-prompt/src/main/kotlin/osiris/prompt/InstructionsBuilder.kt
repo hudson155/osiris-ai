@@ -32,21 +32,10 @@ public abstract class InstructionsBuilder(
     Instructions {
       combine(
         buildList {
-          if (includeDefaultInstructions) {
-            add(
-              """
-                # The system
-                
-                You're a part of a multi-agent system.
-                You can consult other agents.
-                When consulting other agents, succinctly tell them what to do or what you need.
-                Don't tell them how to do their job.
-              """.trimIndent(),
-            )
-          }
-          this@InstructionsBuilder.instructions.forEach { add(it.get()) }
-          addAll(instructions.map { it.get() })
-        },
+          if (includeDefaultInstructions) add(Instructions.fromResource("osiris/prompt/default.md"))
+          addAll(this@InstructionsBuilder.instructions)
+          addAll(instructions)
+        }.map { it.get() },
       )
     }
 }
