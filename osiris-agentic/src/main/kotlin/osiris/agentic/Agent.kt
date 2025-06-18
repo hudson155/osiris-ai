@@ -35,7 +35,7 @@ public abstract class Agent(
    * Rather, when other Agents consult this Agent,
    * the consulting Agent is presented with this description in the consultation Tool.
    */
-  internal open val description: String? = null
+  public open val description: String? = null
 
   /**
    * The instructions for this Agent's LLM call.
