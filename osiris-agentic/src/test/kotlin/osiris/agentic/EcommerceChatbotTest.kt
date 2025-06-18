@@ -32,7 +32,7 @@ internal class EcommerceChatbotTest {
 
   private suspend fun verifyResponse(response: List<ChatMessage>) {
     evaluate(
-      model = testModelFactory.openAi("o3-mini"),
+      model = testModelFactory.openAi("o4-mini"),
       messages = messages + response,
       criteria = """
         Should say that ord_0 has not been shipped yet,
