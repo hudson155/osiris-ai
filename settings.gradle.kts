@@ -3,6 +3,7 @@ rootProject.name = "osiris-ai"
 include(":osiris-agentic")
 include(":osiris-chat")
 include(":osiris-core")
+include(":osiris-embeddings")
 include(":osiris-evaluator")
 include(":osiris-langfuse")
 include(":osiris-langfuse:prompt")
