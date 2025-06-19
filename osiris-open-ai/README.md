@@ -37,6 +37,8 @@ dependencies {
 
 ## Usage
 
+### Chat models
+
 Instead of defining your model using Langchain4j's syntax,
 
 ```kotlin
@@ -64,3 +66,32 @@ modelFactory.openAi("gpt-4.1-nano")
 ```
 
 whenever you need a model.
+
+### Embedding models
+
+Instead of defining your embedding model using Langchain4j's syntax,
+
+```kotlin
+OpenAiEmbeddingModel.builder().apply {
+  modelName("text-embedding-3-small")
+  apiKey("...")
+  block()
+}.build()
+```
+
+you can instead include your OpenAI API key in your embedding factory
+
+```kotlin
+val embeddingFactory =
+  embeddingFactory {
+    openAiApiKey = ProtectedString("...")
+  }
+```
+
+and then use the simple DSL
+
+```kotlin
+embeddingFactory.openAi("gpt-4.1-nano")
+```
+
+whenever you need an embedding model.
