@@ -4,7 +4,7 @@ Osiris's **evaluator module** lets you write basic evals.
 
 ## Installation
 
-`software.airborne.osiris:osiris-evaluator:0.16.1`
+`software.airborne.osiris:osiris-evaluator:0.17.0`
 
 <details>
 
@@ -22,14 +22,14 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-evaluator:0.16.1")
+  implementation("software.airborne.osiris:osiris-evaluator:0.17.0")
 
   /**
    * Also include one of the following,
    * depending on whether you're using the core module or the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-core:0.16.1")
-  implementation("software.airborne.osiris:osiris-agentic:0.16.1")
+  implementation("software.airborne.osiris:osiris-core:0.17.0")
+  implementation("software.airborne.osiris:osiris-agentic:0.17.0")
 }
 ```
 
