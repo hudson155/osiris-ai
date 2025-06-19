@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
   implementation(project(":osiris-chat"))
+  implementation(project(":osiris-embeddings"))
 
   api(libs.langchainOpenAi)
 }
