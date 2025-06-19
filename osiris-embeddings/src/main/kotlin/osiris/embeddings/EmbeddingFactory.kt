@@ -1,4 +1,4 @@
-package osiris.core
+package osiris.embeddings
 
 import dev.langchain4j.model.embedding.EmbeddingModel
 
