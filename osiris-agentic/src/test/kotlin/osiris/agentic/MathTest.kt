@@ -6,7 +6,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import osiris.core.convert
+import osiris.chat.convert
 import osiris.tracing.EventLogger
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

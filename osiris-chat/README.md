@@ -1,11 +1,11 @@
-# Osiris Core
+# Osiris Chat
 
-Osiris's **core module** supports basic Kotlin-idiomatic LLM interaction.
+Osiris's **chat module** supports basic Kotlin-idiomatic LLM interaction.
 See the [**agentic module**](../osiris-agentic) if you're building an agentic framework.
 
 ## Installation
 
-`software.airborne.osiris:osiris-core:0.17.0`
+`software.airborne.osiris:osiris-chat:0.17.0`
 
 <details>
 
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-core:0.17.0")
+  implementation("software.airborne.osiris:osiris-chat:0.17.0")
 }
 ```
 

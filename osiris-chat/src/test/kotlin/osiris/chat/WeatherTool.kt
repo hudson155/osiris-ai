@@ -1,9 +1,10 @@
-package osiris.core
+package osiris.chat
 
 import io.kotest.assertions.fail
 import kairo.lazySupplier.LazySupplier
 import kairo.serialization.util.kairoWriteSpecial
-import osiris.core.WeatherTool.Input
+import osiris.chat.WeatherTool.Input
+import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 
 internal object WeatherTool : Tool<Input>("weather") {

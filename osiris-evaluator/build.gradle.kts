@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  implementation(project(":osiris-core"))
+  implementation(project(":osiris-chat"))
 
   implementation(libs.kairoTesting)
 }

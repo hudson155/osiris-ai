@@ -4,7 +4,7 @@ import dev.langchain4j.data.message.ChatMessage
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.withContext
-import osiris.core.deriveText
+import osiris.chat.deriveText
 import osiris.tracing.Listener
 import osiris.tracing.TraceEvent
 import osiris.tracing.Tracer

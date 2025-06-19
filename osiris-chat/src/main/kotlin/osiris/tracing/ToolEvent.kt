@@ -2,7 +2,7 @@ package osiris.tracing
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.ToolExecutionResultMessage
-import osiris.core.Tool
+import osiris.chat.Tool
 
 /**
  * Each tool call will have a span.

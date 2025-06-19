@@ -3,8 +3,8 @@ package osiris.agentic
 import dev.langchain4j.data.message.UserMessage
 import kairo.lazySupplier.LazySupplier
 import osiris.agentic.Consult.Input
-import osiris.core.Tool
-import osiris.core.convert
+import osiris.chat.Tool
+import osiris.chat.convert
 import osiris.schema.LlmSchema
 
 /**

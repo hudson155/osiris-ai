@@ -4,7 +4,7 @@ Osiris's **prompt module** helps with prompt management.
 
 ## Installation
 
-Included by default with both [osiris-core](../osiris-core) and [osiris-agentic](../osiris-agentic).
+Included by default with both [osiris-chat](../osiris-chat) and [osiris-agentic](../osiris-agentic).
 
 ## Usage
 

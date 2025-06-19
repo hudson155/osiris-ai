@@ -4,23 +4,6 @@ plugins {
 }
 
 dependencies {
-  api(project(":osiris-prompt"))
-  api(project(":osiris-schema"))
-  api(project(":osiris-tracing"))
-
-  implementation(libs.kairoCoroutines)
-  api(libs.kairoLazySupplier)
-  implementation(libs.kairoLogging)
-  api(libs.kairoProtectedString)
-  implementation(libs.kairoReflect)
   api(libs.kairoSerialization)
-  implementation(libs.kairoUtil)
   api(libs.langchain)
-
-  testImplementation(project(":osiris-evaluator"))
-  testImplementation(project(":osiris-open-ai"))
-
-  testImplementation(libs.kairoEnvironmentVariableSupplier)
-  testImplementation(libs.kairoLoggingTesting)
-  testImplementation(libs.kairoTesting)
 }

@@ -5,8 +5,8 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
-import osiris.core.convert
-import osiris.core.llm
+import osiris.chat.convert
+import osiris.chat.llm
 
 /**
  * Evaluates LLM responses, enabling basic evals.

@@ -160,7 +160,7 @@ val ecommerceOrderTracker =
 
 ### Tool
 
-Tools are defined the same way as they are in [osiris-core](../osiris-core/README.md#using-tools).
+Tools are defined the same way as they are in [osiris-chat](../osiris-chat/README.md#using-tools).
 
 ```kotlin
 class TrackOrderTool : Tool<TrackOrderTool.Input>("track_order") {

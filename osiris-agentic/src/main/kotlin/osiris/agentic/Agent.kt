@@ -7,9 +7,9 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
-import osiris.core.Tool
-import osiris.core.deriveText
-import osiris.core.llm
+import osiris.chat.Tool
+import osiris.chat.deriveText
+import osiris.chat.llm
 import osiris.prompt.Instructions
 import osiris.tracing.AgentEvent
 import osiris.tracing.trace

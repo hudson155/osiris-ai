@@ -7,9 +7,9 @@
 **Osiris AI** enables easy & robust LLM integration from Kotlin.
 There are 2 different interaction patterns.
 
-### Core module
+### Chat module
 
-Osiris's [core module](./osiris-core) favors simplicity,
+Osiris's [chat module](./osiris-chat) favors simplicity,
 supporting basic Kotlin-idiomatic LLM interaction.
 
 ```kotlin
@@ -24,7 +24,7 @@ response.convert<String>()
 // 2 + 2 equals 4.
 ```
 
-Visit the [core module](./osiris-core)'s documentation for more details.
+Visit the [chat module](./osiris-chat)'s documentation for more details.
 
 ### Agentic framework
 
@@ -60,7 +60,7 @@ Visit the [agentic framework](./osiris-agentic)'s documentation for more details
 
 ## Installation
 
-`software.airborne.osiris:osiris-core:0.17.0`\
+`software.airborne.osiris:osiris-chat:0.17.0`\
 or `software.airborne.osiris:osiris-agentic:0.17.0`
 
 <details>
@@ -81,9 +81,9 @@ repositories {
 dependencies {
    /**
     * Include one of the following,
-    * depending on whether you're using the core module or the agentic framework.
+    * depending on whether you're using the chat module or the agentic framework.
     */
-  implementation("software.airborne.osiris:osiris-core:0.17.0")
+  implementation("software.airborne.osiris:osiris-chat:0.17.0")
    implementation("software.airborne.osiris:osiris-agentic:0.17.0")
 }
 ```
@@ -93,7 +93,7 @@ dependencies {
 ## Features
 
 These features are supported by both
-the [core module](./osiris-core) and the [agentic framework](./osiris-agentic).
+the [chat module](./osiris-chat) and the [agentic framework](./osiris-agentic).
 Specifics on how to use either of those interaction patterns can be found in the respective documentation.
 
 ### Automatic schema generation
@@ -124,14 +124,14 @@ for full documentation.
 To make Tools available to the LLM,
 extend the `Tool` class.
 
-- More details for [osiris-core](./osiris-core/README.md#using-tools)
+- More details for [osiris-chat](./osiris-chat/README.md#using-tools)
 - More details for [osiris-agentic](./osiris-agentic/README.md#tool)
 
 ### Structured output
 
 Structured output is supported through [osiris-schema](./osiris-schema).
 
-- More details for [osiris-core](./osiris-core/README.md#structured-output)
+- More details for [osiris-chat](./osiris-chat/README.md#structured-output)
 - More details for [osiris-agentic](./osiris-agentic/README.md#structured-output)
 
 ### Prompt management
