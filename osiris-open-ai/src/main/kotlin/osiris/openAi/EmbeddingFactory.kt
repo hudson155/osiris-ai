@@ -2,7 +2,7 @@ package osiris.openAi
 
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel
 import kairo.protectedString.ProtectedString
-import osiris.core.EmbeddingFactory
+import osiris.embeddings.EmbeddingFactory
 
 private const val openAiApiKeyKey: String = "openAiApiKey"
 
