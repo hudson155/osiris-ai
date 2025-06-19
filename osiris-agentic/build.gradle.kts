@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  api(project(":osiris-core"))
+  api(project(":osiris-chat"))
 
   implementation(libs.kairoCoroutines)
   implementation(libs.kairoLogging)

@@ -34,9 +34,9 @@ dependencies {
 
   /**
    * Also include one of the following,
-   * depending on whether you're using the core module or the agentic framework.
+   * depending on whether you're using the chat module or the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-core:0.17.0")
+  implementation("software.airborne.osiris:osiris-chat:0.17.0")
   implementation("software.airborne.osiris:osiris-agentic:0.17.0")
 }
 ```

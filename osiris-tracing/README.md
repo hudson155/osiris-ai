@@ -7,13 +7,13 @@ For Langfuse-specific tracing, see [osiris-langfuse-tracing](../osiris-langfuse/
 
 ## Installation
 
-Included by default with both [osiris-core](../osiris-core) and [osiris-agentic](../osiris-agentic).
+Included by default with both [osiris-chat](../osiris-chat) and [osiris-agentic](../osiris-agentic).
 
 ## Events
 
 - `TraceEvent`:
   The outermost span.
-  Both the core module and the agentic framework will have this as the top level span.
+  Both the chat module and the agentic framework will have this as the top level span.
   You can access the string input and output.
 - `AgentEvent`:
   If using the agentic framework,
@@ -32,9 +32,9 @@ Included by default with both [osiris-core](../osiris-core) and [osiris-agentic]
 
 ## Usage
 
-### Core module
+### Chat module
 
-If you're using the core module,
+If you're using the chat module,
 you can add tracing by creating a Tracer and passing it to `llm()`.
 
 ```kotlin
