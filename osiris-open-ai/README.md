@@ -91,7 +91,7 @@ val embeddingFactory =
 and then use the simple DSL
 
 ```kotlin
-embeddingFactory.openAi("gpt-4.1-nano")
+embeddingFactory.openAi("text-embedding-3-small")
 ```
 
 whenever you need an embedding model.
