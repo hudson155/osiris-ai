@@ -3,7 +3,7 @@ package osiris.agentic
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import kotlin.reflect.KClass
-import osiris.core.Tool
+import osiris.chat.Tool
 import osiris.prompt.Instructions
 
 @Suppress("LongParameterList")

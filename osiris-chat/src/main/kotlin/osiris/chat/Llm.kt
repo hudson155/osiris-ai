@@ -1,4 +1,4 @@
-package osiris.core
+package osiris.chat
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.AiMessage

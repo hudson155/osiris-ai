@@ -1,4 +1,4 @@
-package osiris.core
+package osiris.chat
 
 import dev.langchain4j.agent.tool.ToolSpecification
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import kairo.serialization.util.readValueSpecial
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.core.llmMapper
 
 internal class ToolTest {
   @Test

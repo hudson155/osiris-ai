@@ -1,8 +1,9 @@
-package osiris.core
+package osiris.chat
 
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import kairo.serialization.util.readValueSpecial
+import osiris.core.llmMapper
 
 /**
  * Helper to convert responses to the appropriate type.

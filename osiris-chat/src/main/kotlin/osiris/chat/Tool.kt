@@ -1,4 +1,4 @@
-package osiris.core
+package osiris.chat
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.agent.tool.ToolSpecification
@@ -8,6 +8,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
 import kairo.serialization.util.readValueSpecial
+import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 
 private val logger: KLogger = KotlinLogging.logger {}

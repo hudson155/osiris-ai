@@ -1,4 +1,4 @@
-package osiris.core
+package osiris.chat
 
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
@@ -10,12 +10,11 @@ import osiris.openAi.openAi
 import osiris.tracing.EventLogger
 import osiris.tracing.tracer
 
-internal class StructuredOutputTest {
-  private val messages: List<ChatMessage> =
-    listOf(
-      UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
-      SystemMessage("Provide a JSON representation of the person matching this description."),
-    )
+internal class MathTest {
+  private val messages: List<ChatMessage> = listOf(
+    UserMessage("What's 2+2?"),
+    SystemMessage("Do the math. Return only the answer (nothing else)."),
+  )
 
   @Test
   fun test(): Unit = runTest {
@@ -25,13 +24,12 @@ internal class StructuredOutputTest {
     val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
-      responseType = Person::class,
       tracer = tracer,
     )
     verifyResponse(response)
   }
 
   private fun verifyResponse(response: List<ChatMessage>) {
-    response.convert<Person>().shouldBe(Person(name = "Jeff Hudson", age = 29))
+    response.convert<String>().shouldBe("4")
   }
 }

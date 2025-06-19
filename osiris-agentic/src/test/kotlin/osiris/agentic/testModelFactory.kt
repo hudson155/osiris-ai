@@ -2,8 +2,8 @@ package osiris.agentic
 
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 import kairo.protectedString.ProtectedString
-import osiris.core.ModelFactory
-import osiris.core.modelFactory
+import osiris.chat.ModelFactory
+import osiris.chat.modelFactory
 import osiris.openAi.openAiApiKey
 
 @Suppress("UnnecessaryLet")

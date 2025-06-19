@@ -1,4 +1,4 @@
-package osiris.core
+package osiris.chat
 
 import kairo.environmentVariableSupplier.DefaultEnvironmentVariableSupplier
 import kairo.protectedString.ProtectedString

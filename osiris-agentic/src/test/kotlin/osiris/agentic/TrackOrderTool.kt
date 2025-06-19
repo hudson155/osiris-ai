@@ -1,7 +1,7 @@
 package osiris.agentic
 
 import osiris.agentic.TrackOrderTool.Input
-import osiris.core.Tool
+import osiris.chat.Tool
 
 internal object TrackOrderTool : Tool<Input>("track_order") {
   internal data class Input(
