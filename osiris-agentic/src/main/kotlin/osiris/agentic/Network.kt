@@ -48,13 +48,13 @@ public abstract class Network(
       end = { TraceEvent.End(deriveText(it)) },
     ) {
       logger.debug { "Started execution: (name=$name, messages=$messages)." }
-      val executionContext = ExecutionContext(this@Network)
-      val response = withContext(executionContext) {
+      val executionContext = ExecutionContext(this@Network, messages)
+      withContext(executionContext) {
         val agent = executionContext.getAgent(entrypoint)
-        return@withContext agent.execute(messages)
+        return@withContext agent.execute()
       }
-      logger.debug { "Ended execution: (name=$name, response=$response)." }
-      return@withTracer response
+      logger.debug { "Ended execution: (name=$name, response=${executionContext.response})." }
+      return@withTracer executionContext.response
     }
 
   private fun createTracer(listeners: List<Listener>): Tracer? {

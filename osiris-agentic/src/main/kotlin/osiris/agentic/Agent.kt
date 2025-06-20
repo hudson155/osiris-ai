@@ -1,6 +1,5 @@
 package osiris.agentic
 
-import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
@@ -58,13 +57,17 @@ public abstract class Agent(
    */
   protected open fun ChatRequest.Builder.llm(): Unit = Unit
 
-  public suspend fun execute(messages: List<ChatMessage>): List<ChatMessage> =
-    trace({ AgentEvent.Start(this, deriveText(messages)) }, { AgentEvent.End(deriveText(it)) }) {
-      logger.debug { "Started Agent: (name=$name, messages=$messages)." }
+  public suspend fun execute() {
+    val executionContext = getExecutionContext()
+    val response = trace(
+      start = { AgentEvent.Start(this, deriveText(executionContext.messages)) },
+      end = { AgentEvent.End(deriveText(it)) },
+    ) {
+      logger.debug { "Started Agent: (name=$name, messages=${executionContext.messages})." }
       val response = llm(
         model = model,
         messages = buildList {
-          addAll(messages)
+          addAll(executionContext.messages)
           instructions?.let { add(SystemMessage(it.get())) }
         },
         tools = tools,
@@ -74,6 +77,8 @@ public abstract class Agent(
       logger.debug { "Ended Agent: (name=$name, response=$response)." }
       return@trace response
     }
+    executionContext.response += response
+  }
 
   override fun toString(): String =
     "Agent(name=$name)"

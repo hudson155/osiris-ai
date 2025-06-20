@@ -2,6 +2,7 @@ package osiris.agentic
 
 import dev.langchain4j.data.message.UserMessage
 import kairo.lazySupplier.LazySupplier
+import kotlinx.coroutines.withContext
 import osiris.agentic.Consult.Input
 import osiris.chat.Tool
 import osiris.chat.convert
@@ -34,10 +35,13 @@ public class Consult(
     }
 
   override suspend fun execute(input: Input): String {
+    val executionContext = getExecutionContext()
     val agent = agent.get()
-    val response = agent.execute(
-      messages = listOf(UserMessage(input.message)),
-    )
-    return response.convert()
+    val messages = listOf(UserMessage(input.message))
+    val innerExecutionContext = executionContext.withMessages(messages)
+    withContext(innerExecutionContext) {
+      agent.execute()
+    }
+    return innerExecutionContext.response.convert()
   }
 }
