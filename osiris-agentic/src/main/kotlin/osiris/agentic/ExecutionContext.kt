@@ -15,7 +15,7 @@ import kotlin.coroutines.coroutineContext
  */
 public class ExecutionContext(
   private val network: Network,
-  internal val messages: List<ChatMessage>,
+  public val messages: List<ChatMessage>,
 ) : AbstractCoroutineContextElement(key) {
   internal val response: MutableList<ChatMessage> = mutableListOf()
 
