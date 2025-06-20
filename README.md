@@ -191,7 +191,7 @@ for a Langfuse quickstart.
 - Kotlin 2.1
 - Java 21
 - Kairo 5.8
-- Langchain4j 1.0
+- Langchain4j 1.1
 
 ### Style guide
 
