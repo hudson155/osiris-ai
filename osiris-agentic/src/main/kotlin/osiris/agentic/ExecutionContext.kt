@@ -1,5 +1,6 @@
 package osiris.agentic
 
+import dev.langchain4j.data.message.ChatMessage
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
@@ -14,9 +15,18 @@ import kotlin.coroutines.coroutineContext
  */
 public class ExecutionContext(
   private val network: Network,
+  internal val messages: List<ChatMessage>,
 ) : AbstractCoroutineContextElement(key) {
+  internal val response: MutableList<ChatMessage> = mutableListOf()
+
   internal fun getAgent(agentName: String): Agent =
     requireNotNull(network.agents[agentName]) { "No Agent with name $agentName." }
+
+  internal fun withMessages(messages: List<ChatMessage>): ExecutionContext =
+    ExecutionContext(
+      network = network,
+      messages = messages,
+    )
 
   public companion object {
     public val key: CoroutineContext.Key<ExecutionContext> =
