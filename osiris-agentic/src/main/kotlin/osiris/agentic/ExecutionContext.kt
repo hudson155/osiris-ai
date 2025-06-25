@@ -16,7 +16,7 @@ import kotlin.coroutines.coroutineContext
 public class ExecutionContext(
   private val network: Network,
   public val messages: List<ChatMessage>,
-) : AbstractCoroutineContextElement(key) {
+) : AbstractCoroutineContextElement(ExecutionContext) {
   internal val response: MutableList<ChatMessage> = mutableListOf()
 
   internal fun getAgent(agentName: String): Agent =
@@ -28,11 +28,8 @@ public class ExecutionContext(
       messages = messages,
     )
 
-  public companion object {
-    public val key: CoroutineContext.Key<ExecutionContext> =
-      object : CoroutineContext.Key<ExecutionContext> {}
-  }
+  public companion object : CoroutineContext.Key<ExecutionContext>
 }
 
 public suspend fun getExecutionContext(): ExecutionContext =
-  checkNotNull(coroutineContext[ExecutionContext.key])
+  checkNotNull(coroutineContext[ExecutionContext])
