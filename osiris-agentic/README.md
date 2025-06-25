@@ -235,30 +235,6 @@ val personCreator =
   }
 ```
 
-### Asynchronous updates
-
-Just like ChatGPT streams output back to the user,
-you can stream output by using `Network.runAsync()` instead of `Network.run()`.
-
-```kotlin
-val messages = listOf(
-  UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
-)
-network.runAsync(messages).collect { networkEvent ->
-  when (networkEvent) {
-    is NetworkEvent.Event -> {
-      val event = networkEvent.event
-      TODO("Handle any events you want.")
-    }
-    is NetworkEvent.Response -> {
-      val response = networkEvent.response
-      response.convert<String>()
-      // Your order with ID ord_0 has not been shipped yet, and your order with ID ord_1 is currently in transit.
-    }
-  }
-}
-```
-
 ### Tracing
 
 You can add tracing by adding Listeners to the Network
