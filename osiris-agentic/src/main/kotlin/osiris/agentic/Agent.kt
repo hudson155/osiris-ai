@@ -6,6 +6,10 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import osiris.chat.Tool
 import osiris.chat.deriveText
 import osiris.chat.llm
@@ -53,12 +57,29 @@ public abstract class Agent(
   protected open val responseType: KClass<*>? = null
 
   /**
+   * Input guardrails asynchronously validate the agent's input, possibly throwing an exception.
+   */
+  protected open val inputGuardrails: List<Guardrail> = emptyList()
+
+  /**
    * Use this to customize the Langchain4j chat request.
    */
   protected open fun ChatRequest.Builder.llm(): Unit = Unit
 
   public suspend fun execute() {
-    val executionContext = getExecutionContext()
+    val outerExecutionContext = getExecutionContext()
+    coroutineScope {
+      buildList {
+        inputGuardrails.forEach { guardrail ->
+          val innerExecutionContext = outerExecutionContext.withMessages(outerExecutionContext.messages)
+          add(async { withContext(innerExecutionContext) { guardrail.execute() } })
+        }
+        add(async { execute(outerExecutionContext) })
+      }.awaitAll()
+    }
+  }
+
+  private suspend fun execute(executionContext: ExecutionContext) {
     val response = trace(
       start = { AgentEvent.Start(this, deriveText(executionContext.messages)) },
       end = { AgentEvent.End(deriveText(it)) },
