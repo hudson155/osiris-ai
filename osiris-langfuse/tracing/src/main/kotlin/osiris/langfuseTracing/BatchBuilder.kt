@@ -40,7 +40,7 @@ internal class BatchBuilder {
     val end = event.end as Event.End
     val startDetails = start.details as ChatEvent.Start
     val endDetails = end.details as ChatEvent.End
-    val modelName = endDetails.response?.let { it.modelName() } ?: startDetails.request.modelName()
+    val modelName = endDetails.response?.modelName() ?: startDetails.request.modelName()
     val input = LangfuseMessage.extract(startDetails.request.messages())
     val output = endDetails.response?.let { LangfuseMessage.extract(listOf(it.aiMessage())) }
     ingestionEvents += GenerationCreate(
