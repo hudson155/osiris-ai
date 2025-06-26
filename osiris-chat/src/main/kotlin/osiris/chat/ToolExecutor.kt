@@ -2,8 +2,8 @@ package osiris.chat
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.ToolExecutionResultMessage
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -11,10 +11,10 @@ import osiris.tracing.ToolEvent
 import osiris.tracing.trace
 
 /**
- * By default, Tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
+ * By default, Tools are executed in parallel on using [ToolExecutor.Dispatcher].
  *
  * Alternatively,
- * you can choose to run them on a different coroutine dispatcher using [ToolExecutor.Dispatcher.dispatcher],
+ * you can choose to run them on a specific coroutine dispatcher using [ToolExecutor.Dispatcher.dispatcher],
  * choose to run them sequentially using [ToolExecutor.Sequential],
  * or choose to implement your own Tool executor from scratch.
  */
@@ -37,7 +37,7 @@ public abstract class ToolExecutor {
   }
 
   public class Dispatcher(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val dispatcher: CoroutineDispatcher? = null,
   ) : ToolExecutor() {
     override suspend fun execute(
       tools: List<Tool<*>>,
@@ -45,7 +45,7 @@ public abstract class ToolExecutor {
     ): List<ToolExecutionResultMessage> =
       coroutineScope {
         executionRequests.map { executionRequest ->
-          async(dispatcher) {
+          async(dispatcher ?: EmptyCoroutineContext) {
             execute(tools, executionRequest)
           }
         }.awaitAll()

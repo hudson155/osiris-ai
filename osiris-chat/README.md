@@ -191,9 +191,9 @@ response.convert<String>()
 
 ### Custom Tool executors
 
-By default, Tools are executed in parallel on Kotlin's `Dispatchers.IO` coroutine dispatcher.
+By default, Tools are executed in parallel.
 
-Alternatively, you can choose to run them on a different coroutine dispatcher.
+Alternatively, you can choose to run them on a specific coroutine dispatcher.
 
 ```kotlin
 val dispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
