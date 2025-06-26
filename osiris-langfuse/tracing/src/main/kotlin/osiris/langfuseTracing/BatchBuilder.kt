@@ -40,6 +40,9 @@ internal class BatchBuilder {
     val end = event.end as Event.End
     val startDetails = start.details as ChatEvent.Start
     val endDetails = end.details as ChatEvent.End
+    val modelName = endDetails.response?.modelName() ?: startDetails.request.modelName()
+    val input = LangfuseMessage.extract(startDetails.request.messages())
+    val output = endDetails.response?.let { LangfuseMessage.extract(listOf(it.aiMessage())) }
     ingestionEvents += GenerationCreate(
       id = Uuid.random(),
       timestamp = Instant.now(),
@@ -49,10 +52,10 @@ internal class BatchBuilder {
         parentObservationId = event.parentSpanId,
         startTime = start.at,
         endTime = end.at,
-        name = "Chat: ${endDetails.response.modelName()}",
-        model = endDetails.response.modelName(),
-        input = LangfuseMessage.extract(startDetails.request.messages()),
-        output = LangfuseMessage.extract(listOf(endDetails.response.aiMessage())),
+        name = "Chat: $modelName",
+        model = modelName,
+        input = input,
+        output = output,
       ),
     )
   }
@@ -73,7 +76,7 @@ internal class BatchBuilder {
         endTime = end.at,
         name = "Tool: ${startDetails.tool.name}",
         input = startDetails.executionRequest.arguments(),
-        output = endDetails.executionResult.text(),
+        output = endDetails.executionResult?.text(),
       ),
     )
   }

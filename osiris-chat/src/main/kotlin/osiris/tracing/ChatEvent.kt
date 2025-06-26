@@ -12,6 +12,6 @@ public object ChatEvent {
   ) : Event.Details()
 
   public data class End(
-    val response: ChatResponse,
+    val response: ChatResponse?,
   ) : Event.Details()
 }

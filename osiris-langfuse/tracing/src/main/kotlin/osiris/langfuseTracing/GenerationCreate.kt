@@ -18,6 +18,6 @@ internal data class GenerationCreate(
     val name: String,
     val model: String,
     val input: List<LangfuseMessage>,
-    val output: List<LangfuseMessage>,
+    val output: List<LangfuseMessage>?,
   ) : IngestionEvent.Body()
 }

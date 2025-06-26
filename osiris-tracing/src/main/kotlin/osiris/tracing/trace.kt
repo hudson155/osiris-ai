@@ -20,9 +20,9 @@ public suspend fun <T> trace(
   start: BuildStart,
   /**
    * Creates the details for the end event, which is emitted when [block] completes.
-   * You can access [block]'s result.
+   * You can access [block]'s result. The result will be null if an exception was thrown.
    */
-  end: BuildEnd<T>,
+  end: BuildEnd<T?>,
   block: suspend () -> T,
 ): T {
   val outerTracer = coroutineContext[Tracer]
@@ -42,19 +42,23 @@ public suspend fun <T> trace(
   )
   outerTracer.event(startEvent)
   val innerTraceContext = outerTracer.withSpanId(startEvent.spanId)
-  val result = withContext(innerTraceContext) {
-    block()
+  var result: T? = null
+  return try {
+    withContext(innerTraceContext) {
+      result = block()
+      return@withContext result
+    }
+  } finally {
+    val endEvent = Event(
+      spanId = startEvent.spanId,
+      parentSpanId = startEvent.parentSpanId,
+      rootSpanId = startEvent.rootSpanId,
+      start = startEvent.start,
+      end = Event.End(
+        at = Instant.now(),
+        details = end(result),
+      ),
+    )
+    outerTracer.event(endEvent)
   }
-  val endEvent = Event(
-    spanId = startEvent.spanId,
-    parentSpanId = startEvent.parentSpanId,
-    rootSpanId = startEvent.rootSpanId,
-    start = startEvent.start,
-    end = Event.End(
-      at = Instant.now(),
-      details = end(result),
-    ),
-  )
-  outerTracer.event(endEvent)
-  return result
 }
