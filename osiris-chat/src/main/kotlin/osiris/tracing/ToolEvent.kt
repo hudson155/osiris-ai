@@ -14,6 +14,6 @@ public object ToolEvent {
   ) : Event.Details()
 
   public data class End(
-    val executionResult: ToolExecutionResultMessage,
+    val executionResult: ToolExecutionResultMessage?,
   ) : Event.Details()
 }

@@ -39,13 +39,17 @@ public class Tracer private constructor(
 public suspend fun <T> withTracer(
   tracer: Tracer?,
   start: () -> TraceEvent.Start,
-  end: (T) -> TraceEvent.End,
+  end: (T?) -> TraceEvent.End,
   block: suspend () -> T,
 ): T {
   if (tracer == null || coroutineContext[Tracer] != null) return block()
-  return withContext(tracer) {
-    trace(start, end) {
-      block()
+  try {
+    return withContext(tracer) {
+      trace(start, end) {
+        block()
+      }
     }
-  }.also { tracer.flush() }
+  } finally {
+    tracer.flush()
+  }
 }
