@@ -11,7 +11,6 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KClass
-import kotlinx.coroutines.Dispatchers
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
 import osiris.tracing.TraceEvent
@@ -126,7 +125,7 @@ public suspend fun llm(
    */
   tracer: Tracer? = null,
   /**
-   * By default, Tools are executed in parallel on [Dispatchers.IO] using [ToolExecutor.Dispatcher].
+   * By default, Tools are executed in parallel using [ToolExecutor.Dispatcher].
    */
   toolExecutor: ToolExecutor = ToolExecutor.Dispatcher(),
   /**
