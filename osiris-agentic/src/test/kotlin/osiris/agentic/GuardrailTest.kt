@@ -35,7 +35,7 @@ internal class GuardrailTest {
           require(messages.convert<InputGuardrail.Output>().isUserAskingAboutProvincialCapitals) {
             "User is not asking about provincial capitals."
           }
-        }
+        },
       )
   }
 
@@ -51,7 +51,7 @@ internal class GuardrailTest {
   fun `guardrail hit`(): Unit = runTest {
     shouldThrow<IllegalArgumentException> {
       network.run(
-        messages = listOf(UserMessage("What's 2+2?"))
+        messages = listOf(UserMessage("What's 2+2?")),
       )
     }.shouldHaveMessage("User is not asking about provincial capitals.")
   }
