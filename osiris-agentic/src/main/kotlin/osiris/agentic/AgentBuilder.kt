@@ -14,6 +14,7 @@ internal class AgentImpl(
   override val instructions: Instructions?,
   override val tools: List<Tool<*>>,
   override val responseType: KClass<*>?,
+  override val inputGuardrails: List<Guardrail>,
   private val llmBlock: ChatRequest.Builder.() -> Unit,
 ) : Agent(name, model) {
   override fun ChatRequest.Builder.llm(): Unit =
@@ -28,6 +29,7 @@ public class AgentBuilder internal constructor(
   public var instructions: Instructions? = null
   public val tools: MutableList<Tool<*>> = mutableListOf()
   public var responseType: KClass<*>? = null
+  public val inputGuardrails: MutableList<Guardrail> = mutableListOf()
   private val llmBlocks: MutableList<ChatRequest.Builder.() -> Unit> = mutableListOf()
 
   public fun llm(block: ChatRequest.Builder.() -> Unit) {
@@ -42,6 +44,7 @@ public class AgentBuilder internal constructor(
       instructions = instructions,
       tools = tools,
       responseType = responseType,
+      inputGuardrails = inputGuardrails,
       llmBlock = { llmBlocks.forEach { it() } },
     )
 }
