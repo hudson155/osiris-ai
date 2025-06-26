@@ -56,6 +56,9 @@ public abstract class Agent(
    */
   protected open val responseType: KClass<*>? = null
 
+  /**
+   * Input guardrails asynchronously validate the agent's input, possibly throwing an exception.
+   */
   protected open val inputGuardrails: List<Guardrail> = emptyList()
 
   /**

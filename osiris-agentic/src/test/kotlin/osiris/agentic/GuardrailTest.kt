@@ -31,7 +31,7 @@ internal class GuardrailTest {
   internal object Agent : osiris.agentic.Agent("agent", testModelFactory.openAi("gpt-4.1-nano")) {
     override val inputGuardrails: List<Guardrail> =
       listOf(
-        Guardrail(InputGuardrail) { messages ->
+        Guardrail("input_guardrail") { messages ->
           require(messages.convert<InputGuardrail.Output>().isUserAskingAboutProvincialCapitals) {
             "User is not asking about provincial capitals."
           }
@@ -43,6 +43,7 @@ internal class GuardrailTest {
     network("network") {
       entrypoint = Agent.name
       agents += Agent
+      agents += InputGuardrail
       listener(EventLogger)
     }
 
