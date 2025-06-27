@@ -190,7 +190,7 @@ for a Langfuse quickstart.
 - Gradle 8.14
 - Kotlin 2.2
 - Java 21
-- Kairo 5.10
+- Kairo 5.11
 - Langchain4j 1.1
 
 ### Style guide
