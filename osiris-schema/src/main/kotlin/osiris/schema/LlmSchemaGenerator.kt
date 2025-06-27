@@ -18,21 +18,18 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.valueParameters
-import osiris.schema.LlmSchema.Description
-import osiris.schema.LlmSchema.LlmSchemaException
-import osiris.schema.LlmSchema.SchemaName
 
 internal object LlmSchemaGenerator {
   fun generateName(kClass: KClass<*>): String =
     withErrorWrapper({ "Failed to generate LLM schema name for ${kClass.qualifiedName!!}. $it" }) {
-      val annotation = kClass.findAnnotation<SchemaName>()
-        ?: throw LlmSchemaException("Missing @${SchemaName::class.simpleName!!}.")
+      val annotation = kClass.findAnnotation<LlmSchema.SchemaName>()
+        ?: throw LlmSchema.LlmSchemaException("Missing @${LlmSchema.SchemaName::class.simpleName!!}.")
       return@withErrorWrapper annotation.schemaName
     }
 
   fun generateSchema(kClass: KClass<*>): JsonObjectSchema =
     withErrorWrapper({ "Failed to generate LLM schema for ${kClass.qualifiedName!!}. $it" }) {
-      if (!kClass.isData) throw LlmSchemaException("Must be a data class or data object.")
+      if (!kClass.isData) throw LlmSchema.LlmSchemaException("Must be a data class or data object.")
       return@withErrorWrapper objectElement(null, kClass)
     }
 
@@ -89,7 +86,7 @@ internal object LlmSchemaGenerator {
           element(param, param.type)
         }
         addProperty(name, element)
-        if (param.isOptional) throw LlmSchemaException("${param.name!!} must not be optional.")
+        if (param.isOptional) throw LlmSchema.LlmSchemaException("${param.name!!} must not be optional.")
         if (!param.type.isMarkedNullable) {
           required += name
         }
@@ -102,16 +99,16 @@ internal object LlmSchemaGenerator {
       description(description)
       val jsonTypeInfo = checkNotNull(kClass.findAnnotation<JsonTypeInfo>())
       if (jsonTypeInfo.use != JsonTypeInfo.Id.NAME) {
-        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have use = NAME.")
+        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have use = NAME.")
       }
       if (jsonTypeInfo.include != JsonTypeInfo.As.PROPERTY) {
-        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have include = PROPERTY.")
+        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have include = PROPERTY.")
       }
       if (jsonTypeInfo.defaultImpl != JsonTypeInfo::class) {
-        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not specify defaultImpl.")
+        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not specify defaultImpl.")
       }
       if (jsonTypeInfo.visible) {
-        throw LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not be visible.")
+        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not be visible.")
       }
       val jsonSubTypes = checkNotNull(kClass.findAnnotation<JsonSubTypes>())
       anyOf(
@@ -138,7 +135,7 @@ internal object LlmSchemaGenerator {
     }.build()
 
   private fun parseDescription(element: KAnnotatedElement): String? {
-    val annotation = element.findAnnotation<Description>() ?: return null
+    val annotation = element.findAnnotation<LlmSchema.Description>() ?: return null
     return annotation.description
   }
 
@@ -153,8 +150,8 @@ internal object LlmSchemaGenerator {
   private fun <T> withErrorWrapper(transformMessage: (message: String) -> String, block: () -> T): T {
     try {
       return block()
-    } catch (e: LlmSchemaException) {
-      throw LlmSchemaException(transformMessage(e.message), e)
+    } catch (e: LlmSchema.LlmSchemaException) {
+      throw LlmSchema.LlmSchemaException(transformMessage(e.message), e)
     }
   }
 }
