@@ -10,10 +10,10 @@ import dev.langchain4j.data.message.UserMessage
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "role")
 @JsonSubTypes(
-  JsonSubTypes.Type(LangfuseMessage.Assistant::class, "assistant"),
-  JsonSubTypes.Type(LangfuseMessage.Tool::class, "tool"),
-  JsonSubTypes.Type(LangfuseMessage.System::class, "system"),
-  JsonSubTypes.Type(LangfuseMessage.User::class, "user"),
+  JsonSubTypes.Type(LangfuseMessage.Assistant::class, name = "assistant"),
+  JsonSubTypes.Type(LangfuseMessage.Tool::class, name = "tool"),
+  JsonSubTypes.Type(LangfuseMessage.System::class, name = "system"),
+  JsonSubTypes.Type(LangfuseMessage.User::class, name = "user"),
 )
 internal sealed class LangfuseMessage {
   internal data class Assistant(
@@ -22,7 +22,7 @@ internal sealed class LangfuseMessage {
   ) : LangfuseMessage() {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
     @JsonSubTypes(
-      JsonSubTypes.Type(ToolCall.Function::class, "function"),
+      JsonSubTypes.Type(ToolCall.Function::class, name = "function"),
     )
     internal sealed class ToolCall {
       abstract val id: String
