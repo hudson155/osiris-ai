@@ -8,9 +8,9 @@ import osiris.langfuseTracing.IngestionEvent.Body
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
-  JsonSubTypes.Type(GenerationCreate::class, "generation-create"),
-  JsonSubTypes.Type(SpanCreate::class, "span-create"),
-  JsonSubTypes.Type(TraceCreate::class, "trace-create"),
+  JsonSubTypes.Type(GenerationCreate::class, name = "generation-create"),
+  JsonSubTypes.Type(SpanCreate::class, name = "span-create"),
+  JsonSubTypes.Type(TraceCreate::class, name = "trace-create"),
 )
 internal sealed class IngestionEvent<T : Body> {
   abstract val id: Uuid
