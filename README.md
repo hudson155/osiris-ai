@@ -188,7 +188,7 @@ for a Langfuse quickstart.
 ### Major dependencies
 
 - Gradle 8.14
-- Kotlin 2.1
+- Kotlin 2.2
 - Java 21
 - Kairo 5.10
 - Langchain4j 1.1
@@ -198,8 +198,8 @@ for a Langfuse quickstart.
 Please follow the [Kairo style guide](https://github.com/hudson155/kairo/blob/main/docs/style-guide.md).
 
 - **Product terminology:**
-   - Treat Osiris _Agents_, _Tools_, and _Networks_ as proper nouns (the first letter should be capitalized).
-   - Treat Osiris _Listeners_ and _Tracers_ as proper nouns (the first letter should be capitalized).
+  - Treat Osiris _Agents_, _Tools_, and _Networks_ as proper nouns (the first letter should be capitalized).
+  - Treat Osiris _Listeners_ and _Tracers_ as proper nouns (the first letter should be capitalized).
 
 ## Releasing
 

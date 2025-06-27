@@ -1,8 +1,8 @@
 package osiris.tracing
 
 import java.time.Instant
-import kotlin.coroutines.coroutineContext
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 
 public typealias BuildStart = () -> Event.Details
@@ -25,7 +25,7 @@ public suspend fun <T> trace(
   end: BuildEnd<T?>,
   block: suspend () -> T,
 ): T {
-  val outerTracer = coroutineContext[Tracer]
+  val outerTracer = currentCoroutineContext()[Tracer]
   if (outerTracer == null) {
     return block()
   }

@@ -2,8 +2,8 @@ package osiris.tracing
 
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 
 public class Tracer private constructor(
@@ -42,7 +42,7 @@ public suspend fun <T> withTracer(
   end: (T?) -> TraceEvent.End,
   block: suspend () -> T,
 ): T {
-  if (tracer == null || coroutineContext[Tracer] != null) return block()
+  if (tracer == null || currentCoroutineContext()[Tracer] != null) return block()
   try {
     return withContext(tracer) {
       trace(start, end) {
