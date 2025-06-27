@@ -22,6 +22,11 @@ public object LlmSchema {
   @Target(AnnotationTarget.TYPE, AnnotationTarget.VALUE_PARAMETER)
   public annotation class Type(val type: String)
 
+  @Target(AnnotationTarget.CLASS)
+  public annotation class Polymorphic(val discriminator: String, val subTypes: Array<Subtype>) {
+    public annotation class Subtype(val value: KClass<*>, val name: String)
+  }
+
   /**
    * Descriptions are available to the LLM, helping it understand your schema better.
    */
