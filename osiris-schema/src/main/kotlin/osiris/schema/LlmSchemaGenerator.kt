@@ -1,7 +1,5 @@
 package osiris.schema
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
@@ -97,30 +95,17 @@ internal object LlmSchemaGenerator {
   private fun polymorphicElement(description: String?, kClass: KClass<*>): JsonAnyOfSchema =
     JsonAnyOfSchema.builder().apply {
       description(description)
-      val jsonTypeInfo = checkNotNull(kClass.findAnnotation<JsonTypeInfo>())
-      if (jsonTypeInfo.use != JsonTypeInfo.Id.NAME) {
-        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have use = NAME.")
-      }
-      if (jsonTypeInfo.include != JsonTypeInfo.As.PROPERTY) {
-        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must be have include = PROPERTY.")
-      }
-      if (jsonTypeInfo.defaultImpl != JsonTypeInfo::class) {
-        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not specify defaultImpl.")
-      }
-      if (jsonTypeInfo.visible) {
-        throw LlmSchema.LlmSchemaException("@${JsonTypeInfo::class.simpleName!!} must not be visible.")
-      }
-      val jsonSubTypes = checkNotNull(kClass.findAnnotation<JsonSubTypes>())
+      val annotation = checkNotNull(kClass.findAnnotation<LlmSchema.Polymorphic>())
       anyOf(
-        jsonSubTypes.value.map { subType ->
+        annotation.subTypes.map { subType ->
           val delegate = objectElement(null, subType.value)
           return@map JsonObjectSchema.builder().apply {
             description(delegate.description())
-            addEnumProperty(jsonTypeInfo.property, listOf(subType.name))
+            addEnumProperty(annotation.discriminator, listOf(subType.name))
             addProperties(delegate.properties())
             required(
               buildList {
-                add(jsonTypeInfo.property)
+                add(annotation.discriminator)
                 addAll(delegate.required())
               },
             )

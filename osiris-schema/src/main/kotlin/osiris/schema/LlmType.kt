@@ -1,7 +1,5 @@
 package osiris.schema
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import java.math.BigDecimal
 import java.math.BigInteger
 import kairo.id.KairoId
@@ -46,11 +44,10 @@ internal fun parseLlmType(element: KAnnotatedElement, kClass: KClass<*>): LlmTyp
     return LlmType.Object
   }
   if (kClass.isSealed) {
-    if (!kClass.hasAnnotation<JsonTypeInfo>()) {
-      throw LlmSchema.LlmSchemaException("Missing @${JsonTypeInfo::class.simpleName!!} on sealed (polymorphic) class.")
-    }
-    if (!kClass.hasAnnotation<JsonSubTypes>()) {
-      throw LlmSchema.LlmSchemaException("Missing @${JsonSubTypes::class.simpleName!!} on sealed (polymorphic) class.")
+    if (!kClass.hasAnnotation<LlmSchema.Polymorphic>()) {
+      throw LlmSchema.LlmSchemaException(
+        "Missing @${LlmSchema.Polymorphic::class.simpleName!!} on sealed (polymorphic) class.",
+      )
     }
     return LlmType.Polymorphic
   }

@@ -1,7 +1,5 @@
 package osiris.schema
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
@@ -78,11 +76,13 @@ internal class LlmSchemaTest {
   internal data class DataClassPolymorphic(
     val vehicle: Vehicle,
   ) {
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-    @JsonSubTypes(
-      JsonSubTypes.Type(Vehicle.Car::class, name = "Car"),
-      JsonSubTypes.Type(Vehicle.Motorcycle::class, name = "Motorcycle"),
-      JsonSubTypes.Type(Vehicle.Bicycle::class, name = "Bicycle"),
+    @LlmSchema.Polymorphic(
+      discriminator = "type",
+      subTypes = [
+        LlmSchema.Polymorphic.Subtype(Vehicle.Car::class, name = "Car"),
+        LlmSchema.Polymorphic.Subtype(Vehicle.Motorcycle::class, name = "Motorcycle"),
+        LlmSchema.Polymorphic.Subtype(Vehicle.Bicycle::class, name = "Bicycle"),
+      ],
     )
     internal sealed class Vehicle {
       abstract val model: String?
