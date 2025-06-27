@@ -197,6 +197,10 @@ for a Langfuse quickstart.
 
 Please follow the [Kairo style guide](https://github.com/hudson155/kairo/blob/main/docs/style-guide.md).
 
+- **Product terminology:**
+   - Treat Osiris _Agents_, _Tools_, and _Networks_ as proper nouns (the first letter should be capitalized).
+   - Treat Osiris _Listeners_ and _Tracers_ as proper nouns (the first letter should be capitalized).
+
 ## Releasing
 
 1. Familiarize yourself with [semantic versioning](https://semver.org/).
