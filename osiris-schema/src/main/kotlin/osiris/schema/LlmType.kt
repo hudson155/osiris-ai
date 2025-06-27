@@ -9,7 +9,6 @@ import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
-import osiris.schema.LlmSchema.LlmSchemaException
 
 internal enum class LlmType {
   Boolean,
@@ -30,7 +29,7 @@ internal fun parseLlmType(element: KAnnotatedElement, kClass: KClass<*>): LlmTyp
       "integer" -> LlmType.Integer
       "number" -> LlmType.Number
       "string" -> LlmType.String
-      else -> throw LlmSchemaException("Specified unsupported type ${annotation.type}.")
+      else -> throw LlmSchema.LlmSchemaException("Specified unsupported type ${annotation.type}.")
     }
   }
   when (kClass) {
@@ -48,14 +47,14 @@ internal fun parseLlmType(element: KAnnotatedElement, kClass: KClass<*>): LlmTyp
   }
   if (kClass.isSealed) {
     if (!kClass.hasAnnotation<JsonTypeInfo>()) {
-      throw LlmSchemaException("Missing @${JsonTypeInfo::class.simpleName!!} on sealed (polymorphic) class.")
+      throw LlmSchema.LlmSchemaException("Missing @${JsonTypeInfo::class.simpleName!!} on sealed (polymorphic) class.")
     }
     if (!kClass.hasAnnotation<JsonSubTypes>()) {
-      throw LlmSchemaException("Missing @${JsonSubTypes::class.simpleName!!} on sealed (polymorphic) class.")
+      throw LlmSchema.LlmSchemaException("Missing @${JsonSubTypes::class.simpleName!!} on sealed (polymorphic) class.")
     }
     return LlmType.Polymorphic
   }
-  throw LlmSchemaException(
+  throw LlmSchema.LlmSchemaException(
     "Missing @${LlmSchema.Type::class.simpleName!!}" +
       " and the type could not be inferred.",
   )

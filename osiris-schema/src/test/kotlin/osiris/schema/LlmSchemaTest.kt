@@ -14,7 +14,6 @@ import java.math.BigInteger
 import kairo.id.KairoId
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import osiris.schema.LlmSchema.LlmSchemaException
 
 @Suppress("CyclomaticComplexMethod", "LongMethod", "NestedScopeFunctions")
 internal class LlmSchemaTest {
@@ -156,7 +155,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `non-data object`(): Unit = runTest {
-    shouldThrow<LlmSchemaException> {
+    shouldThrow<LlmSchema.LlmSchemaException> {
       LlmSchema.generate(NonDataObject::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataObject." +
@@ -174,7 +173,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `non-data class`(): Unit = runTest {
-    shouldThrow<LlmSchemaException> {
+    shouldThrow<LlmSchema.LlmSchemaException> {
       LlmSchema.generate(NonDataClass::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataClass." +
@@ -371,7 +370,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, unsupported type`(): Unit = runTest {
-    shouldThrow<LlmSchemaException> {
+    shouldThrow<LlmSchema.LlmSchemaException> {
       LlmSchema.generate(DataClassUnsupportedType::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedType." +
@@ -410,7 +409,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, unsupported overridden type`(): Unit = runTest {
-    shouldThrow<LlmSchemaException> {
+    shouldThrow<LlmSchema.LlmSchemaException> {
       LlmSchema.generate(DataClassUnsupportedOverriddenType::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedOverriddenType." +
@@ -438,7 +437,7 @@ internal class LlmSchemaTest {
 
   @Test
   fun `data class, optional param`(): Unit = runTest {
-    shouldThrow<LlmSchemaException> {
+    shouldThrow<LlmSchema.LlmSchemaException> {
       LlmSchema.generate(DataClassOptionalParam::class)
     }.shouldHaveMessage(
       "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassOptionalParam." +
