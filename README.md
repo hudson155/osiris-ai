@@ -188,7 +188,7 @@ for a Langfuse quickstart.
 ### Major dependencies
 
 - Gradle 8.14
-- Kotlin 2.1
+- Kotlin 2.2
 - Java 21
 - Kairo 5.10
 - Langchain4j 1.1

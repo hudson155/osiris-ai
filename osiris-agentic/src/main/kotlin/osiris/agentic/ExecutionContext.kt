@@ -3,7 +3,7 @@ package osiris.agentic
 import dev.langchain4j.data.message.ChatMessage
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.currentCoroutineContext
 
 /**
  * The execution context is available via [getExecutionContext]
@@ -32,4 +32,4 @@ public class ExecutionContext(
 }
 
 public suspend fun getExecutionContext(): ExecutionContext =
-  checkNotNull(coroutineContext[ExecutionContext])
+  checkNotNull(currentCoroutineContext()[ExecutionContext])
