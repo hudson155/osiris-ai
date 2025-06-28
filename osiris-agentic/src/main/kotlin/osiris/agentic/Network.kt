@@ -38,7 +38,7 @@ public abstract class Network(
 
   internal val agents: Map<String, Agent> = agents.associateBy { it.name }
 
-  public suspend fun run(
+  public open suspend fun run(
     messages: List<ChatMessage>,
     listeners: List<Listener> = emptyList(),
   ): List<ChatMessage> =
