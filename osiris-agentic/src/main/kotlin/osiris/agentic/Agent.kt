@@ -39,28 +39,23 @@ public abstract class Agent(
    * the consulting Agent is presented with this description in the consultation Tool.
    */
   public open val description: String? = null
-
   /**
    * The instructions for this Agent's LLM call.
    */
   protected open val instructions: Instructions? = null
-
   /**
    * Tools are passed to the LLM.
    */
   protected open val tools: List<Tool<*>> = emptyList()
-
   /**
    * Class reference for structured output.
    * If not provided, output will be a string.
    */
   protected open val responseType: KClass<*>? = null
-
   /**
    * Input guardrails asynchronously validate the agent's input, possibly throwing an exception.
    */
   protected open val inputGuardrails: List<Guardrail> = emptyList()
-
   /**
    * Use this to customize the Langchain4j chat request.
    */
