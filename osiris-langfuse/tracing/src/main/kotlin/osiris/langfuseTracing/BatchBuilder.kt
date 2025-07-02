@@ -12,7 +12,8 @@ import osiris.tracing.TraceEvent
 
 @Suppress("ForbiddenMethodCall")
 internal class BatchBuilder {
-  val ingestionEvents: Queue<IngestionEvent<*>> = ConcurrentLinkedQueue()
+  private var traceId: Uuid? = null
+  private val ingestionEvents: Queue<IngestionEvent<*>> = ConcurrentLinkedQueue()
 
   fun agentEvent(event: Event) {
     val start = event.start
@@ -86,6 +87,7 @@ internal class BatchBuilder {
     val end = event.end as Event.End
     val startDetails = start.details as TraceEvent.Start
     val endDetails = end.details as TraceEvent.End
+    traceId = event.spanId
     ingestionEvents += TraceCreate(
       id = Uuid.random(),
       timestamp = Instant.now(),
@@ -99,8 +101,11 @@ internal class BatchBuilder {
     )
   }
 
-  fun build(): BatchIngestion =
-    BatchIngestion(
-      batch = ingestionEvents.toList(),
-    )
+  fun build(): Pair<Uuid, BatchIngestion>? =
+    traceId?.let { traceId ->
+      val batchIngestion = BatchIngestion(
+        batch = ingestionEvents.toList(),
+      )
+      return@let Pair(traceId, batchIngestion)
+    }
 }
