@@ -8,7 +8,7 @@ https://langfuse.com/docs/prompts/get-started.
 
 ## Installation
 
-`software.airborne.osiris:osiris-langfuse-prompt:0.24.0`
+`software.airborne.osiris:osiris-langfuse-prompt:0.25.0`
 
 <details>
 
@@ -26,14 +26,14 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-langfuse:0.24.0")
-  implementation("software.airborne.osiris:osiris-langfuse-prompt:0.24.0")
+  implementation("software.airborne.osiris:osiris-langfuse:0.25.0")
+  implementation("software.airborne.osiris:osiris-langfuse-prompt:0.25.0")
 
   /**
    * Also include the following,
    * assuming you're using the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-agentic:0.24.0") 
+  implementation("software.airborne.osiris:osiris-agentic:0.25.0") 
 }
 ```
 
