@@ -47,7 +47,7 @@ Create a Langfuse instance.
 
 ```kotlin
 val langfuse = Langfuse(
-  url = "https://us.cloud.langfuse.com/api/public/",
+  url = "https://us.cloud.langfuse.com/",
   publicKey = "pk-lf-...",
   secretKey = ProtectedString("sk-lf-..."),
 )

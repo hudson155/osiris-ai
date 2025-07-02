@@ -39,7 +39,7 @@ public fun Langfuse.trace(): Listener {
       CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
         client.request {
           method = HttpMethod.Post
-          url("ingestion")
+          url("api/public/ingestion")
           contentType(ContentType.Application.Json)
           accept(ContentType.Application.Json)
           setBody(batchBuilder.build())

@@ -14,7 +14,7 @@ public fun Langfuse.prompt(name: String): Instructions =
     val response = client.request {
       // https://api.reference.langfuse.com/#tag/prompts/get/api/public/v2/prompts/{promptName}
       method = HttpMethod.Get
-      url("v2/prompts/$name")
+      url("api/public/v2/prompts/$name")
       accept(ContentType.Application.Json)
     }
     return@Instructions response.body<Prompt>().prompt
