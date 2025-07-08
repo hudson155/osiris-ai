@@ -1,5 +1,6 @@
 package osiris.agentic
 
+import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import kotlin.reflect.KClass
@@ -15,10 +16,10 @@ internal class AgentImpl(
   override val tools: List<Tool<*>>,
   override val responseType: KClass<*>?,
   override val inputGuardrails: List<Guardrail>,
-  private val llmBlock: ChatRequest.Builder.() -> Unit,
+  private val llmBlock: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit,
 ) : Agent(name, model) {
-  override fun ChatRequest.Builder.llm(): Unit =
-    llmBlock()
+  override fun ChatRequest.Builder.llm(response: List<ChatMessage>): Unit =
+    llmBlock(response)
 }
 
 public class AgentBuilder internal constructor(
@@ -30,9 +31,9 @@ public class AgentBuilder internal constructor(
   public val tools: MutableList<Tool<*>> = mutableListOf()
   public var responseType: KClass<*>? = null
   public val inputGuardrails: MutableList<Guardrail> = mutableListOf()
-  private val llmBlocks: MutableList<ChatRequest.Builder.() -> Unit> = mutableListOf()
+  private val llmBlocks: MutableList<ChatRequest.Builder.(response: List<ChatMessage>) -> Unit> = mutableListOf()
 
-  public fun llm(block: ChatRequest.Builder.() -> Unit) {
+  public fun llm(block: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit) {
     llmBlocks += block
   }
 
@@ -45,7 +46,7 @@ public class AgentBuilder internal constructor(
       tools = tools,
       responseType = responseType,
       inputGuardrails = inputGuardrails,
-      llmBlock = { llmBlocks.forEach { it() } },
+      llmBlock = { response -> llmBlocks.forEach { it(response) } },
     )
 }
 

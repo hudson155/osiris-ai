@@ -26,7 +26,7 @@ internal class Llm(
   private val messages: List<ChatMessage>,
   private val tools: List<Tool<*>>,
   private val responseType: KClass<*>?,
-  private val chatRequestBlock: ChatRequest.Builder.() -> Unit,
+  private val chatRequestBlock: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit,
   private val toolExecutor: ToolExecutor,
   private val exitCondition: ExitCondition,
 ) {
@@ -42,7 +42,7 @@ internal class Llm(
         val executionRequests = lastMessage.toolExecutionRequests()
         response += executeTools(executionRequests)
       } else {
-        val chatRequest = buildChatRequest(messages)
+        val chatRequest = buildChatRequest(messages) { chatRequestBlock(response) }
         response += chat(chatRequest)
       }
     }
@@ -67,7 +67,10 @@ internal class Llm(
     return listOf(aiMessage)
   }
 
-  private suspend fun buildChatRequest(messages: List<ChatMessage>): ChatRequest =
+  private suspend fun buildChatRequest(
+    messages: List<ChatMessage>,
+    chatRequestBlock: ChatRequest.Builder.() -> Unit,
+  ): ChatRequest =
     ChatRequest.builder().apply {
       messages(messages)
       if (tools.isNotEmpty()) {
@@ -118,7 +121,7 @@ public suspend fun llm(
   /**
    * Use this to customize the Langchain4j chat request.
    */
-  chatRequestBlock: ChatRequest.Builder.() -> Unit = {},
+  chatRequestBlock: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit = {},
   /**
    * Enable tracing for this request by providing a Tracer.
    * If a Tracer is provided but tracing is already enabled upstack, the Tracer will be ignored.
