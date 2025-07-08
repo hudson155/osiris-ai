@@ -40,7 +40,7 @@ public abstract class Tool<in Input : Any>(
     logger.debug { "Started Tool: $executionRequest." }
     val inputString = executionRequest.arguments()
     val input = try {
-      checkNotNull(llmMapper.kairoRead(inputString, inputType))
+      llmMapper.kairoRead(inputString, inputType)
     } catch (e: MismatchedInputException) {
       val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
       return ToolExecutionResultMessage.from(executionRequest, outputString)
