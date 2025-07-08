@@ -1,5 +1,6 @@
 package osiris.chat
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.agent.tool.ToolSpecification
 import dev.langchain4j.data.message.ToolExecutionResultMessage
@@ -38,7 +39,12 @@ public abstract class Tool<in Input : Any>(
   public suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
     logger.debug { "Started Tool: $executionRequest." }
     val inputString = executionRequest.arguments()
-    val input = checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
+    val input = try {
+      checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
+    } catch (e: MismatchedInputException) {
+      val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
+      return ToolExecutionResultMessage.from(executionRequest, outputString)
+    }
     val outputString = execute(input)
     val executionResult = ToolExecutionResultMessage.from(executionRequest, outputString)
     logger.debug { "Ended Tool: $executionResult." }
