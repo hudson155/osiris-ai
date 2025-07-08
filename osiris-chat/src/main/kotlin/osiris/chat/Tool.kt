@@ -8,7 +8,7 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.lazySupplier.LazySupplier
 import kairo.reflect.KairoType
-import kairo.serialization.util.readValueSpecial
+import kairo.serialization.util.kairoReadSpecial
 import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 
@@ -40,7 +40,7 @@ public abstract class Tool<in Input : Any>(
     logger.debug { "Started Tool: $executionRequest." }
     val inputString = executionRequest.arguments()
     val input = try {
-      checkNotNull(llmMapper.readValueSpecial(inputString, inputType))
+      checkNotNull(llmMapper.kairoReadSpecial(inputString, inputType))
     } catch (e: MismatchedInputException) {
       val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
       return ToolExecutionResultMessage.from(executionRequest, outputString)

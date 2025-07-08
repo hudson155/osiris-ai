@@ -2,7 +2,7 @@ package osiris.chat
 
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
-import kairo.serialization.util.readValueSpecial
+import kairo.serialization.util.kairoReadSpecial
 import osiris.core.llmMapper
 
 /**
@@ -13,6 +13,6 @@ import osiris.core.llmMapper
  */
 public inline fun <reified Response : Any> List<ChatMessage>.convert(): Response {
   val lastMessage = last() as AiMessage
-  val response = llmMapper.readValueSpecial<Response>(lastMessage.text())
+  val response = llmMapper.kairoReadSpecial<Response>(lastMessage.text())
   return checkNotNull(response)
 }
