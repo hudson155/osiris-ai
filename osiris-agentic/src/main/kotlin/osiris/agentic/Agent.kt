@@ -1,5 +1,6 @@
 package osiris.agentic
 
+import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
@@ -59,7 +60,7 @@ public abstract class Agent(
   /**
    * Use this to customize the Langchain4j chat request.
    */
-  protected open fun ChatRequest.Builder.llm(): Unit = Unit
+  protected open fun ChatRequest.Builder.llm(response: List<ChatMessage>): Unit = Unit
 
   public suspend fun execute() {
     val outerExecutionContext = getExecutionContext()
@@ -88,7 +89,7 @@ public abstract class Agent(
         },
         tools = tools,
         responseType = responseType,
-        chatRequestBlock = { llm() },
+        chatRequestBlock = { response -> llm(response) },
       )
       logger.debug { "Ended Agent: (name=$name, response=$response)." }
       return@trace response
