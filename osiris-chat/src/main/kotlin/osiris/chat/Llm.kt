@@ -13,7 +13,7 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.reflect.KairoType
-import kairo.serialization.typeReference
+import kairo.serialization.util.kairoRead
 import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
@@ -34,6 +34,7 @@ internal class Llm(
   private val toolExecutor: ToolExecutor,
   private val exitCondition: ExitCondition,
 ) {
+  @Suppress("CognitiveComplexMethod", "NestedBlockDepth")
   suspend fun execute(): List<ChatMessage> {
     logger.debug { "Started LLM." }
     val response = mutableListOf<ChatMessage>()
@@ -52,7 +53,7 @@ internal class Llm(
         aiMessage.text()?.let { text ->
           if (responseType == null) return@let
           try {
-            llmMapper.readValue(text, responseType.typeReference)
+            llmMapper.kairoRead(text, responseType)
           } catch (e: MismatchedInputException) {
             val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
             response += SystemMessage(outputString)
