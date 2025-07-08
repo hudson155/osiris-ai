@@ -30,39 +30,39 @@ internal class Llm(
   private val messages: List<ChatMessage>,
   private val tools: List<Tool<*>>,
   private val responseType: KairoType<*>?,
-  private val chatRequestBlock: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit,
+  private val chatRequestBlock: ChatRequest.Builder.(state: LlmState) -> Unit,
   private val toolExecutor: ToolExecutor,
   private val exitCondition: ExitCondition,
 ) {
   @Suppress("CognitiveComplexMethod", "NestedBlockDepth")
   suspend fun execute(): List<ChatMessage> {
     logger.debug { "Started LLM." }
-    val response = mutableListOf<ChatMessage>()
+    var state = LlmState(response = emptyList())
     while (true) {
-      val messages = messages + response
+      val messages = messages + state.response
       val lastMessage = messages.lastOrNull()
       logger.debug { "Last message: ${lastMessage ?: "null"}." }
-      if (exitCondition.shouldExit(response)) break
+      if (exitCondition.shouldExit(state)) break
       if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
         val executionRequests = lastMessage.toolExecutionRequests()
-        response += executeTools(executionRequests)
+        state = state.copy(response = state.response + executeTools(executionRequests))
       } else {
-        val chatRequest = buildChatRequest(messages) { chatRequestBlock(response) }
+        val chatRequest = buildChatRequest(messages) { chatRequestBlock(state) }
         val aiMessage = chat(chatRequest)
-        response += aiMessage
+        state = state.copy(response = state.response + aiMessage)
         aiMessage.text()?.let { text ->
           if (responseType == null) return@let
           try {
             llmMapper.kairoRead(text, responseType)
           } catch (e: MismatchedInputException) {
             val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
-            response += SystemMessage(outputString)
+            state = state.copy(response = state.response + SystemMessage(outputString))
           }
         }
       }
     }
     logger.debug { "Ended LLM." }
-    return response
+    return state.response
   }
 
   private suspend fun executeTools(executionRequests: List<ToolExecutionRequest>): List<ChatMessage> {
@@ -135,7 +135,7 @@ public suspend fun llm(
   /**
    * Use this to customize the Langchain4j chat request.
    */
-  chatRequestBlock: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit = {},
+  chatRequestBlock: ChatRequest.Builder.(state: LlmState) -> Unit = {},
   /**
    * Enable tracing for this request by providing a Tracer.
    * If a Tracer is provided but tracing is already enabled upstack, the Tracer will be ignored.

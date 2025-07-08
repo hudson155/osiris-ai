@@ -1,7 +1,6 @@
 package osiris.chat
 
 import dev.langchain4j.data.message.AiMessage
-import dev.langchain4j.data.message.ChatMessage
 
 /**
  * By default ([Default]), Osiris will run LLM requests in a loop,
@@ -12,11 +11,11 @@ import dev.langchain4j.data.message.ChatMessage
  * If you have a more complex use case, you can implement your own [ExitCondition] instead.
  */
 public fun interface ExitCondition {
-  public fun shouldExit(response: List<ChatMessage>): Boolean
+  public fun shouldExit(state: LlmState): Boolean
 
   public class Default : ExitCondition {
-    override fun shouldExit(response: List<ChatMessage>): Boolean {
-      val lastMessage = response.lastOrNull() ?: return false
+    override fun shouldExit(state: LlmState): Boolean {
+      val lastMessage = state.response.lastOrNull() ?: return false
       if (lastMessage !is AiMessage) return false
       if (lastMessage.hasToolExecutionRequests()) return false
       return true
