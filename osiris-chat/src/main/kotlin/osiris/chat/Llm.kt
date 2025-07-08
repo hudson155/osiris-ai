@@ -37,7 +37,7 @@ internal class Llm(
   @Suppress("CognitiveComplexMethod", "NestedBlockDepth")
   suspend fun execute(): List<ChatMessage> {
     logger.debug { "Started LLM." }
-    var state = LlmState(response = emptyList())
+    var state = LlmState()
     while (true) {
       val messages = messages + state.response
       val lastMessage = messages.lastOrNull()
@@ -49,7 +49,10 @@ internal class Llm(
       } else {
         val chatRequest = buildChatRequest(messages) { chatRequestBlock(state) }
         val aiMessage = chat(chatRequest)
-        state = state.copy(response = state.response + aiMessage)
+        state = state.copy(
+          chatRequestCount = state.chatRequestCount + 1,
+          response = state.response + aiMessage,
+        )
         aiMessage.text()?.let { text ->
           if (responseType == null) return@let
           try {
