@@ -5,6 +5,7 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.model.chat.ChatModel
 import io.kotest.assertions.withClue
 import io.kotest.matchers.booleans.shouldBeTrue
+import kairo.reflect.kairoType
 import osiris.chat.convert
 import osiris.chat.llm
 
@@ -38,7 +39,7 @@ public suspend fun evaluate(
   val response = llm(
     model = model,
     messages = messages + systemMessage,
-    responseType = Eval::class,
+    responseType = kairoType<Eval>(),
   )
   val eval = response.convert<Eval>()
   withClue(eval.failureReason) {

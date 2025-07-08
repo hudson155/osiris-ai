@@ -4,6 +4,7 @@ import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
+import kairo.reflect.kairoType
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.openAi.openAi
@@ -25,7 +26,7 @@ internal class StructuredOutputTest {
     val response = llm(
       model = testModelFactory.openAi("gpt-4.1-nano"),
       messages = messages,
-      responseType = Person::class,
+      responseType = kairoType<Person>(),
       tracer = tracer,
     )
     verifyResponse(response)

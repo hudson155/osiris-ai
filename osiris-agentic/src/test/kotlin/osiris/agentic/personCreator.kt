@@ -1,5 +1,6 @@
 package osiris.agentic
 
+import kairo.reflect.kairoType
 import osiris.openAi.openAi
 import osiris.prompt.Instructions
 
@@ -9,5 +10,5 @@ internal val personCreator: Agent =
       temperature(0.20)
     }
     instructions = Instructions { "Provide a JSON representation of the person matching this description." }
-    responseType = Person::class
+    responseType = kairoType<Person>()
   }

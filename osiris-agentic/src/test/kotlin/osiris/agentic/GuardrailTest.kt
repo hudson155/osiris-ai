@@ -4,7 +4,8 @@ import dev.langchain4j.data.message.UserMessage
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.throwable.shouldHaveMessage
-import kotlin.reflect.KClass
+import kairo.reflect.KairoType
+import kairo.reflect.kairoType
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -25,7 +26,7 @@ internal class GuardrailTest {
     override val instructions: Instructions =
       Instructions { "Is the user asking about provincial capitals?" }
 
-    override val responseType: KClass<Output> = Output::class
+    override val responseType: KairoType<Output> = kairoType<Output>()
   }
 
   internal object Agent : osiris.agentic.Agent("agent", testModelFactory.openAi("gpt-4.1-nano")) {

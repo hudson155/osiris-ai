@@ -3,7 +3,7 @@ package osiris.agentic
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
-import kotlin.reflect.KClass
+import kairo.reflect.KairoType
 import osiris.chat.Tool
 import osiris.prompt.Instructions
 
@@ -14,7 +14,7 @@ internal class AgentImpl(
   model: ChatModel,
   override val instructions: Instructions?,
   override val tools: List<Tool<*>>,
-  override val responseType: KClass<*>?,
+  override val responseType: KairoType<*>?,
   override val inputGuardrails: List<Guardrail>,
   private val llmBlock: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit,
 ) : Agent(name, model) {
@@ -29,7 +29,7 @@ public class AgentBuilder internal constructor(
   public var model: ChatModel? = null
   public var instructions: Instructions? = null
   public val tools: MutableList<Tool<*>> = mutableListOf()
-  public var responseType: KClass<*>? = null
+  public var responseType: KairoType<*>? = null
   public val inputGuardrails: MutableList<Guardrail> = mutableListOf()
   private val llmBlocks: MutableList<ChatRequest.Builder.(response: List<ChatMessage>) -> Unit> = mutableListOf()
 
