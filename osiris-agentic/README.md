@@ -231,7 +231,7 @@ val personCreator =
   agent("person_creator") {
     model = modelFactory.openAi("gpt-4.1-nano")
     instructions = Instructions { "Provide a JSON representation of the person matching this description." }
-    responseType = Person::class
+    responseType = kairoType<Person>()
   }
 ```
 

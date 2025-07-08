@@ -157,7 +157,7 @@ val response = llm(
     UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
     SystemMessage("Provide a JSON representation of the person matching this description."),
   ),
-  responseType = Person::class,
+  responseType = kairoType<Person>(),
 )
 
 response.convert<Person>()

@@ -31,7 +31,7 @@ data class Person(
 )
 ```
 
-Then use it by specifying `responseType = Person::class` in the LLM call.
+Then use it by specifying `responseType = kairoType<Person>()` in the LLM call.
 
 ```kotlin
 val messages = listOf(
@@ -41,7 +41,7 @@ val messages = listOf(
 val flow = llm(
   model = modelFactory.openAi("gpt-4.1-nano"),
   messages = messages,
-  responseType = Person::class,
+  responseType = kairoType<Person>(),
 )
 
 flow.response().convert<Person>()
