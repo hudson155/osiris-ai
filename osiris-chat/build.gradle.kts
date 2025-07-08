@@ -13,7 +13,7 @@ dependencies {
   api(libs.kairoLazySupplier)
   implementation(libs.kairoLogging)
   api(libs.kairoProtectedString)
-  implementation(libs.kairoReflect)
+  api(libs.kairoReflect)
   implementation(libs.kairoUtil)
 
   testImplementation(project(":osiris-evaluator"))

@@ -10,6 +10,7 @@ import dev.langchain4j.model.chat.request.ResponseFormatType
 import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kairo.reflect.KairoType
 import kotlin.reflect.KClass
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
@@ -25,7 +26,7 @@ internal class Llm(
   private val model: ChatModel,
   private val messages: List<ChatMessage>,
   private val tools: List<Tool<*>>,
-  private val responseType: KClass<*>?,
+  private val responseType: KairoType<*>?,
   private val chatRequestBlock: ChatRequest.Builder.(response: List<ChatMessage>) -> Unit,
   private val toolExecutor: ToolExecutor,
   private val exitCondition: ExitCondition,
@@ -78,8 +79,8 @@ internal class Llm(
       }
       if (responseType != null) {
         val jsonSchema = JsonSchema.builder().apply {
-          name(LlmSchema.generateName(responseType))
-          rootElement(LlmSchema.generate(responseType))
+          name(LlmSchema.generateName(responseType.kotlinClass))
+          rootElement(LlmSchema.generate(responseType.kotlinClass))
         }.build()
         val responseFormat = ResponseFormat.builder().apply {
           type(ResponseFormatType.JSON)
@@ -114,10 +115,10 @@ public suspend fun llm(
    */
   tools: List<Tool<*>> = emptyList(),
   /**
-   * Class reference for structured output.
+   * Type for structured output.
    * If not provided, output will be a string.
    */
-  responseType: KClass<*>? = null,
+  responseType: KairoType<*>? = null,
   /**
    * Use this to customize the Langchain4j chat request.
    */

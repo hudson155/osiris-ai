@@ -6,6 +6,7 @@ import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kairo.reflect.KairoType
 import kotlin.reflect.KClass
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -49,10 +50,10 @@ public abstract class Agent(
    */
   protected open val tools: List<Tool<*>> = emptyList()
   /**
-   * Class reference for structured output.
+   * Type for structured output.
    * If not provided, output will be a string.
    */
-  protected open val responseType: KClass<*>? = null
+  protected open val responseType: KairoType<*>? = null
   /**
    * Input guardrails asynchronously validate the agent's input, possibly throwing an exception.
    */
