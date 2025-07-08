@@ -7,7 +7,6 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.reflect.KairoType
-import kotlin.reflect.KClass
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

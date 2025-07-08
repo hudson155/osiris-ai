@@ -11,7 +11,6 @@ import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.reflect.KairoType
-import kotlin.reflect.KClass
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
 import osiris.tracing.TraceEvent
