@@ -6,9 +6,12 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.reflect.KairoType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import osiris.chat.LlmState
 import osiris.chat.Tool
@@ -64,15 +67,14 @@ public abstract class Agent(
 
   public suspend fun execute() {
     val outerExecutionContext = getExecutionContext()
+    val deferred = CoroutineScope(currentCoroutineContext() + SupervisorJob()).async { execute(outerExecutionContext) }
     coroutineScope {
-      buildList {
-        inputGuardrails.forEach { guardrail ->
-          val innerExecutionContext = outerExecutionContext.withMessages(outerExecutionContext.messages)
-          add(async { withContext(innerExecutionContext) { guardrail.execute() } })
-        }
-        add(async { execute(outerExecutionContext) })
+      inputGuardrails.map { guardrail ->
+        val innerExecutionContext = outerExecutionContext.withMessages(outerExecutionContext.messages)
+        return@map async { withContext(innerExecutionContext) { guardrail.execute() } }
       }.awaitAll()
     }
+    deferred.await()
   }
 
   private suspend fun execute(executionContext: ExecutionContext) {
