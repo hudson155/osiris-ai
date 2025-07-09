@@ -30,66 +30,34 @@ internal class Llm(
   private val messages: List<ChatMessage>,
   private val tools: List<Tool<*>>,
   private val responseType: KairoType<*>?,
+  private val options: LlmOptions,
   private val chatRequestBlock: ChatRequest.Builder.(state: LlmState) -> Unit,
   private val toolExecutor: ToolExecutor,
   private val exitCondition: ExitCondition,
 ) {
-  @Suppress("CognitiveComplexMethod", "NestedBlockDepth")
+  private var state: LlmState = LlmState()
+
   suspend fun execute(): List<ChatMessage> {
     logger.debug { "Started LLM." }
-    var state = LlmState()
     while (true) {
-      val messages = messages + state.response
-      val lastMessage = messages.lastOrNull()
+      val lastMessage = (messages + state.response).lastOrNull()
       logger.debug { "Last message: ${lastMessage ?: "null"}." }
       if (exitCondition.shouldExit(state)) break
       if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
         val executionRequests = lastMessage.toolExecutionRequests()
-        state = state.copy(response = state.response + executeTools(executionRequests))
+        executeTools(executionRequests)
       } else {
-        val chatRequest = buildChatRequest(messages) { chatRequestBlock(state) }
-        val aiMessage = chat(chatRequest)
-        state = state.copy(
-          chatRequestCount = state.chatRequestCount + 1,
-          response = state.response + aiMessage,
-        )
-        aiMessage.text()?.let { text ->
-          if (responseType == null) return@let
-          try {
-            llmMapper.kairoRead(text, responseType)
-          } catch (e: MismatchedInputException) {
-            val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
-            state = state.copy(response = state.response + SystemMessage(outputString))
-          }
-        }
+        val chatRequest = buildChatRequest { chatRequestBlock(state) }
+        chat(chatRequest)
       }
     }
     logger.debug { "Ended LLM." }
     return state.response
   }
 
-  private suspend fun executeTools(executionRequests: List<ToolExecutionRequest>): List<ChatMessage> {
-    logger.debug { "Tool execution requests: $executionRequests." }
-    val executionResults = toolExecutor.execute(tools, executionRequests)
-    logger.debug { "Tool execution results: $executionResults." }
-    return executionResults
-  }
-
-  private suspend fun chat(chatRequest: ChatRequest): AiMessage {
-    logger.debug { "Chat request: $chatRequest." }
-    val chatResponse = trace({ ChatEvent.Start(chatRequest) }, { ChatEvent.End(it) }) {
-      model.chat(chatRequest)
-    }
-    logger.debug { "Chat response: $chatResponse." }
-    return chatResponse.aiMessage()
-  }
-
-  private suspend fun buildChatRequest(
-    messages: List<ChatMessage>,
-    chatRequestBlock: ChatRequest.Builder.() -> Unit,
-  ): ChatRequest =
+  private suspend fun buildChatRequest(chatRequestBlock: ChatRequest.Builder.() -> Unit): ChatRequest =
     ChatRequest.builder().apply {
-      messages(messages)
+      messages(messages + state.response)
       if (tools.isNotEmpty()) {
         toolSpecifications(tools.map { it.toolSpecification.get() })
       }
@@ -106,6 +74,42 @@ internal class Llm(
       }
       chatRequestBlock()
     }.build()
+
+  private suspend fun chat(chatRequest: ChatRequest) {
+    logger.debug { "Chat request: $chatRequest." }
+    val chatResponse = trace({ ChatEvent.Start(chatRequest) }, { ChatEvent.End(it) }) {
+      model.chat(chatRequest)
+    }
+    logger.debug { "Chat response: $chatResponse." }
+    val aiMessage = chatResponse.aiMessage()
+    state = state.copy(response = state.response + aiMessage)
+    aiMessage.text()?.let { text ->
+      validateResponse(text)
+    }
+  }
+
+  /**
+   * Attempts deserialization to validate the response schema, discarding the result.
+   */
+  private fun validateResponse(text: String) {
+    if (responseType == null) return
+    state = state.copy(consecutiveResponseTries = state.consecutiveResponseTries + 1)
+    try {
+      llmMapper.kairoRead(text, responseType)
+      state = state.copy(consecutiveResponseTries = 0)
+    } catch (e: MismatchedInputException) {
+      if (state.consecutiveResponseTries >= options.maxConsecutiveResponseTries) throw e
+      val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
+      state = state.copy(response = state.response + SystemMessage(outputString))
+    }
+  }
+
+  private suspend fun executeTools(executionRequests: List<ToolExecutionRequest>) {
+    logger.debug { "Tool execution requests: $executionRequests." }
+    val executionResults = toolExecutor.execute(tools, executionRequests)
+    logger.debug { "Tool execution results: $executionResults." }
+    state = state.copy(response = state.response + executionResults)
+  }
 }
 
 /**
@@ -136,6 +140,11 @@ public suspend fun llm(
    */
   responseType: KairoType<*>? = null,
   /**
+   * The maximum number of consecutive times to try requesting an answer before throwing a fatal exception.
+   * Normally only 1 try will be attempted, but response deserialization failures can cause retries.
+   */
+  maxConsecutiveResponseTries: Int = 3,
+  /**
    * Use this to customize the Langchain4j chat request.
    */
   chatRequestBlock: ChatRequest.Builder.(state: LlmState) -> Unit = {},
@@ -160,6 +169,9 @@ public suspend fun llm(
     messages = messages,
     tools = tools,
     responseType = responseType,
+    options = LlmOptions(
+      maxConsecutiveResponseTries = maxConsecutiveResponseTries,
+    ),
     chatRequestBlock = chatRequestBlock,
     toolExecutor = toolExecutor,
     exitCondition = exitCondition,
