@@ -45,11 +45,10 @@ internal class Llm(
       if (exitCondition.shouldExit(state)) break
       if (lastMessage is AiMessage && lastMessage.hasToolExecutionRequests()) {
         val executionRequests = lastMessage.toolExecutionRequests()
-        state = state.copy(response = state.response + executeTools(executionRequests))
+        executeTools(executionRequests)
       } else {
         val chatRequest = buildChatRequest { chatRequestBlock(state) }
-        val aiMessage = chat(chatRequest)
-        state = state.copy(response = state.response + aiMessage)
+        chat(chatRequest)
       }
     }
     logger.debug { "Ended LLM." }
@@ -76,17 +75,17 @@ internal class Llm(
       chatRequestBlock()
     }.build()
 
-  private suspend fun chat(chatRequest: ChatRequest): AiMessage {
+  private suspend fun chat(chatRequest: ChatRequest) {
     logger.debug { "Chat request: $chatRequest." }
     val chatResponse = trace({ ChatEvent.Start(chatRequest) }, { ChatEvent.End(it) }) {
       model.chat(chatRequest)
     }
     logger.debug { "Chat response: $chatResponse." }
     val aiMessage = chatResponse.aiMessage()
+    state = state.copy(response = state.response + aiMessage)
     aiMessage.text()?.let { text ->
       validateResponse(text)
     }
-    return aiMessage
   }
 
   /**
@@ -94,24 +93,22 @@ internal class Llm(
    */
   private fun validateResponse(text: String) {
     if (responseType == null) return
+    state = state.copy(consecutiveResponseTries = state.consecutiveResponseTries + 1)
     try {
       llmMapper.kairoRead(text, responseType)
       state = state.copy(consecutiveResponseTries = 0)
     } catch (e: MismatchedInputException) {
       if (state.consecutiveResponseTries >= options.maxConsecutiveResponseTries) throw e
       val outputString = listOf(e.message, "Consider retrying.").joinToString("\n\n")
-      state = state.copy(
-        consecutiveResponseTries = state.consecutiveResponseTries + 1,
-        response = state.response + SystemMessage(outputString),
-      )
+      state = state.copy(response = state.response + SystemMessage(outputString))
     }
   }
 
-  private suspend fun executeTools(executionRequests: List<ToolExecutionRequest>): List<ChatMessage> {
+  private suspend fun executeTools(executionRequests: List<ToolExecutionRequest>) {
     logger.debug { "Tool execution requests: $executionRequests." }
     val executionResults = toolExecutor.execute(tools, executionRequests)
     logger.debug { "Tool execution results: $executionResults." }
-    return executionResults
+    state = state.copy(response = state.response + executionResults)
   }
 }
 
