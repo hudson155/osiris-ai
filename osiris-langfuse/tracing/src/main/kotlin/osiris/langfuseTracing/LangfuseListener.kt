@@ -58,6 +58,21 @@ public class LangfuseListener(
   }
 
   public companion object {
+    public fun setUserId(block: suspend () -> String?): Transform =
+      transform@{ batchIngestion ->
+        val userId = block()
+        batchIngestion.copy(
+          batch = batchIngestion.batch.map { ingestionEvent ->
+            if (ingestionEvent !is TraceCreate) return@map ingestionEvent
+            return@map ingestionEvent.copy(
+              body = ingestionEvent.body.copy(
+                userId = userId,
+              ),
+            )
+          },
+        )
+      }
+
     public fun setSessionId(block: suspend () -> String?): Transform =
       transform@{ batchIngestion ->
         val sessionId = block()

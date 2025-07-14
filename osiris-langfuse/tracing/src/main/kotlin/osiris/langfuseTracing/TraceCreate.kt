@@ -13,8 +13,9 @@ internal data class TraceCreate(
     override val id: Uuid,
     val timestamp: Instant,
     val name: String,
-    val metadata: Map<String, Any>,
+    val userId: String?,
     val sessionId: String?,
+    val metadata: Map<String, Any>,
     val input: String?,
     val output: String?,
   ) : IngestionEvent.Body()
