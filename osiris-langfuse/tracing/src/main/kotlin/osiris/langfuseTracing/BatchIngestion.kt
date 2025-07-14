@@ -1,5 +1,5 @@
 package osiris.langfuseTracing
 
-internal data class BatchIngestion(
+public data class BatchIngestion(
   val batch: List<IngestionEvent<*>>,
 )
