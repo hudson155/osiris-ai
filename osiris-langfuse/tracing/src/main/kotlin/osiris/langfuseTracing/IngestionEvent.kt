@@ -12,12 +12,12 @@ import osiris.langfuseTracing.IngestionEvent.Body
   JsonSubTypes.Type(SpanCreate::class, name = "span-create"),
   JsonSubTypes.Type(TraceCreate::class, name = "trace-create"),
 )
-internal sealed class IngestionEvent<T : Body> {
-  abstract val id: Uuid
-  abstract val timestamp: Instant
-  abstract val body: T
+public sealed class IngestionEvent<T : Body> {
+  public abstract val id: Uuid
+  public abstract val timestamp: Instant
+  public abstract val body: T
 
-  internal sealed class Body {
-    abstract val id: Uuid
+  public sealed class Body {
+    public abstract val id: Uuid
   }
 }

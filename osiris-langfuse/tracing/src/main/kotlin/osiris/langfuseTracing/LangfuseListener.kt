@@ -45,7 +45,7 @@ public class LangfuseListener(
   override fun flush() {
     CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
       val (traceId, batchIngestion) = batchBuilder.build() ?: return@launch
-      val body = transforms.fold(batchIngestion) { batchIngestion, transform -> transform(batchIngestion) }
+      val body = transforms.fold(batchIngestion) { acc, transform -> transform(acc) }
       langfuse.client.request {
         method = HttpMethod.Post
         url("api/public/ingestion")
@@ -69,7 +69,7 @@ public class LangfuseListener(
                 sessionId = sessionId,
               ),
             )
-          }
+          },
         )
       }
 
@@ -84,7 +84,7 @@ public class LangfuseListener(
                 metadata = ingestionEvent.body.metadata + metadata,
               ),
             )
-          }
+          },
         )
       }
   }
