@@ -15,8 +15,8 @@ import dev.langchain4j.data.message.UserMessage
   JsonSubTypes.Type(LangfuseMessage.System::class, name = "system"),
   JsonSubTypes.Type(LangfuseMessage.User::class, name = "user"),
 )
-internal sealed class LangfuseMessage {
-  internal data class Assistant(
+public sealed class LangfuseMessage {
+  public data class Assistant(
     val content: String?,
     val toolCalls: List<ToolCall>?,
   ) : LangfuseMessage() {
@@ -24,14 +24,14 @@ internal sealed class LangfuseMessage {
     @JsonSubTypes(
       JsonSubTypes.Type(ToolCall.Function::class, name = "function"),
     )
-    internal sealed class ToolCall {
-      abstract val id: String
+    public sealed class ToolCall {
+      public abstract val id: String
 
-      internal data class Function(
+      public data class Function(
         override val id: String,
         val function: Function,
       ) : ToolCall() {
-        internal data class Function(
+        public data class Function(
           val name: String,
           val arguments: String,
         )
@@ -39,23 +39,23 @@ internal sealed class LangfuseMessage {
     }
   }
 
-  internal data class Tool(
+  public data class Tool(
     val id: String,
     val name: String,
     val content: String,
   ) : LangfuseMessage()
 
-  internal data class System(
+  public data class System(
     val content: String,
   ) : LangfuseMessage()
 
-  internal data class User(
+  public data class User(
     val content: String,
   ) : LangfuseMessage()
 
-  internal companion object {
+  public companion object {
     @Suppress("LongMethod")
-    fun extract(messages: List<ChatMessage>): List<LangfuseMessage> =
+    internal fun extract(messages: List<ChatMessage>): List<LangfuseMessage> =
       messages.mapNotNull { message ->
         when (message) {
           is AiMessage -> run {

@@ -95,6 +95,8 @@ internal class BatchBuilder {
         id = event.spanId,
         timestamp = start.at,
         name = startDetails.name,
+        metadata = emptyMap(),
+        sessionId = null,
         input = startDetails.input,
         output = endDetails.output,
       ),

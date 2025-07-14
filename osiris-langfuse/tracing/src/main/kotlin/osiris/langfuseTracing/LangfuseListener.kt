@@ -25,8 +25,11 @@ import osiris.tracing.TraceEvent
  */
 public class LangfuseListener(
   private val langfuse: Langfuse,
+  private val transforms: List<Transform> = emptyList(),
   private val onCreate: suspend (traceId: Uuid) -> Unit = {},
 ) : Listener {
+  public typealias Transform = suspend (trace: BatchIngestion) -> BatchIngestion
+
   private val batchBuilder: BatchBuilder = BatchBuilder()
 
   override fun event(event: Event) {
@@ -42,14 +45,47 @@ public class LangfuseListener(
   override fun flush() {
     CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
       val (traceId, batchIngestion) = batchBuilder.build() ?: return@launch
+      val body = transforms.fold(batchIngestion) { batchIngestion, transform -> transform(batchIngestion) }
       langfuse.client.request {
         method = HttpMethod.Post
         url("api/public/ingestion")
         contentType(ContentType.Application.Json)
         accept(ContentType.Application.Json)
-        setBody(batchIngestion)
+        setBody(body)
       }
       this@LangfuseListener.onCreate(traceId)
     }
+  }
+
+  public companion object {
+    public fun setSessionId(block: suspend () -> String?): Transform =
+      transform@{ batchIngestion ->
+        val sessionId = block()
+        batchIngestion.copy(
+          batch = batchIngestion.batch.map { ingestionEvent ->
+            if (ingestionEvent !is TraceCreate) return@map ingestionEvent
+            return@map ingestionEvent.copy(
+              body = ingestionEvent.body.copy(
+                sessionId = sessionId,
+              ),
+            )
+          }
+        )
+      }
+
+    public fun appendMetadata(block: suspend () -> Map<String, Any>): Transform =
+      transform@{ batchIngestion ->
+        val metadata = block()
+        batchIngestion.copy(
+          batch = batchIngestion.batch.map { ingestionEvent ->
+            if (ingestionEvent !is TraceCreate) return@map ingestionEvent
+            return@map ingestionEvent.copy(
+              body = ingestionEvent.body.copy(
+                metadata = ingestionEvent.body.metadata + metadata,
+              ),
+            )
+          }
+        )
+      }
   }
 }
