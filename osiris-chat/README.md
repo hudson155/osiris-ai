@@ -5,7 +5,7 @@ See the [**agentic module**](../osiris-agentic) if you're building an agentic fr
 
 ## Installation
 
-`software.airborne.osiris:osiris-chat:0.28.1`
+`software.airborne.osiris:osiris-chat:0.28.2`
 
 <details>
 
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-chat:0.28.1")
+  implementation("software.airborne.osiris:osiris-chat:0.28.2")
 }
 ```
 
