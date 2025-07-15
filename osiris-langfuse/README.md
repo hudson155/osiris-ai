@@ -6,7 +6,7 @@ but a peer module must be installed to see real functionality.
 
 ## Installation
 
-`software.airborne.osiris:osiris-langfuse:0.28.1`
+`software.airborne.osiris:osiris-langfuse:0.28.2`
 
 <details>
 
@@ -24,20 +24,20 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-langfuse:0.28.1")
+  implementation("software.airborne.osiris:osiris-langfuse:0.28.2")
 
   /**
    * Also include at least one of the following peers.
    */
-  implementation("software.airborne.osiris:osiris-langfuse-prompt:0.28.1") 
-  implementation("software.airborne.osiris:osiris-langfuse-tracing:0.28.1")
+  implementation("software.airborne.osiris:osiris-langfuse-prompt:0.28.2") 
+  implementation("software.airborne.osiris:osiris-langfuse-tracing:0.28.2")
 
   /**
    * Also include one of the following,
    * depending on whether you're using the chat module or the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-chat:0.28.1")
-  implementation("software.airborne.osiris:osiris-agentic:0.28.1")
+  implementation("software.airborne.osiris:osiris-chat:0.28.2")
+  implementation("software.airborne.osiris:osiris-agentic:0.28.2")
 }
 ```
 
