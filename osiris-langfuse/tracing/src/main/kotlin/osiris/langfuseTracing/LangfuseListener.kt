@@ -61,44 +61,35 @@ public class LangfuseListener(
     public fun setUserId(block: suspend () -> String?): Transform =
       transform@{ batchIngestion ->
         val userId = block()
-        batchIngestion.copy(
-          batch = batchIngestion.batch.map { ingestionEvent ->
-            if (ingestionEvent !is TraceCreate) return@map ingestionEvent
-            return@map ingestionEvent.copy(
-              body = ingestionEvent.body.copy(
-                userId = userId,
-              ),
-            )
-          },
-        )
+        return@transform transformEvents<TraceCreate> { ingestionEvent ->
+          ingestionEvent.copy(body = ingestionEvent.body.copy(userId = userId))
+        }.invoke(batchIngestion)
       }
 
     public fun setSessionId(block: suspend () -> String?): Transform =
       transform@{ batchIngestion ->
         val sessionId = block()
-        batchIngestion.copy(
-          batch = batchIngestion.batch.map { ingestionEvent ->
-            if (ingestionEvent !is TraceCreate) return@map ingestionEvent
-            return@map ingestionEvent.copy(
-              body = ingestionEvent.body.copy(
-                sessionId = sessionId,
-              ),
-            )
-          },
-        )
+        return@transform transformEvents<TraceCreate> { ingestionEvent ->
+          ingestionEvent.copy(body = ingestionEvent.body.copy(sessionId = sessionId))
+        }.invoke(batchIngestion)
       }
 
     public fun appendMetadata(block: suspend () -> Map<String, Any>): Transform =
       transform@{ batchIngestion ->
         val metadata = block()
+        return@transform transformEvents<TraceCreate> { ingestionEvent ->
+          ingestionEvent.copy(body = ingestionEvent.body.copy(metadata = ingestionEvent.body.metadata + metadata))
+        }.invoke(batchIngestion)
+      }
+
+    public inline fun <reified T : IngestionEvent<*>> transformEvents(
+      crossinline block: suspend (ingestionEvent: T) -> T,
+    ): Transform =
+      transform@{ batchIngestion ->
         batchIngestion.copy(
           batch = batchIngestion.batch.map { ingestionEvent ->
-            if (ingestionEvent !is TraceCreate) return@map ingestionEvent
-            return@map ingestionEvent.copy(
-              body = ingestionEvent.body.copy(
-                metadata = ingestionEvent.body.metadata + metadata,
-              ),
-            )
+            if (ingestionEvent !is T) return@map ingestionEvent
+            return@map block(ingestionEvent)
           },
         )
       }
