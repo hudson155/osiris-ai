@@ -1,6 +1,6 @@
 [versions]
 guava = "33.4.8-jre" # https://github.com/google/guava/releases
-kairo = "5.13.0" # https://github.com/hudson155/kairo/releases
+kairo = "5.15.0" # https://github.com/hudson155/kairo/releases
 langchain = "1.1.0" # https://github.com/langchain4j/langchain4j/releases
 
 [libraries]
