@@ -25,11 +25,9 @@ import osiris.tracing.TraceEvent
  */
 public class LangfuseListener(
   private val langfuse: Langfuse,
-  private val transforms: List<Transform> = emptyList(),
+  private val transforms: List<LangfuseTransform> = emptyList(),
   private val onCreate: suspend (traceId: Uuid) -> Unit = {},
 ) : Listener {
-  public typealias Transform = suspend (trace: BatchIngestion) -> BatchIngestion
-
   private val batchBuilder: BatchBuilder = BatchBuilder()
 
   override fun event(event: Event) {
@@ -58,7 +56,7 @@ public class LangfuseListener(
   }
 
   public companion object {
-    public fun setUserId(block: suspend () -> String?): Transform =
+    public fun setUserId(block: suspend () -> String?): LangfuseTransform =
       transform@{ batchIngestion ->
         val userId = block()
         return@transform transformEvents<TraceCreate> { ingestionEvent ->
@@ -66,7 +64,7 @@ public class LangfuseListener(
         }.invoke(batchIngestion)
       }
 
-    public fun setSessionId(block: suspend () -> String?): Transform =
+    public fun setSessionId(block: suspend () -> String?): LangfuseTransform =
       transform@{ batchIngestion ->
         val sessionId = block()
         return@transform transformEvents<TraceCreate> { ingestionEvent ->
@@ -74,7 +72,7 @@ public class LangfuseListener(
         }.invoke(batchIngestion)
       }
 
-    public fun appendMetadata(block: suspend () -> Map<String, Any>): Transform =
+    public fun appendMetadata(block: suspend () -> Map<String, Any>): LangfuseTransform =
       transform@{ batchIngestion ->
         val metadata = block()
         return@transform transformEvents<TraceCreate> { ingestionEvent ->
@@ -84,7 +82,7 @@ public class LangfuseListener(
 
     public inline fun <reified T : IngestionEvent<*>> transformEvents(
       crossinline block: suspend (ingestionEvent: T) -> T,
-    ): Transform =
+    ): LangfuseTransform =
       transform@{ batchIngestion ->
         batchIngestion.copy(
           batch = batchIngestion.batch.map { ingestionEvent ->
