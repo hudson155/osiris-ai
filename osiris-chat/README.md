@@ -236,7 +236,7 @@ executing Tool calls until the LLM responds.
 This means several round trips to the LLM.
 
 If you want to exit at a different point,
-implement a custom `ExitCondition`.
+implement a custom `LlmExitCondition`.
 
 ### Tracing
 

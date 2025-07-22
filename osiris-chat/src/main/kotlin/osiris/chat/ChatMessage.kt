@@ -8,7 +8,7 @@ import osiris.core.llmMapper
 /**
  * Helper to convert responses to the appropriate type.
  *
- * This assumes the last message is an [AiMessage], which is true with [ExitCondition.Default].
+ * This assumes the last message is an [AiMessage], which is true with [LlmExitCondition.Default].
  * If you customize the exit condition, this helper might not work.
  */
 public inline fun <reified Response : Any> List<ChatMessage>.convert(): Response {

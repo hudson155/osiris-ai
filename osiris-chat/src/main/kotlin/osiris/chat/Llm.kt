@@ -33,7 +33,7 @@ internal class Llm(
   private val options: LlmOptions,
   private val chatRequestBlock: ChatRequest.Builder.(state: LlmState) -> Unit,
   private val toolExecutor: ToolExecutor,
-  private val exitCondition: ExitCondition,
+  private val exitCondition: LlmExitCondition,
 ) {
   private var state: LlmState = LlmState()
 
@@ -161,7 +161,7 @@ public suspend fun llm(
    * By default, Osiris will run LLM requests in a loop,
    * executing Tool calls until the LLM responds.
    */
-  exitCondition: ExitCondition = ExitCondition.Default(),
+  exitCondition: LlmExitCondition = LlmExitCondition.Default(),
 ): List<ChatMessage> {
   require(messages.isNotEmpty()) { "Messages cannot be empty." }
   val llm = Llm(

@@ -8,12 +8,12 @@ import dev.langchain4j.data.message.AiMessage
  * This means several round trips to the LLM.
  *
  * This approach should fit simple use cases.
- * If you have a more complex use case, you can implement your own [ExitCondition] instead.
+ * If you have a more complex use case, you can implement your own [LlmExitCondition] instead.
  */
-public fun interface ExitCondition {
+public fun interface LlmExitCondition {
   public fun shouldExit(state: LlmState): Boolean
 
-  public class Default : ExitCondition {
+  public class Default : LlmExitCondition {
     override fun shouldExit(state: LlmState): Boolean {
       val lastMessage = state.response.lastOrNull() ?: return false
       if (lastMessage !is AiMessage) return false
