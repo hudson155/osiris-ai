@@ -6,6 +6,6 @@ import osiris.chat.LlmState
 internal class AgentLlmExitCondition : LlmExitCondition {
   private val delegate: LlmExitCondition = LlmExitCondition.Default()
 
-  override fun shouldExit(state: LlmState): Boolean =
+  override suspend fun shouldExit(state: LlmState): Boolean =
     delegate.shouldExit(state)
 }

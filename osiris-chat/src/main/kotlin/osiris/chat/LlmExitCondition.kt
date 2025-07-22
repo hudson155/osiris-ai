@@ -11,10 +11,10 @@ import dev.langchain4j.data.message.AiMessage
  * If you have a more complex use case, you can implement your own [LlmExitCondition] instead.
  */
 public fun interface LlmExitCondition {
-  public fun shouldExit(state: LlmState): Boolean
+  public suspend fun shouldExit(state: LlmState): Boolean
 
   public class Default : LlmExitCondition {
-    override fun shouldExit(state: LlmState): Boolean {
+    override suspend fun shouldExit(state: LlmState): Boolean {
       val lastMessage = state.response.lastOrNull() ?: return false
       if (lastMessage !is AiMessage) return false
       if (lastMessage.hasToolExecutionRequests()) return false
