@@ -63,7 +63,8 @@ public abstract class Agent(
   /**
    * Use this to customize the Langchain4j chat request.
    */
-  protected open fun ChatRequest.Builder.llm(state: LlmState): Unit = Unit
+  protected open fun ChatRequest.Builder.llm(state: LlmState): Unit =
+    Unit
 
   public suspend fun execute() {
     val outerExecutionContext = getExecutionContext()
