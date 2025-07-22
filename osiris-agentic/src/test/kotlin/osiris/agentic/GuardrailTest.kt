@@ -53,7 +53,7 @@ internal class GuardrailTest {
     shouldThrow<IllegalArgumentException> {
       network.run(
         messages = listOf(UserMessage("What's 2+2?")),
-      )
+      ).response
     }.shouldHaveMessage("User is not asking about provincial capitals.")
   }
 
@@ -61,7 +61,7 @@ internal class GuardrailTest {
   fun `guardrail not hit`(): Unit = runTest {
     val response = network.run(
       messages = listOf(UserMessage("What's the capital of Saskatchewan (province in Canada)?")),
-    )
+    ).response
     response.convert<String>().lowercase().shouldContain("regina")
   }
 }

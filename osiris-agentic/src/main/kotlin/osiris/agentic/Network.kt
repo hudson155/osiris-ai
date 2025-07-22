@@ -44,11 +44,11 @@ public abstract class Network(
   public suspend fun run(
     messages: List<ChatMessage>,
     listeners: List<Listener> = emptyList(),
-  ): List<ChatMessage> =
+  ): NetworkState =
     withTracer(
       tracer = createTracer(listeners),
       start = { TraceEvent.Start("Trace: $name", deriveText(messages)) },
-      end = { response -> TraceEvent.End(response?.let { deriveText(it) }) },
+      end = { response -> TraceEvent.End(response?.let { deriveText(it.response) }) },
     ) {
       logger.debug { "Started execution: (name=$name, messages=$messages)." }
       val executionContext = ExecutionContext(
@@ -60,7 +60,7 @@ public abstract class Network(
         executionContext.execute()
       }
       logger.debug { "Ended execution: (name=$name, response=${executionContext.state.get().response})." }
-      return@withTracer executionContext.state.get().response
+      return@withTracer executionContext.state.get()
     }
 
   private fun createTracer(listeners: List<Listener>): Tracer? {
