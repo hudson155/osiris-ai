@@ -63,7 +63,8 @@ public abstract class Agent(
   /**
    * Use this to customize the Langchain4j chat request.
    */
-  protected open fun ChatRequest.Builder.llm(state: LlmState): Unit = Unit
+  protected open fun ChatRequest.Builder.llm(state: LlmState): Unit =
+    Unit
 
   public suspend fun execute() {
     val outerExecutionContext = getExecutionContext()
@@ -92,6 +93,7 @@ public abstract class Agent(
         tools = tools,
         responseType = responseType,
         chatRequestBlock = { state -> llm(state) },
+        // TODO: Handoff exit condition
       )
       logger.debug { "Ended Agent: (name=$name, response=$response)." }
       return@trace response

@@ -13,5 +13,6 @@ public object EventLogger : Listener {
     logger.info { "Osiris event: $event." }
   }
 
-  override fun flush(): Unit = Unit
+  override fun flush(): Unit =
+    Unit
 }
