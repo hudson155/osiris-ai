@@ -93,7 +93,6 @@ public abstract class Agent(
         tools = tools,
         responseType = responseType,
         chatRequestBlock = { state -> llm(state) },
-        // TODO: Handoff exit condition
       )
       logger.debug { "Ended Agent: (name=$name, response=$response)." }
       return@trace response
