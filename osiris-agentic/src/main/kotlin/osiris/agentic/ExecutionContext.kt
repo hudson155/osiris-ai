@@ -16,7 +16,7 @@ import kotlinx.coroutines.currentCoroutineContext
 public class ExecutionContext internal constructor(
   public val network: Network,
   currentAgent: Agent,
-  internal val messages: List<ChatMessage>,
+  public val messages: List<ChatMessage>,
 ) : AbstractCoroutineContextElement(ExecutionContext) {
   public var currentAgent: Agent = currentAgent
     private set
