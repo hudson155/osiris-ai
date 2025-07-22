@@ -13,7 +13,7 @@ import osiris.schema.LlmSchema
  */
 public class Consult(
   agentName: String,
-) : Tool<Input>("consult_$agentName") {
+) : Tool<Input>(prefix + agentName) {
   public data class Input(
     @LlmSchema.Description("The message to the agent.")
     val message: String,
@@ -43,5 +43,9 @@ public class Consult(
       innerExecutionContext.execute()
     }
     return innerExecutionContext.response.convert()
+  }
+
+  public companion object {
+    public const val prefix: String = "consult_"
   }
 }
