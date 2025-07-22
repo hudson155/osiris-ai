@@ -48,7 +48,7 @@ public abstract class Network(
     withTracer(
       tracer = createTracer(listeners),
       start = { TraceEvent.Start("Trace: $name", deriveText(messages)) },
-      end = { response -> TraceEvent.End(response?.let { deriveText(it.response) }) },
+      end = { response -> TraceEvent.End(response?.let { deriveText(it.messages) }) },
     ) {
       logger.debug { "Started execution: (name=$name, messages=$messages)." }
       val executionContext = ExecutionContext(
@@ -59,7 +59,7 @@ public abstract class Network(
       withContext(executionContext) {
         executionContext.execute()
       }
-      logger.debug { "Ended execution: (name=$name, response=${executionContext.state.get().response})." }
+      logger.debug { "Ended execution: (name=$name, response=${executionContext.state.get().messages})." }
       return@withTracer executionContext.state.get()
     }
 
