@@ -35,7 +35,7 @@ public abstract class Agent(
   /**
    * An Agent is associated with a specific model.
    */
-  protected val model: ChatModel,
+  public val model: ChatModel,
 ) {
   /**
    * The description is not used by the Agent itself.
@@ -66,7 +66,7 @@ public abstract class Agent(
   protected open fun ChatRequest.Builder.llm(state: LlmState): Unit =
     Unit
 
-  public suspend fun execute() {
+  internal suspend fun execute() {
     val outerExecutionContext = getExecutionContext()
     val deferred = CoroutineScope(currentCoroutineContext() + SupervisorJob()).async { execute(outerExecutionContext) }
     coroutineScope {

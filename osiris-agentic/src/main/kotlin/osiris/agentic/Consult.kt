@@ -12,7 +12,7 @@ import osiris.schema.LlmSchema
  * Use this Tool to allow an Agent to consult another Agent.
  */
 public class Consult(
-  private val agentName: String,
+  public val agentName: String,
 ) : Tool<Input>("consult_$agentName") {
   public data class Input(
     @LlmSchema.Description("The message to the agent.")
