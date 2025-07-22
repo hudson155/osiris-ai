@@ -15,7 +15,7 @@ public class Guardrail(
     val innerExecutionContext = outerExecutionContext.inner(agentName = agentName)
     withContext(innerExecutionContext) {
       innerExecutionContext.execute()
-      validate(innerExecutionContext.response)
+      validate(innerExecutionContext.state.get().response)
     }
   }
 }

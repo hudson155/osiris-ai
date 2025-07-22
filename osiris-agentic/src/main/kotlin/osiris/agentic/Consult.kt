@@ -42,7 +42,7 @@ public class Consult(
     withContext(innerExecutionContext) {
       innerExecutionContext.execute()
     }
-    return innerExecutionContext.response.convert()
+    return innerExecutionContext.state.get().response.convert()
   }
 
   public companion object {

@@ -1,6 +1,7 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.ChatMessage
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.currentCoroutineContext
@@ -18,14 +19,10 @@ public class ExecutionContext internal constructor(
   currentAgent: Agent,
   public val messages: List<ChatMessage>,
 ) : AbstractCoroutineContextElement(ExecutionContext) {
-  public var currentAgent: Agent = currentAgent
-    private set
-
-  public var response: List<ChatMessage> = emptyList()
-    internal set
+  public val state: AtomicReference<NetworkState> = AtomicReference(NetworkState(currentAgent, emptyList()))
 
   public suspend fun execute() {
-    currentAgent.execute()
+    state.get().currentAgent.execute()
   }
 
   public fun inner(
