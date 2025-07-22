@@ -87,6 +87,7 @@ public abstract class Agent(
         tools = tools,
         responseType = responseType,
         chatRequestBlock = { state -> llm(state) },
+        exitCondition = AgentLlmExitCondition(),
       )
       logger.debug { "Ended Agent: (name=$name, response=$response)." }
       return@trace response
