@@ -36,7 +36,10 @@ public abstract class Network(
    */
   protected open val listeners: List<Listener> = emptyList()
 
-  internal val agents: Map<String, Agent> = agents.associateBy { it.name }
+  private val agents: Map<String, Agent> = agents.associateBy { it.name }
+
+  public fun getAgent(agentName: String): Agent =
+    requireNotNull(agents[agentName]) { "No Agent with name $agentName." }
 
   public suspend fun run(
     messages: List<ChatMessage>,
@@ -48,10 +51,13 @@ public abstract class Network(
       end = { response -> TraceEvent.End(response?.let { deriveText(it) }) },
     ) {
       logger.debug { "Started execution: (name=$name, messages=$messages)." }
-      val executionContext = ExecutionContext(this@Network, messages)
+      val executionContext = ExecutionContext(
+        network = this@Network,
+        currentAgent = getAgent(entrypoint),
+        messages = messages,
+      )
       withContext(executionContext) {
-        val agent = executionContext.getAgent(entrypoint)
-        return@withContext agent.execute()
+        executionContext.execute()
       }
       logger.debug { "Ended execution: (name=$name, response=${executionContext.response})." }
       return@withTracer executionContext.response

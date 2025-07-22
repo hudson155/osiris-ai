@@ -14,18 +14,28 @@ import kotlinx.coroutines.currentCoroutineContext
  * Although this class is public, API stability is not guaranteed.
  */
 public class ExecutionContext internal constructor(
-  private val network: Network,
+  public val network: Network,
+  currentAgent: Agent,
   public val messages: List<ChatMessage>,
 ) : AbstractCoroutineContextElement(ExecutionContext) {
-  internal val response: MutableList<ChatMessage> = mutableListOf()
+  public var currentAgent: Agent = currentAgent
+    private set
 
-  internal fun getAgent(agentName: String): Agent =
-    requireNotNull(network.agents[agentName]) { "No Agent with name $agentName." }
+  public var response: List<ChatMessage> = emptyList()
+    internal set
 
-  internal fun withMessages(messages: List<ChatMessage>): ExecutionContext =
+  public suspend fun execute() {
+    currentAgent.execute()
+  }
+
+  public fun inner(
+    agentName: String,
+    messages: List<ChatMessage>? = null,
+  ): ExecutionContext =
     ExecutionContext(
       network = network,
-      messages = messages,
+      currentAgent = network.getAgent(agentName),
+      messages = messages ?: this.messages,
     )
 
   public companion object : CoroutineContext.Key<ExecutionContext>

@@ -12,7 +12,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.withContext
 import osiris.chat.LlmState
 import osiris.chat.Tool
 import osiris.chat.deriveText
@@ -69,12 +68,7 @@ public abstract class Agent(
   internal suspend fun execute() {
     val outerExecutionContext = getExecutionContext()
     val deferred = CoroutineScope(currentCoroutineContext() + SupervisorJob()).async { execute(outerExecutionContext) }
-    coroutineScope {
-      inputGuardrails.map { guardrail ->
-        val innerExecutionContext = outerExecutionContext.withMessages(outerExecutionContext.messages)
-        return@map async { withContext(innerExecutionContext) { guardrail.execute() } }
-      }.awaitAll()
-    }
+    coroutineScope { inputGuardrails.map { async { it.execute() } }.awaitAll() }
     deferred.await()
   }
 

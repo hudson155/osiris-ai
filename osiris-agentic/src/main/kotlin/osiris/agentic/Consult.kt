@@ -12,7 +12,7 @@ import osiris.schema.LlmSchema
  * Use this Tool to allow an Agent to consult another Agent.
  */
 public class Consult(
-  public val agentName: String,
+  agentName: String,
 ) : Tool<Input>("consult_$agentName") {
   public data class Input(
     @LlmSchema.Description("The message to the agent.")
@@ -24,7 +24,7 @@ public class Consult(
   private val agent: LazySupplier<Agent> =
     LazySupplier {
       with(getExecutionContext()) {
-        getAgent(agentName)
+        network.getAgent(agentName)
       }
     }
 
@@ -38,9 +38,9 @@ public class Consult(
     val executionContext = getExecutionContext()
     val agent = agent.get()
     val messages = listOf(UserMessage(input.message))
-    val innerExecutionContext = executionContext.withMessages(messages)
+    val innerExecutionContext = executionContext.inner(agentName = agent.name, messages = messages)
     withContext(innerExecutionContext) {
-      agent.execute()
+      innerExecutionContext.execute()
     }
     return innerExecutionContext.response.convert()
   }
