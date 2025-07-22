@@ -13,7 +13,7 @@ import kotlinx.coroutines.currentCoroutineContext
  *
  * Although this class is public, API stability is not guaranteed.
  */
-public class ExecutionContext(
+public class ExecutionContext internal constructor(
   private val network: Network,
   public val messages: List<ChatMessage>,
 ) : AbstractCoroutineContextElement(ExecutionContext) {

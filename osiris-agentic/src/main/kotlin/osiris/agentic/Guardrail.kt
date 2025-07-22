@@ -6,7 +6,7 @@ import dev.langchain4j.data.message.ChatMessage
  * Input guardrails asynchronously validate the agent's input, possibly throwing an exception.
  */
 public class Guardrail(
-  private val agentName: String,
+  public val agentName: String,
   private val validate: (messages: List<ChatMessage>) -> Unit,
 ) {
   public suspend fun execute() {
