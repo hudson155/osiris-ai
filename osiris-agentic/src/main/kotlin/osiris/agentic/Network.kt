@@ -59,8 +59,8 @@ public abstract class Network(
       withContext(executionContext) {
         executionContext.execute()
       }
-      logger.debug { "Ended execution: (name=$name, response=${executionContext.response})." }
-      return@withTracer executionContext.response
+      logger.debug { "Ended execution: (name=$name, response=${executionContext.state.get().response})." }
+      return@withTracer executionContext.state.get().response
     }
 
   private fun createTracer(listeners: List<Listener>): Tracer? {
