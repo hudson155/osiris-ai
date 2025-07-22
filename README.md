@@ -52,7 +52,7 @@ val response = network.run(
   ),
 )
 
-response.convert<String>()
+response.messages.convert<String>()
 // Your order with ID ord_0 has not been shipped yet, and your order with ID ord_1 is currently in transit.
 ```
 

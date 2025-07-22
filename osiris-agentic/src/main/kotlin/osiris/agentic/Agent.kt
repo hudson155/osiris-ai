@@ -92,7 +92,7 @@ public abstract class Agent(
       logger.debug { "Ended Agent: (name=$name, response=$response)." }
       return@trace response
     }
-    executionContext.state.updateAndGet { it.copy(response = it.response + response) }
+    executionContext.state.updateAndGet { it.copy(messages = it.messages + response) }
   }
 
   override fun toString(): String =

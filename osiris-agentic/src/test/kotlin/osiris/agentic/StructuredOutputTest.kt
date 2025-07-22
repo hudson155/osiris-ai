@@ -25,7 +25,7 @@ internal class StructuredOutputTest {
 
   @Test
   fun test(): Unit = runTest {
-    val response = network.run(messages)
+    val response = network.run(messages).messages
     verifyResponse(response)
   }
 
