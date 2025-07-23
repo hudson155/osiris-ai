@@ -10,6 +10,7 @@ import osiris.schema.LlmSchema
  */
 public class Handoff(
   agentName: String,
+  description: LazySupplier<String?> = LazySupplier { null },
 ) : Tool<Input>(prefix + agentName) {
   public data class Input(
     @LlmSchema.Description("A progress update for the user, regarding their original question.")
@@ -32,6 +33,7 @@ public class Handoff(
 
   override val description: LazySupplier<String?> =
     LazySupplier {
+      description.get()?.let { return@LazySupplier it }
       val agent = agent.get()
       return@LazySupplier agent.description
     }
