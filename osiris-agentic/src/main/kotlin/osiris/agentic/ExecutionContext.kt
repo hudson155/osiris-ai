@@ -19,10 +19,20 @@ public class ExecutionContext internal constructor(
   currentAgent: Agent,
   public val messages: List<ChatMessage>,
 ) : AbstractCoroutineContextElement(ExecutionContext) {
-  public val state: AtomicReference<NetworkState> = AtomicReference(NetworkState(currentAgent, emptyList()))
+  public val state: AtomicReference<NetworkState> =
+    AtomicReference(
+      NetworkState(
+        currentAgent = currentAgent,
+        llmExit = false,
+        messages = emptyList(),
+      ),
+    )
 
   public suspend fun execute() {
-    state.get().currentAgent.execute()
+    do {
+      val state = this.state.updateAndGet { it.copy(llmExit = false) }
+      state.currentAgent.execute()
+    } while (this.state.get().llmExit)
   }
 
   public fun inner(
