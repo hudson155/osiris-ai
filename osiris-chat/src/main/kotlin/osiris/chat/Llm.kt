@@ -59,7 +59,7 @@ internal class Llm(
     ChatRequest.builder().apply {
       messages(messages + state.response)
       if (tools.isNotEmpty()) {
-        toolSpecifications(tools.map { it.toolSpecification.get() })
+        toolSpecifications(tools.filter { it.include.get() }.map { it.toolSpecification.get() })
       }
       if (responseType != null) {
         val jsonSchema = JsonSchema.builder().apply {

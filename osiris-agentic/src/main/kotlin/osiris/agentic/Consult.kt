@@ -28,6 +28,13 @@ public class Consult(
       }
     }
 
+  override val include: LazySupplier<Boolean> =
+    LazySupplier {
+      with(getExecutionContext()) {
+        network.getAgentOrNull(agentName) != null
+      }
+    }
+
   override val description: LazySupplier<String?> =
     LazySupplier {
       val agent = agent.get()

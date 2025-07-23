@@ -39,7 +39,10 @@ public abstract class Network(
   private val agents: Map<String, Agent> = agents.associateBy { it.name }
 
   public fun getAgent(agentName: String): Agent =
-    requireNotNull(agents[agentName]) { "No Agent with name $agentName." }
+    requireNotNull(getAgentOrNull(agentName)) { "No Agent with name $agentName." }
+
+  public fun getAgentOrNull(agentName: String): Agent? =
+    agents[agentName]
 
   public suspend fun run(
     messages: List<ChatMessage>,
