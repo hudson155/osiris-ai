@@ -24,6 +24,9 @@ public abstract class Tool<in Input : Any>(
 ) {
   private val inputType: KairoType<Input> = KairoType.from(Tool::class, 0, this::class)
 
+  public open val include: LazySupplier<Boolean> =
+    LazySupplier { true }
+
   public open val description: LazySupplier<out String?> =
     LazySupplier { null }
 
