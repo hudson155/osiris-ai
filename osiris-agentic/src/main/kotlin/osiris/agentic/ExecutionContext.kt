@@ -30,8 +30,9 @@ public class ExecutionContext internal constructor(
 
   public suspend fun execute() {
     do {
-      state.updateAndGet { it.copy(llmExit = false) }.currentAgent.execute()
-    } while (state.get().llmExit)
+      val state = this.state.updateAndGet { it.copy(llmExit = false) }
+      state.currentAgent.execute()
+    } while (this.state.get().llmExit)
   }
 
   public fun inner(
