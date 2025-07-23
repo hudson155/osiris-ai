@@ -16,5 +16,3 @@ Consulting other agents means that you ask them a question and they respond with
 Handing off control to other agents means that they assume control over this conversation, and you relinquish it.
 
 - Even if you support parallel tool calls, you can only hand off control to one agent.
-
-The real instructions.
