@@ -54,7 +54,7 @@ public abstract class Network(
       logger.debug { "Started execution: (name=$name, messages=$messages)." }
       val executionContext = ExecutionContext(
         network = this@Network,
-        currentAgent = getAgent(checkNotNull(this.entrypoint ?: entrypoint) { "No entrypoint specified." }),
+        currentAgent = getAgent(checkNotNull(entrypoint ?: this.entrypoint) { "No entrypoint specified." }),
         messages = messages,
       )
       withContext(executionContext) {
