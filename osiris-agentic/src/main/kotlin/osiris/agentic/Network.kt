@@ -29,7 +29,7 @@ public abstract class Network(
   /**
    * The name of the Agent to be visited first.
    */
-  protected abstract val entrypoint: String
+  protected open val entrypoint: String? = null
 
   /**
    * Listeners help with tracing.
@@ -46,6 +46,7 @@ public abstract class Network(
 
   public suspend fun run(
     messages: List<ChatMessage>,
+    entrypoint: String? = null,
     listeners: List<Listener> = emptyList(),
   ): NetworkState =
     withTracer(
@@ -56,7 +57,7 @@ public abstract class Network(
       logger.debug { "Started execution: (name=$name, messages=$messages)." }
       val executionContext = ExecutionContext(
         network = this@Network,
-        currentAgent = getAgent(entrypoint),
+        currentAgent = getAgent(checkNotNull(entrypoint ?: this.entrypoint) { "No entrypoint specified." }),
         messages = messages,
       )
       withContext(executionContext) {
