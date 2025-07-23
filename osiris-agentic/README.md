@@ -9,7 +9,7 @@ helps deliver better responses faster responses, and improved traceability.
 
 ## Installation
 
-`software.airborne.osiris:osiris-agentic:0.31.0`
+`software.airborne.osiris:osiris-agentic:0.31.1`
 
 <details>
 
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-agentic:0.31.0")
+  implementation("software.airborne.osiris:osiris-agentic:0.31.1")
 }
 ```
 
