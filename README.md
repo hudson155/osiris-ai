@@ -33,6 +33,7 @@ This is similar to the [OpenAI Agents SDK](https://openai.github.io/openai-agent
 or [LangGraph](https://langchain-ai.github.io/langgraph/).
 Splitting up workloads across a Network of smaller, more focused Agents
 helps deliver better responses faster responses, and improved traceability.
+The agentic framework also supports input Guardrails.
 
 ```kotlin
 val ecommerceChatbot = agent("ecommerce_chatbot") { ... }
@@ -198,7 +199,8 @@ for a Langfuse quickstart.
 Please follow the [Kairo style guide](https://github.com/hudson155/kairo/blob/main/docs/style-guide.md).
 
 - **Product terminology:**
-  - Treat Osiris _Agents_, _Tools_, and _Networks_ as proper nouns (the first letter should be capitalized).
+  - Treat Osiris _Agents_, _Tools_, _Guardrails_, and _Networks_
+    as proper nouns (the first letter should be capitalized).
   - Treat Osiris _Listeners_ and _Tracers_ as proper nouns (the first letter should be capitalized).
 
 ## Releasing
