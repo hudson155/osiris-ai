@@ -1,4 +1,6 @@
-# Osiris AI
+---
+layout: default
+---
 
 > [Osiris](https://en.wikipedia.org/wiki/Osiris)
 > was the god of fertility, agriculture, the afterlife, the dead, resurrection, life, and vegetation
@@ -8,9 +10,9 @@
 
 ### Quick links
 
-- Simple LLM usage
-- Agentic framework
-- Text embeddings
+- [Simple LLM usage](./simple-llm-usage.md)
+- [Agentic framework](./agentic-framework.md)
+- [Text embeddings](./text-embeddings.md)
 
 ### Maintainers
 
