@@ -10,8 +10,8 @@ public object Score {
   @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "dataType")
   @JsonSubTypes(
     JsonSubTypes.Type(Creator.BooleanScore::class, name = "BOOLEAN"),
-    JsonSubTypes.Type(Creator.BooleanScore::class, name = "CATEGORICAL"),
-    JsonSubTypes.Type(Creator.BooleanScore::class, name = "NUMERIC"),
+    JsonSubTypes.Type(Creator.CategoricalScore::class, name = "CATEGORICAL"),
+    JsonSubTypes.Type(Creator.NumericScore::class, name = "NUMERIC"),
   )
   public sealed class Creator<T : Any> {
     public abstract val sessionId: String?
