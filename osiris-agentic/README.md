@@ -242,6 +242,59 @@ val personCreator =
   }
 ```
 
+### Guardrails
+
+Guardrails (sometimes called "input guardrails") validate inputs in parallel with agent execution.
+
+```kotlin
+@LlmSchema.SchemaName("ecommerce_guardrail")
+data class EcommerceGuardrailOutput(
+  @LlmSchema.Description(
+    "A brief explanation of why the user's question is or is not considered related to the ecommerce industry.",
+  )
+  val explanation: String,
+  @LlmSchema.Description(
+    "True only if the user's question is related to the ecommerce industry. False otherwise.",
+  )
+  val isRelatedToEcommerceIndustry: Boolean,
+)
+
+val ecommerceGuardrail =
+  agent("ecommerce_guardrail") {
+    model = modelFactory.openAi("gpt-4.1-nano")
+    instructions = instructionsBuilder.build {
+      """
+        # Your role and task
+        
+        Do not answer the user's question. Instead, determine if the user's question is related to the ecommerce industry.
+      """.trimIndent()
+    }
+    responseType = kairoType<EcommerceGuardrailOutput>()
+  }
+```
+
+Now define the chatbot using this Guardrail.
+
+```kotlin
+val ecommerceChatbot =
+  agent("ecommerce_chatbot") {
+    model = modelFactory.openAi("gpt-4.1-nano")
+    instructions = instructionsBuilder.build {
+      """
+        # Your role and task
+        
+        You are the store's really smart AI assistant.
+        Your task is to use tools to comprehensively answer the user's question.
+      """.trimIndent()
+    }
+    tools += Guardrail("ecommerce_guardrail") { messages ->
+      val output = messages.convert<EcommerceGuardrailOutput>()
+      if (!output.isRelatedToEcommerceIndustry) throw GuardrailException(output)
+    }
+    tools += Consult("ecommerce_order_tracker")
+  }
+```
+
 ### Tracing
 
 You can add tracing by adding Listeners to the Network
