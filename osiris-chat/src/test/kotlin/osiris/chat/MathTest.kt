@@ -17,16 +17,18 @@ internal class MathTest {
   )
 
   @Test
-  fun test(): Unit = runTest {
-    val tracer = tracer {
-      listener(EventLogger)
+  fun test() {
+    runTest {
+      val tracer = tracer {
+        listener(EventLogger)
+      }
+      val response = llm(
+        model = testModelFactory.openAi("gpt-4.1-nano"),
+        messages = messages,
+        tracer = tracer,
+      )
+      verifyResponse(response)
     }
-    val response = llm(
-      model = testModelFactory.openAi("gpt-4.1-nano"),
-      messages = messages,
-      tracer = tracer,
-    )
-    verifyResponse(response)
   }
 
   private fun verifyResponse(response: List<ChatMessage>) {

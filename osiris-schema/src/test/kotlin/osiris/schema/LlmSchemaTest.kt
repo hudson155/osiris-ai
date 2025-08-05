@@ -154,294 +154,318 @@ internal class LlmSchemaTest {
   )
 
   @Test
-  fun `non-data object`(): Unit = runTest {
-    shouldThrow<LlmSchema.LlmSchemaException> {
-      LlmSchema.generate(NonDataObject::class)
-    }.shouldHaveMessage(
-      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataObject." +
-        " Must be a data class or data object.",
-    )
+  fun `non-data object`() {
+    runTest {
+      shouldThrow<LlmSchema.LlmSchemaException> {
+        LlmSchema.generate(NonDataObject::class)
+      }.shouldHaveMessage(
+        "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataObject." +
+          " Must be a data class or data object.",
+      )
+    }
   }
 
   @Test
-  fun `data object`(): Unit = runTest {
-    LlmSchema.generate(DataObject::class).shouldBe(
-      JsonObjectSchema.builder()
-        .build(),
-    )
+  fun `data object`() {
+    runTest {
+      LlmSchema.generate(DataObject::class).shouldBe(
+        JsonObjectSchema.builder()
+          .build(),
+      )
+    }
   }
 
   @Test
-  fun `non-data class`(): Unit = runTest {
-    shouldThrow<LlmSchema.LlmSchemaException> {
-      LlmSchema.generate(NonDataClass::class)
-    }.shouldHaveMessage(
-      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataClass." +
-        " Must be a data class or data object.",
-    )
+  fun `non-data class`() {
+    runTest {
+      shouldThrow<LlmSchema.LlmSchemaException> {
+        LlmSchema.generate(NonDataClass::class)
+      }.shouldHaveMessage(
+        "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.NonDataClass." +
+          " Must be a data class or data object.",
+      )
+    }
   }
 
   @Test
-  fun `data class, default`(): Unit = runTest {
-    LlmSchema.generate(DataClassDefault::class).shouldBe(
-      JsonObjectSchema.builder().apply {
-        addBooleanProperty("myBoolean")
-        addIntegerProperty("myBigInteger")
-        addEnumProperty("myEnum", listOf("Android", "Flip", "Iphone"))
-        addIntegerProperty("myInt")
-        addIntegerProperty("myLong")
-        addIntegerProperty("myShort")
-        addNumberProperty("myBigDecimal")
-        addNumberProperty("myDouble")
-        addNumberProperty("myFloat")
-        addStringProperty("myKairoId")
-        addStringProperty("myString")
-        required(
-          "myBoolean",
-          "myBigInteger",
-          "myEnum",
-          "myInt",
-          "myLong",
-          "myShort",
-          "myBigDecimal",
-          "myDouble",
-          "myFloat",
-          "myKairoId",
-          "myString",
-        )
-      }.build(),
-    )
+  fun `data class, default`() {
+    runTest {
+      LlmSchema.generate(DataClassDefault::class).shouldBe(
+        JsonObjectSchema.builder().apply {
+          addBooleanProperty("myBoolean")
+          addIntegerProperty("myBigInteger")
+          addEnumProperty("myEnum", listOf("Android", "Flip", "Iphone"))
+          addIntegerProperty("myInt")
+          addIntegerProperty("myLong")
+          addIntegerProperty("myShort")
+          addNumberProperty("myBigDecimal")
+          addNumberProperty("myDouble")
+          addNumberProperty("myFloat")
+          addStringProperty("myKairoId")
+          addStringProperty("myString")
+          required(
+            "myBoolean",
+            "myBigInteger",
+            "myEnum",
+            "myInt",
+            "myLong",
+            "myShort",
+            "myBigDecimal",
+            "myDouble",
+            "myFloat",
+            "myKairoId",
+            "myString",
+          )
+        }.build(),
+      )
+    }
   }
 
   @Test
-  fun `data class, nested`(): Unit = runTest {
-    LlmSchema.generate(DataClassNested::class).shouldBe(
-      JsonObjectSchema.builder().apply {
-        addStringProperty("myParam")
-        addStringProperty("myString", "My string.")
-        addProperty(
-          "myOuter",
-          JsonObjectSchema.builder().apply {
-            description("My outer.")
-            addStringProperty("myParam")
-            addStringProperty("myString", "My string.")
-            addProperty(
-              "myInner",
-              JsonObjectSchema.builder().apply {
-                description("My inner.")
-                addStringProperty("myParam")
-                addStringProperty("myString", "My string.")
-                addProperty(
-                  "myParamList",
-                  JsonArraySchema.builder().apply {
-                    items(JsonStringSchema.builder().build())
-                  }.build(),
-                )
-                addProperty(
-                  "myStringList",
-                  JsonArraySchema.builder().apply {
-                    description("My string list.")
-                    items(
-                      JsonStringSchema.builder().apply {
-                        description("Each string.")
-                      }.build(),
-                    )
-                  }.build(),
-                )
-                required(
-                  "myParam",
-                  "myString",
-                  "myParamList",
-                  "myStringList",
-                )
-              }.build(),
-            )
-            addProperty(
-              "myParamList",
-              JsonArraySchema.builder().apply {
-                items(JsonStringSchema.builder().build())
-              }.build(),
-            )
-            addProperty(
-              "myStringList",
-              JsonArraySchema.builder().apply {
-                description("My string list.")
-                items(
-                  JsonStringSchema.builder().apply {
-                    description("Each string.")
-                  }.build(),
-                )
-              }.build(),
-            )
-            addProperty(
-              "myInnerList",
-              JsonArraySchema.builder().apply {
-                description("My inner list.")
-                items(
-                  JsonObjectSchema.builder().apply {
-                    description("Each inner.")
-                    addStringProperty("myParam")
-                    addStringProperty("myString", "My string.")
-                    addProperty(
-                      "myParamList",
-                      JsonArraySchema.builder().apply {
-                        items(JsonStringSchema.builder().build())
-                      }.build(),
-                    )
-                    addProperty(
-                      "myStringList",
-                      JsonArraySchema.builder().apply {
-                        description("My string list.")
-                        items(
-                          JsonStringSchema.builder().apply {
-                            description("Each string.")
-                          }.build(),
-                        )
-                      }.build(),
-                    )
-                    required(
-                      "myParam",
-                      "myString",
-                      "myParamList",
-                      "myStringList",
-                    )
-                  }.build(),
-                )
-              }.build(),
-            )
-            required(
-              "myParam",
-              "myString",
-              "myInner",
-              "myParamList",
-              "myStringList",
-              "myInnerList",
-            )
-          }.build(),
-        )
-        required(
-          "myParam",
-          "myString",
-          "myOuter",
-        )
-      }.build(),
-    )
+  fun `data class, nested`() {
+    runTest {
+      LlmSchema.generate(DataClassNested::class).shouldBe(
+        JsonObjectSchema.builder().apply {
+          addStringProperty("myParam")
+          addStringProperty("myString", "My string.")
+          addProperty(
+            "myOuter",
+            JsonObjectSchema.builder().apply {
+              description("My outer.")
+              addStringProperty("myParam")
+              addStringProperty("myString", "My string.")
+              addProperty(
+                "myInner",
+                JsonObjectSchema.builder().apply {
+                  description("My inner.")
+                  addStringProperty("myParam")
+                  addStringProperty("myString", "My string.")
+                  addProperty(
+                    "myParamList",
+                    JsonArraySchema.builder().apply {
+                      items(JsonStringSchema.builder().build())
+                    }.build(),
+                  )
+                  addProperty(
+                    "myStringList",
+                    JsonArraySchema.builder().apply {
+                      description("My string list.")
+                      items(
+                        JsonStringSchema.builder().apply {
+                          description("Each string.")
+                        }.build(),
+                      )
+                    }.build(),
+                  )
+                  required(
+                    "myParam",
+                    "myString",
+                    "myParamList",
+                    "myStringList",
+                  )
+                }.build(),
+              )
+              addProperty(
+                "myParamList",
+                JsonArraySchema.builder().apply {
+                  items(JsonStringSchema.builder().build())
+                }.build(),
+              )
+              addProperty(
+                "myStringList",
+                JsonArraySchema.builder().apply {
+                  description("My string list.")
+                  items(
+                    JsonStringSchema.builder().apply {
+                      description("Each string.")
+                    }.build(),
+                  )
+                }.build(),
+              )
+              addProperty(
+                "myInnerList",
+                JsonArraySchema.builder().apply {
+                  description("My inner list.")
+                  items(
+                    JsonObjectSchema.builder().apply {
+                      description("Each inner.")
+                      addStringProperty("myParam")
+                      addStringProperty("myString", "My string.")
+                      addProperty(
+                        "myParamList",
+                        JsonArraySchema.builder().apply {
+                          items(JsonStringSchema.builder().build())
+                        }.build(),
+                      )
+                      addProperty(
+                        "myStringList",
+                        JsonArraySchema.builder().apply {
+                          description("My string list.")
+                          items(
+                            JsonStringSchema.builder().apply {
+                              description("Each string.")
+                            }.build(),
+                          )
+                        }.build(),
+                      )
+                      required(
+                        "myParam",
+                        "myString",
+                        "myParamList",
+                        "myStringList",
+                      )
+                    }.build(),
+                  )
+                }.build(),
+              )
+              required(
+                "myParam",
+                "myString",
+                "myInner",
+                "myParamList",
+                "myStringList",
+                "myInnerList",
+              )
+            }.build(),
+          )
+          required(
+            "myParam",
+            "myString",
+            "myOuter",
+          )
+        }.build(),
+      )
+    }
   }
 
   @Test
-  fun `data class, polymorphic`(): Unit = runTest {
-    LlmSchema.generate(DataClassPolymorphic::class).shouldBe(
-      JsonObjectSchema.builder().apply {
-        addProperty(
-          "vehicle",
-          JsonAnyOfSchema.builder().apply {
-            anyOf(
-              JsonObjectSchema.builder().apply {
-                addEnumProperty("type", listOf("Car"))
-                addStringProperty("model")
-                addStringProperty("plate")
-                addIntegerProperty("capacity")
-                required(
-                  "type",
-                  "model",
-                  "plate",
-                  "capacity",
-                )
-              }.build(),
-              JsonObjectSchema.builder().apply {
-                addEnumProperty("type", listOf("Motorcycle"))
-                addStringProperty("plate")
-                required(
-                  "type",
-                  "plate",
-                )
-              }.build(),
-              JsonObjectSchema.builder().apply {
-                addEnumProperty("type", listOf("Bicycle"))
-                required("type")
-              }.build(),
-            )
-          }.build(),
-        )
-        required("vehicle")
-      }.build(),
-    )
+  fun `data class, polymorphic`() {
+    runTest {
+      LlmSchema.generate(DataClassPolymorphic::class).shouldBe(
+        JsonObjectSchema.builder().apply {
+          addProperty(
+            "vehicle",
+            JsonAnyOfSchema.builder().apply {
+              anyOf(
+                JsonObjectSchema.builder().apply {
+                  addEnumProperty("type", listOf("Car"))
+                  addStringProperty("model")
+                  addStringProperty("plate")
+                  addIntegerProperty("capacity")
+                  required(
+                    "type",
+                    "model",
+                    "plate",
+                    "capacity",
+                  )
+                }.build(),
+                JsonObjectSchema.builder().apply {
+                  addEnumProperty("type", listOf("Motorcycle"))
+                  addStringProperty("plate")
+                  required(
+                    "type",
+                    "plate",
+                  )
+                }.build(),
+                JsonObjectSchema.builder().apply {
+                  addEnumProperty("type", listOf("Bicycle"))
+                  required("type")
+                }.build(),
+              )
+            }.build(),
+          )
+          required("vehicle")
+        }.build(),
+      )
+    }
   }
 
   @Test
-  fun `data class, unsupported type`(): Unit = runTest {
-    shouldThrow<LlmSchema.LlmSchemaException> {
-      LlmSchema.generate(DataClassUnsupportedType::class)
-    }.shouldHaveMessage(
-      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedType." +
-        " Missing @Type and the type could not be inferred" +
-        " for property myByte.",
-    )
+  fun `data class, unsupported type`() {
+    runTest {
+      shouldThrow<LlmSchema.LlmSchemaException> {
+        LlmSchema.generate(DataClassUnsupportedType::class)
+      }.shouldHaveMessage(
+        "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedType." +
+          " Missing @Type and the type could not be inferred" +
+          " for property myByte.",
+      )
+    }
   }
 
   @Test
-  fun `data class, type specified`(): Unit = runTest {
-    LlmSchema.generate(DataClassTypeSpecified::class).shouldBe(
-      JsonObjectSchema.builder().apply {
-        addBooleanProperty("myBoolean")
-        addIntegerProperty("myInteger")
-        addNumberProperty("myNumber")
-        addStringProperty("myString")
-        required(
-          "myBoolean",
-          "myInteger",
-          "myNumber",
-          "myString",
-        )
-      }.build(),
-    )
+  fun `data class, type specified`() {
+    runTest {
+      LlmSchema.generate(DataClassTypeSpecified::class).shouldBe(
+        JsonObjectSchema.builder().apply {
+          addBooleanProperty("myBoolean")
+          addIntegerProperty("myInteger")
+          addNumberProperty("myNumber")
+          addStringProperty("myString")
+          required(
+            "myBoolean",
+            "myInteger",
+            "myNumber",
+            "myString",
+          )
+        }.build(),
+      )
+    }
   }
 
   @Test
-  fun `data class, type overridden`(): Unit = runTest {
-    LlmSchema.generate(DataClassTypeOverridden::class).shouldBe(
-      JsonObjectSchema.builder().apply {
-        addStringProperty("myParam")
-        required("myParam")
-      }.build(),
-    )
+  fun `data class, type overridden`() {
+    runTest {
+      LlmSchema.generate(DataClassTypeOverridden::class).shouldBe(
+        JsonObjectSchema.builder().apply {
+          addStringProperty("myParam")
+          required("myParam")
+        }.build(),
+      )
+    }
   }
 
   @Test
-  fun `data class, unsupported overridden type`(): Unit = runTest {
-    shouldThrow<LlmSchema.LlmSchemaException> {
-      LlmSchema.generate(DataClassUnsupportedOverriddenType::class)
-    }.shouldHaveMessage(
-      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedOverriddenType." +
-        " Specified unsupported type byte for property myParam.",
-    )
+  fun `data class, unsupported overridden type`() {
+    runTest {
+      shouldThrow<LlmSchema.LlmSchemaException> {
+        LlmSchema.generate(DataClassUnsupportedOverriddenType::class)
+      }.shouldHaveMessage(
+        "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassUnsupportedOverriddenType." +
+          " Specified unsupported type byte for property myParam.",
+      )
+    }
   }
 
   @Test
-  fun `data class, with descriptions`(): Unit = runTest {
-    LlmSchema.generate(DataClassWithDescriptions::class).shouldBe(
-      JsonObjectSchema.builder().apply {
-        addBooleanProperty("myBoolean", "My boolean.")
-        addIntegerProperty("myInt", "My int.")
-        addNumberProperty("myDouble", "My double.")
-        addStringProperty("myString", "My string.")
-        required(
-          "myBoolean",
-          "myInt",
-          "myDouble",
-          "myString",
-        )
-      }.build(),
-    )
+  fun `data class, with descriptions`() {
+    runTest {
+      LlmSchema.generate(DataClassWithDescriptions::class).shouldBe(
+        JsonObjectSchema.builder().apply {
+          addBooleanProperty("myBoolean", "My boolean.")
+          addIntegerProperty("myInt", "My int.")
+          addNumberProperty("myDouble", "My double.")
+          addStringProperty("myString", "My string.")
+          required(
+            "myBoolean",
+            "myInt",
+            "myDouble",
+            "myString",
+          )
+        }.build(),
+      )
+    }
   }
 
   @Test
-  fun `data class, optional param`(): Unit = runTest {
-    shouldThrow<LlmSchema.LlmSchemaException> {
-      LlmSchema.generate(DataClassOptionalParam::class)
-    }.shouldHaveMessage(
-      "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassOptionalParam." +
-        " myBoolean must not be optional.",
-    )
+  fun `data class, optional param`() {
+    runTest {
+      shouldThrow<LlmSchema.LlmSchemaException> {
+        LlmSchema.generate(DataClassOptionalParam::class)
+      }.shouldHaveMessage(
+        "Failed to generate LLM schema for osiris.schema.LlmSchemaTest.DataClassOptionalParam." +
+          " myBoolean must not be optional.",
+      )
+    }
   }
 }

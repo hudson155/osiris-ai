@@ -11,44 +11,52 @@ import osiris.core.llmMapper
 
 internal class ToolTest {
   @Test
-  fun name(): Unit = runTest {
-    WeatherTool.name.shouldBe("weather")
+  fun name() {
+    runTest {
+      WeatherTool.name.shouldBe("weather")
+    }
   }
 
   @Test
-  fun description(): Unit = runTest {
-    WeatherTool.description.get().shouldBe("Gets the weather.")
+  fun description() {
+    runTest {
+      WeatherTool.description.get().shouldBe("Gets the weather.")
+    }
   }
 
   @Test
-  fun toolSpecification(): Unit = runTest {
-    WeatherTool.toolSpecification.get()
-      .shouldBe(
-        ToolSpecification.builder().apply {
-          name("weather")
-          description("Gets the weather.")
-          parameters(
-            JsonObjectSchema.builder().apply {
-              addStringProperty("location", "The city to get the weather for. Only the city name.")
-              required("location")
-            }.build(),
-          )
-        }.build(),
-      )
+  fun toolSpecification() {
+    runTest {
+      WeatherTool.toolSpecification.get()
+        .shouldBe(
+          ToolSpecification.builder().apply {
+            name("weather")
+            description("Gets the weather.")
+            parameters(
+              JsonObjectSchema.builder().apply {
+                addStringProperty("location", "The city to get the weather for. Only the city name.")
+                required("location")
+              }.build(),
+            )
+          }.build(),
+        )
+    }
   }
 
   @Test
-  fun invoke(): Unit = runTest {
-    WeatherTool.execute(WeatherTool.Input(location = "Calgary"))
-      .let { llmMapper.kairoRead<WeatherTool.Output>(it) }
-      .shouldBe(WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
+  fun invoke() {
+    runTest {
+      WeatherTool.execute(WeatherTool.Input(location = "Calgary"))
+        .let { llmMapper.kairoRead<WeatherTool.Output>(it) }
+        .shouldBe(WeatherTool.Output(temperature = "15 degrees Celsius", conditions = "Sunny"))
 
-    WeatherTool.execute(WeatherTool.Input(location = "Edmonton"))
-      .let { llmMapper.kairoRead<WeatherTool.Output>(it) }
-      .shouldBe(WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
+      WeatherTool.execute(WeatherTool.Input(location = "Edmonton"))
+        .let { llmMapper.kairoRead<WeatherTool.Output>(it) }
+        .shouldBe(WeatherTool.Output(temperature = "-30 degrees Celsius", conditions = "Snowing"))
 
-    shouldFailWithMessage("Unknown location: New York.") {
-      WeatherTool.execute(WeatherTool.Input("New York"))
+      shouldFailWithMessage("Unknown location: New York.") {
+        WeatherTool.execute(WeatherTool.Input("New York"))
+      }
     }
   }
 }
