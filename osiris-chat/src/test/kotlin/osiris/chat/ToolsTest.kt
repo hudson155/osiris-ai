@@ -16,17 +16,19 @@ internal class ToolsTest {
     )
 
   @Test
-  fun test(): Unit = runTest {
-    val tracer = tracer {
-      listener(EventLogger)
+  fun test() {
+    runTest {
+      val tracer = tracer {
+        listener(EventLogger)
+      }
+      val response = llm(
+        model = testModelFactory.openAi("gpt-4.1-nano"),
+        messages = messages,
+        tools = listOf(WeatherTool),
+        tracer = tracer,
+      )
+      verifyResponse(response)
     }
-    val response = llm(
-      model = testModelFactory.openAi("gpt-4.1-nano"),
-      messages = messages,
-      tools = listOf(WeatherTool),
-      tracer = tracer,
-    )
-    verifyResponse(response)
   }
 
   private suspend fun verifyResponse(response: List<ChatMessage>) {

@@ -42,20 +42,22 @@ Use this within a test.
 
 ```kotlin
 @Test
-fun test(): Unit = runTest {
-  val response = llm(
-    model = modelFactory.openAi("gpt-4.1-nano"),
-    messages = listOf(
-      UserMessage("What's the weather in Calgary?"),
-    ),
-    tools = listOf(WeatherTool()),
-  )
+fun test() {
+  runTest {
+    val response = llm(
+      model = modelFactory.openAi("gpt-4.1-nano"),
+      messages = listOf(
+        UserMessage("What's the weather in Calgary?"),
+      ),
+      tools = listOf(WeatherTool()),
+    )
 
-  evaluate(
-    model = modelFactory.openAi("o4-mini"),
-    messages = messages + response,
-    criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
-  )
+    evaluate(
+      model = modelFactory.openAi("o4-mini"),
+      messages = messages + response,
+      criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
+    )
+  }
 }
 ```
 

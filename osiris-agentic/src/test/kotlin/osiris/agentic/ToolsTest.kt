@@ -24,9 +24,11 @@ internal class ToolsTest {
     )
 
   @Test
-  fun test(): Unit = runTest {
-    val response = network.run(messages).messages
-    verifyResponse(response)
+  fun test() {
+    runTest {
+      val response = network.run(messages).messages
+      verifyResponse(response)
+    }
   }
 
   private suspend fun verifyResponse(response: List<ChatMessage>) {

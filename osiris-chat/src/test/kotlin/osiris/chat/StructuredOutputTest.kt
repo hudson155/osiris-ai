@@ -19,17 +19,19 @@ internal class StructuredOutputTest {
     )
 
   @Test
-  fun test(): Unit = runTest {
-    val tracer = tracer {
-      listener(EventLogger)
+  fun test() {
+    runTest {
+      val tracer = tracer {
+        listener(EventLogger)
+      }
+      val response = llm(
+        model = testModelFactory.openAi("gpt-4.1-nano"),
+        messages = messages,
+        responseType = kairoType<Person>(),
+        tracer = tracer,
+      )
+      verifyResponse(response)
     }
-    val response = llm(
-      model = testModelFactory.openAi("gpt-4.1-nano"),
-      messages = messages,
-      responseType = kairoType<Person>(),
-      tracer = tracer,
-    )
-    verifyResponse(response)
   }
 
   private fun verifyResponse(response: List<ChatMessage>) {
