@@ -11,7 +11,11 @@ Many of the classes you'll use with Osiris
 (`ChatModel`, `ChatMessage`, `ChatRequest`, `ChatResponse`, etc.)
 are actually from Langchain4j.
 
-## [Simple LLM usage](https://github.com/hudson155/osiris-ai/wiki/Simple-LLM-usage)
+## Documentation
+
+[See the GitHub wiki](https://github.com/hudson155/osiris-ai/wiki) for complete documentation.
+
+### [Simple LLM usage](https://github.com/hudson155/osiris-ai/wiki/Simple-LLM-usage)
 
 The `llm()` function enables simple LLM interaction from anywhere in your code.
 
