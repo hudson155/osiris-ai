@@ -20,14 +20,14 @@ internal class CompileTest {
     runTest {
       val instructions = Instructions {
         """
-        The odds of the Oilers winning tonight are {{oilersOdds}}.
-        And their odds of winning the Stanley Cup are {{oilers-odds-of-stanley-cup}}.
-        If they win tonight, the odds of them winning the Stanley Cup become {{oilers_odds_if_win_tonight}}.
-        
-        The odds of the Panthers winning tonight are {{ panthersOdds }}.
-        And their odds of winning the Stanley Cup are {{ panthers-odds-of-stanley-cup }}.
-        If they lose tonight, the odds of them winning the Stanley Cup become {{ panthers_odds_if_lose_tonight }}.
-      """.trimIndent()
+          The odds of the Oilers winning tonight are {{oilersOdds}}.
+          And their odds of winning the Stanley Cup are {{oilers-odds-of-stanley-cup}}.
+          If they win tonight, the odds of them winning the Stanley Cup become {{oilers_odds_if_win_tonight}}.
+          
+          The odds of the Panthers winning tonight are {{ panthersOdds }}.
+          And their odds of winning the Stanley Cup are {{ panthers-odds-of-stanley-cup }}.
+          If they lose tonight, the odds of them winning the Stanley Cup become {{ panthers_odds_if_lose_tonight }}.
+        """.trimIndent()
       }
       instructions.compile {
         put("oilersOdds", "42.8%")
@@ -38,14 +38,14 @@ internal class CompileTest {
         put("panthers_odds_if_lose_tonight", "48.4%")
       }.get().shouldBe(
         """
-        The odds of the Oilers winning tonight are 42.8%.
-        And their odds of winning the Stanley Cup are 21.8%.
-        If they win tonight, the odds of them winning the Stanley Cup become 51.6%.
-        
-        The odds of the Panthers winning tonight are 57.2%.
-        And their odds of winning the Stanley Cup are 78.2%.
-        If they lose tonight, the odds of them winning the Stanley Cup become 48.4%.
-      """.trimIndent(),
+          The odds of the Oilers winning tonight are 42.8%.
+          And their odds of winning the Stanley Cup are 21.8%.
+          If they win tonight, the odds of them winning the Stanley Cup become 51.6%.
+          
+          The odds of the Panthers winning tonight are 57.2%.
+          And their odds of winning the Stanley Cup are 78.2%.
+          If they lose tonight, the odds of them winning the Stanley Cup become 48.4%.
+        """.trimIndent(),
       )
     }
   }
