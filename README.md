@@ -4,18 +4,21 @@
 > was the god of fertility, agriculture, the afterlife, the dead, resurrection, life, and vegetation
 > in ancient Egyptian religion.
 
-**Osiris AI** enables easy & robust LLM integration from Kotlin.
-There are 2 different interaction patterns.
+**Osiris AI** enables simple & robust LLM interaction from Kotlin.
 
-### Chat module
+Osiris is built atop [Langchain4j](https://github.com/langchain4j/langchain4j).
+Many of the classes you'll use with Osiris
+(`ChatModel`, `ChatMessage`, `ChatRequest`, `ChatResponse`, etc.)
+are actually from Langchain4j.
 
-Osiris's [chat module](./osiris-chat) favors simplicity,
-supporting basic Kotlin-idiomatic LLM interaction.
+## [Simple LLM usage](https://github.com/hudson155/osiris-ai/wiki/Simple-LLM-usage)
+
+The `llm()` function enables simple LLM interaction from anywhere in your code.
 
 ```kotlin
 val model = modelFactory.openAi("gpt-4.1-nano")
 val messages = listOf(
-   UserMessage("What's 2+2?"),
+  UserMessage("What's 2+2?"),
 )
 
 val response = llm(model, messages)
@@ -24,167 +27,7 @@ response.convert<String>()
 // 2 + 2 equals 4.
 ```
 
-Visit the [chat module](./osiris-chat)'s documentation for more details.
-
-### Agentic framework
-
-Osiris's [agentic framework](./osiris-agentic) lets you build complex systems.
-This is similar to the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
-or [LangGraph](https://langchain-ai.github.io/langgraph/).
-Splitting up workloads across a Network of smaller, more focused Agents
-helps deliver better responses faster responses, and improved traceability.
-The agentic framework also supports input Guardrails.
-
-```kotlin
-val ecommerceChatbot = agent("ecommerce_chatbot") { ... }
-
-val ecommerceOrderTracker = agent("ecommerce_order_tracker") { ... }
-
-val network =
-  network("network") {
-    entrypoint = ecommerceChatbot.name
-    agents += ecommerceChatbot
-    agents += ecommerceOrderTracker
-  }
-
-val response = network.run(
-  messages = listOf(
-    UserMessage("Where are my orders? The IDs are ord_0 and ord_1."),
-  ),
-)
-
-response.messages.convert<String>()
-// Your order with ID ord_0 has not been shipped yet, and your order with ID ord_1 is currently in transit.
-```
-
-Visit the [agentic framework](./osiris-agentic)'s documentation for more details.
-
-## Installation
-
-`software.airborne.osiris:osiris-chat:0.32.0`\
-or `software.airborne.osiris:osiris-agentic:0.32.0`
-
-<details>
-
-<summary>Gradle</summary>
-
-```kotlin
-plugins {
-  id("com.google.cloud.artifactregistry.gradle-plugin")
-}
-
-repositories {
-  maven {
-    url = uri("artifactregistry://us-central1-maven.pkg.dev/airborne-software/maven")
-  }
-}
-
-dependencies {
-   /**
-    * Include one of the following,
-    * depending on whether you're using the chat module or the agentic framework.
-    */
-  implementation("software.airborne.osiris:osiris-chat:0.32.0")
-   implementation("software.airborne.osiris:osiris-agentic:0.32.0")
-}
-```
-
-</details>
-
-## Features
-
-These features are supported by both
-the [chat module](./osiris-chat) and the [agentic framework](./osiris-agentic).
-Specifics on how to use either of those interaction patterns can be found in the respective documentation.
-
-### Automatic schema generation
-
-Osiris supports automatic LLM (OpenAPI) **schema generation** for **structured output** and **tool calls**,
-so you don't need to manage schemas yourself.
-
-A typical schema looks like this
-
-```kotlin
-@LlmSchema.SchemaName("person") // Required!
-data class Person(
-  @LlmSchema.Description("Their full name.") // Optional additional context for the LLM.
-  val name: String,
-  val age: Int,
-)
-```
-
-In addition to primitives,
-automatic schema generation also supports
-**lists**, **nested objects**, and **polymorphism**.
-
-See [osiris-schema](./osiris-schema)
-for full documentation.
-
-### Tools
-
-To make Tools available to the LLM,
-extend the `Tool` class.
-
-- More details for [osiris-chat](./osiris-chat/README.md#using-tools)
-- More details for [osiris-agentic](./osiris-agentic/README.md#tool)
-
-### Structured output
-
-Structured output is supported through [osiris-schema](./osiris-schema).
-
-- More details for [osiris-chat](./osiris-chat/README.md#structured-output)
-- More details for [osiris-agentic](./osiris-agentic/README.md#structured-output)
-
-### Prompt management
-
-```kotlin
-val instructions = Instructions { "The odds of the Oilers winning tonight are {{odds}}." }
-instructions.compile {
-  put("odds", "42.8%")
-}
-// The odds of the Oilers winning tonight are 42.8%.
-```
-
-See [osiris-prompt](./osiris-prompt)
-for full documentation.
-
-### Evals
-
-`evaluate()` lets you write basic evals.
-
-```kotlin
-@Test
-fun test() {
-  runTest {
-    val response = llm(
-      model = modelFactory.openAi("gpt-4.1-nano"),
-      messages = listOf(
-        UserMessage("What's the weather in Calgary?"),
-      ),
-      tools = listOf(WeatherTool()),
-    )
-
-    evaluate(
-      model = modelFactory.openAi("o4-mini"),
-      messages = messages + response,
-      criteria = "Should say that the weather in Calgary is 15 degrees Celsius and sunny.",
-    )
-  }
-}
-```
-
-See [osiris-evaluator](./osiris-evaluator)
-for full documentation.
-
-### Tracing
-
-You can add arbitrary listeners to LLM requests and agentic executions,
-as well as pipe those listeners to tracing tools such as Langfuse.
-
-See [osiris-tracing](./osiris-tracing)
-for general tracing documentation,
-or [osiris-langfuse-tracing](./osiris-langfuse/tracing)
-for a Langfuse quickstart.
+Learn more about [Simple LLM usage](https://github.com/hudson155/osiris-ai/wiki/Simple-LLM-usage).
 
 ## Project information
 
