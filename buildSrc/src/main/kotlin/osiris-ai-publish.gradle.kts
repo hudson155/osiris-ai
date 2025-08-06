@@ -28,6 +28,15 @@ publishing {
       }
       version = "0.32.0"
       from(components["java"])
+      pom {
+        licenses {
+          license {
+            name.set("The Apache License, Version 2.0")
+            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+            distribution.set("repo")
+          }
+        }
+      }
     }
   }
 }
