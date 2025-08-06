@@ -10,7 +10,7 @@ Note: Custom events are not yet supported by this module.
 
 ## Installation
 
-`software.airborne.osiris:osiris-langfuse-tracing:0.32.0`
+`software.airborne.osiris:osiris-langfuse-tracing:0.32.1`
 
 <details>
 
@@ -28,14 +28,14 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-langfuse:0.32.0")
-  implementation("software.airborne.osiris:osiris-langfuse-tracing:0.32.0")
+  implementation("software.airborne.osiris:osiris-langfuse:0.32.1")
+  implementation("software.airborne.osiris:osiris-langfuse-tracing:0.32.1")
 
   /**
    * Also include the following,
    * assuming you're using the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-agentic:0.32.0") 
+  implementation("software.airborne.osiris:osiris-agentic:0.32.1") 
 }
 ```
 
