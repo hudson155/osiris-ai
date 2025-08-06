@@ -61,8 +61,8 @@ Visit the [agentic framework](./osiris-agentic)'s documentation for more details
 
 ## Installation
 
-`software.airborne.osiris:osiris-chat:0.32.0`\
-or `software.airborne.osiris:osiris-agentic:0.32.0`
+`software.airborne.osiris:osiris-chat:0.32.1`\
+or `software.airborne.osiris:osiris-agentic:0.32.1`
 
 <details>
 
@@ -84,8 +84,8 @@ dependencies {
     * Include one of the following,
     * depending on whether you're using the chat module or the agentic framework.
     */
-  implementation("software.airborne.osiris:osiris-chat:0.32.0")
-   implementation("software.airborne.osiris:osiris-agentic:0.32.0")
+  implementation("software.airborne.osiris:osiris-chat:0.32.1")
+   implementation("software.airborne.osiris:osiris-agentic:0.32.1")
 }
 ```
 

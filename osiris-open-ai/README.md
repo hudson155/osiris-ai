@@ -4,7 +4,7 @@ Simple quality of life DSL for OpenAI.
 
 ## Installation
 
-`software.airborne.osiris:osiris-open-ai:0.32.0`
+`software.airborne.osiris:osiris-open-ai:0.32.1`
 
 <details>
 
@@ -22,14 +22,14 @@ repositories {
 }
 
 dependencies {
-  implementation("software.airborne.osiris:osiris-open-ai:0.32.0")
+  implementation("software.airborne.osiris:osiris-open-ai:0.32.1")
 
   /**
    * Also include one of the following,
    * depending on whether you're using the chat module or the agentic framework.
    */
-  implementation("software.airborne.osiris:osiris-chat:0.32.0")
-  implementation("software.airborne.osiris:osiris-agentic:0.32.0")
+  implementation("software.airborne.osiris:osiris-chat:0.32.1")
+  implementation("software.airborne.osiris:osiris-agentic:0.32.1")
 }
 ```
 
