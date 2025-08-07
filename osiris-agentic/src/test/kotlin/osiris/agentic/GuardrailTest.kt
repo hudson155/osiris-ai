@@ -1,6 +1,7 @@
 package osiris.agentic
 
 import dev.langchain4j.data.message.UserMessage
+import dev.langchain4j.model.chat.ChatModel
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.throwable.shouldHaveMessage
@@ -17,20 +18,26 @@ import osiris.tracing.EventLogger
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class GuardrailTest {
-  internal object InputGuardrail : osiris.agentic.Agent("input_guardrail", testModelFactory.openAi("gpt-4.1-nano")) {
+  internal object InputGuardrail : osiris.agentic.Agent("input_guardrail") {
     @LlmSchema.SchemaName("input_guardrail")
     internal data class Output(
       val isUserAskingAboutProvincialCapitals: Boolean,
     )
 
-    override val instructions: Instructions =
-      Instructions { "Is the user asking about provincial capitals?" }
-
     override val responseType: KairoType<Output> = kairoType<Output>()
+
+    override suspend fun model(): ChatModel =
+      testModelFactory.openAi("gpt-4.1-nano")
+
+    override suspend fun instructions(): Instructions =
+      Instructions { "Is the user asking about provincial capitals?" }
   }
 
-  internal object Agent : osiris.agentic.Agent("agent", testModelFactory.openAi("gpt-4.1-nano")) {
-    override val inputGuardrails: List<Guardrail> =
+  internal object Agent : osiris.agentic.Agent("agent") {
+    override suspend fun model(): ChatModel =
+      testModelFactory.openAi("gpt-4.1-nano")
+
+    override suspend fun inputGuardrails(): List<Guardrail> =
       listOf(
         Guardrail("input_guardrail") { messages ->
           require(messages.convert<InputGuardrail.Output>().isUserAskingAboutProvincialCapitals) {

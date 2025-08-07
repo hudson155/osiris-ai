@@ -13,9 +13,9 @@ import osiris.tracing.EventLogger
 internal class EcommerceChatbotTest {
   private val network: Network =
     network("network") {
-      entrypoint = ecommerceChatbot.name
-      agents += ecommerceChatbot
-      agents += ecommerceOrderTracker
+      entrypoint = EcommerceChatbot.name
+      agents += EcommerceChatbot
+      agents += EcommerceOrderTracker
       listener(EventLogger)
     }
 
