@@ -26,7 +26,7 @@ publishing {
         val match = requireNotNull(regex.matchEntire(path)) { "Invalid project name: $path." }
         return@run match.groupValues[1].replace(':', '-')
       }
-      version = "0.32.1"
+      version = "0.33.0"
       from(components["java"])
       pom {
         licenses {
