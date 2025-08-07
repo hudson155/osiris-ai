@@ -34,7 +34,7 @@ dependencies {
 `llm()` is the primary entrypoint.
 
 ```kotlin
-val model = modelFactory.openAi("gpt-4.1-nano")
+val model = modelFactory.openAi("gpt-5-nano")
 val messages = listOf(
   UserMessage("What's 2+2?"),
 )
@@ -65,14 +65,14 @@ val modelFactory =
     openAiApiKey = ProtectedString("...")
   }
 
-val model = modelFactory.openAi("gpt-4.1-nano")
+val model = modelFactory.openAi("gpt-5-nano")
 ```
 
 Alternatively, you can instantiate a model with Langchain4j directly.
 
 ```kotlin
 val model = OpenAiChatModel.builder().apply {
-  modelName("gpt-4.1-nano")
+  modelName("gpt-5-nano")
   apiKey("...")
   strictJsonSchema(true)
   strictTools(true)
@@ -129,7 +129,7 @@ you can make it available when you call `llm()`.
 
 ```kotlin
 val response = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
+  model = modelFactory.openAi("gpt-5-nano"),
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),
@@ -152,7 +152,7 @@ data class Person(
 )
 
 val response = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
+  model = modelFactory.openAi("gpt-5-nano"),
   messages = listOf(
     UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
     SystemMessage("Provide a JSON representation of the person matching this description."),
@@ -173,7 +173,7 @@ pass a custom `chatRequestBlock` to `llm()`.
 
 ```kotlin
 val response = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
+  model = modelFactory.openAi("gpt-5-nano"),
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),
@@ -199,7 +199,7 @@ Alternatively, you can choose to run them on a specific coroutine dispatcher.
 val dispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
 
 val response = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
+  model = modelFactory.openAi("gpt-5-nano"),
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),
@@ -215,7 +215,7 @@ You can run Tools sequentially if you need to.
 
 ```kotlin
 val response = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
+  model = modelFactory.openAi("gpt-5-nano"),
   messages = listOf(
     UserMessage("What's the weather in Calgary?"),
   ),

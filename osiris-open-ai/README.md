@@ -43,7 +43,7 @@ Instead of defining your model using Langchain4j's syntax,
 
 ```kotlin
 OpenAiChatModel.builder().apply {
-  modelName("gpt-4.1-nano")
+  modelName("gpt-5-nano")
   apiKey("...")
   strictJsonSchema(true)
   strictTools(true)
@@ -62,7 +62,7 @@ val modelFactory =
 and then use the simple DSL
 
 ```kotlin
-modelFactory.openAi("gpt-4.1-nano")
+modelFactory.openAi("gpt-5-nano")
 ```
 
 whenever you need a model.

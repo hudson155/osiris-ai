@@ -39,7 +39,7 @@ val messages = listOf(
   SystemMessage("Provide a JSON representation of the person matching this description."),
 )
 val flow = llm(
-  model = modelFactory.openAi("gpt-4.1-nano"),
+  model = modelFactory.openAi("gpt-5-nano"),
   messages = messages,
   responseType = kairoType<Person>(),
 )

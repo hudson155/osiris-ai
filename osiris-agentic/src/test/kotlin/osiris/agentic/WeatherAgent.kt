@@ -6,9 +6,7 @@ import osiris.openAi.openAi
 
 internal object WeatherAgent : Agent("weather_agent") {
   override suspend fun model(): ChatModel =
-    testModelFactory.openAi("gpt-4.1-nano") {
-      temperature(0.20)
-    }
+    testModelFactory.openAi("gpt-5-nano")
 
   override suspend fun tools(): List<Tool<*>> =
     listOf(
