@@ -6,7 +6,7 @@ import osiris.prompt.Instructions
 
 internal object MathAgent : Agent("math_agent") {
   override suspend fun model(): ChatModel =
-    testModelFactory.openAi("gpt-4.1-nano") {
+    testModelFactory.openAi("gpt-5-nano") {
       temperature(0.20)
     }
 

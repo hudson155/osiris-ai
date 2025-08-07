@@ -10,7 +10,7 @@ internal object EcommerceOrderTracker : Agent("ecommerce_order_tracker") {
   override val description: String = "Use to track an order."
 
   override suspend fun model(): ChatModel =
-    testModelFactory.openAi("gpt-4.1-nano") {
+    testModelFactory.openAi("gpt-5-nano") {
       temperature(0.20)
     }
 

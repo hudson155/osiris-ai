@@ -13,7 +13,7 @@ Osiris's [chat module](./osiris-chat) favors simplicity,
 supporting basic Kotlin-idiomatic LLM interaction.
 
 ```kotlin
-val model = modelFactory.openAi("gpt-4.1-nano")
+val model = modelFactory.openAi("gpt-5-nano")
 val messages = listOf(
    UserMessage("What's 2+2?"),
 )
@@ -157,7 +157,7 @@ for full documentation.
 fun test() {
   runTest {
     val response = llm(
-      model = modelFactory.openAi("gpt-4.1-nano"),
+      model = modelFactory.openAi("gpt-5-nano"),
       messages = listOf(
         UserMessage("What's the weather in Calgary?"),
       ),

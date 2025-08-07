@@ -8,7 +8,7 @@ import osiris.prompt.build
 
 internal object EcommerceChatbot : Agent("ecommerce_chatbot") {
   override suspend fun model(): ChatModel =
-    testModelFactory.openAi("gpt-4.1-nano") {
+    testModelFactory.openAi("gpt-5-nano") {
       temperature(0.20)
     }
 

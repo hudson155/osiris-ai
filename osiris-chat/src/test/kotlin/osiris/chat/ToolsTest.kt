@@ -22,7 +22,7 @@ internal class ToolsTest {
         listener(EventLogger)
       }
       val response = llm(
-        model = testModelFactory.openAi("gpt-4.1-nano"),
+        model = testModelFactory.openAi("gpt-5-nano"),
         messages = messages,
         tools = listOf(WeatherTool),
         tracer = tracer,

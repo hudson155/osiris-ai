@@ -126,7 +126,7 @@ Sometimes this is referred to as a "manager" or "orchestrator".
 ```kotlin
 val ecommerceChatbot =
   agent("ecommerce_chatbot") {
-    model = modelFactory.openAi("gpt-4.1-nano")
+    model = modelFactory.openAi("gpt-5-nano")
     instructions = instructionsBuilder.build {
       """
         # Your role and task
@@ -152,7 +152,7 @@ but it's also given access to a Tool.
 val ecommerceOrderTracker =
   agent("ecommerce_order_tracker") {
     description = "Use to track an order."
-    model = modelFactory.openAi("gpt-4.1-nano")
+    model = modelFactory.openAi("gpt-5-nano")
     instructions = instructionsBuilder.build {
       """
         # Your role and task
@@ -236,7 +236,7 @@ data class Person(
 
 val personCreator =
   agent("person_creator") {
-    model = modelFactory.openAi("gpt-4.1-nano")
+    model = modelFactory.openAi("gpt-5-nano")
     instructions = Instructions { "Provide a JSON representation of the person matching this description." }
     responseType = kairoType<Person>()
   }
@@ -261,7 +261,7 @@ data class EcommerceGuardrailOutput(
 
 val ecommerceGuardrail =
   agent("ecommerce_guardrail") {
-    model = modelFactory.openAi("gpt-4.1-nano")
+    model = modelFactory.openAi("gpt-5-nano")
     instructions = instructionsBuilder.build {
       """
         # Your role and task
@@ -278,7 +278,7 @@ Now define the chatbot using this Guardrail.
 ```kotlin
 val ecommerceChatbot =
   agent("ecommerce_chatbot") {
-    model = modelFactory.openAi("gpt-4.1-nano")
+    model = modelFactory.openAi("gpt-5-nano")
     instructions = instructionsBuilder.build {
       """
         # Your role and task

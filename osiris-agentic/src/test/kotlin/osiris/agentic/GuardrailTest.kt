@@ -27,7 +27,7 @@ internal class GuardrailTest {
     override val responseType: KairoType<Output> = kairoType<Output>()
 
     override suspend fun model(): ChatModel =
-      testModelFactory.openAi("gpt-4.1-nano")
+      testModelFactory.openAi("gpt-5-nano")
 
     override suspend fun instructions(): Instructions =
       Instructions { "Is the user asking about provincial capitals?" }
@@ -35,7 +35,7 @@ internal class GuardrailTest {
 
   internal object Agent : osiris.agentic.Agent("agent") {
     override suspend fun model(): ChatModel =
-      testModelFactory.openAi("gpt-4.1-nano")
+      testModelFactory.openAi("gpt-5-nano")
 
     override suspend fun inputGuardrails(): List<Guardrail> =
       listOf(

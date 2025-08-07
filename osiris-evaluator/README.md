@@ -45,7 +45,7 @@ Use this within a test.
 fun test() {
   runTest {
     val response = llm(
-      model = modelFactory.openAi("gpt-4.1-nano"),
+      model = modelFactory.openAi("gpt-5-nano"),
       messages = listOf(
         UserMessage("What's the weather in Calgary?"),
       ),

@@ -60,7 +60,7 @@ Access a prompt when building your Agent.
 ```kotlin
 val ecommerceChatbot =
   agent("ecommerce_chatbot") {
-    model = modelFactory.openAi("gpt-4.1-nano")
+    model = modelFactory.openAi("gpt-5-nano")
     instructions = langfuse.prompt("ai_analyst") // Nice!
     tools += Consult("ecommerce_order_tracker")
   }

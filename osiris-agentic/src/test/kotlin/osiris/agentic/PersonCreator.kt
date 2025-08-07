@@ -10,7 +10,7 @@ internal object PersonCreator : Agent("person_creator") {
   override val responseType: KairoType<Person> = kairoType<Person>()
 
   override suspend fun model(): ChatModel =
-    testModelFactory.openAi("gpt-4.1-nano") {
+    testModelFactory.openAi("gpt-5-nano") {
       temperature(0.20)
     }
 
