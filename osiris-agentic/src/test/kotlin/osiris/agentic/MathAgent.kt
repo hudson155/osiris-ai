@@ -6,9 +6,7 @@ import osiris.prompt.Instructions
 
 internal object MathAgent : Agent("math_agent") {
   override suspend fun model(): ChatModel =
-    testModelFactory.openAi("gpt-5-nano") {
-      temperature(0.20)
-    }
+    testModelFactory.openAi("gpt-5-nano")
 
   override suspend fun instructions(): Instructions =
     Instructions { "Do the math. Return only the answer (nothing else)." }
