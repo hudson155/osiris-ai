@@ -13,8 +13,8 @@ import osiris.tracing.EventLogger
 internal class MathTest {
   private val network: Network =
     network("network") {
-      entrypoint = mathAgent.name
-      agents += mathAgent
+      entrypoint = MathAgent.name
+      agents += MathAgent
       listener(EventLogger)
     }
 

@@ -31,10 +31,6 @@ public abstract class Agent(
    * The Agent's name uniquely identifies it within the Network.
    */
   public val name: String,
-  /**
-   * An Agent is associated with a specific model.
-   */
-  public val model: ChatModel,
 ) {
   /**
    * The description is not used by the Agent itself.
@@ -43,22 +39,29 @@ public abstract class Agent(
    */
   public open val description: String? = null
   /**
-   * The instructions for this Agent's LLM call.
-   */
-  protected open val instructions: Instructions? = null
-  /**
-   * Tools are passed to the LLM.
-   */
-  protected open val tools: List<Tool<*>> = emptyList()
-  /**
    * Type for structured output.
    * If not provided, output will be a string.
    */
   protected open val responseType: KairoType<*>? = null
   /**
+   * An Agent is associated with a specific model.
+   */
+  public abstract suspend fun model(): ChatModel
+  /**
+   * The instructions for this Agent's LLM call.
+   */
+  protected open suspend fun instructions(): Instructions? =
+    null
+  /**
+   * Tools are passed to the LLM.
+   */
+  protected open suspend fun tools(): List<Tool<*>> =
+    emptyList()
+  /**
    * Input guardrails asynchronously validate the agent's input, possibly throwing an exception.
    */
-  protected open val inputGuardrails: List<Guardrail> = emptyList()
+  protected open suspend fun inputGuardrails(): List<Guardrail> =
+    emptyList()
   /**
    * Use this to customize the Langchain4j chat request.
    */
@@ -68,7 +71,7 @@ public abstract class Agent(
   internal suspend fun execute() {
     val outerExecutionContext = getExecutionContext()
     val deferred = CoroutineScope(currentCoroutineContext() + SupervisorJob()).async { execute(outerExecutionContext) }
-    coroutineScope { inputGuardrails.map { async { it.execute() } }.awaitAll() }
+    coroutineScope { inputGuardrails().map { async { it.execute() } }.awaitAll() }
     deferred.await()
   }
 
@@ -79,12 +82,12 @@ public abstract class Agent(
     ) {
       logger.debug { "Started Agent: (name=$name, messages=${executionContext.messages})." }
       val response = llm(
-        model = model,
+        model = model(),
         messages = buildList {
           addAll(executionContext.messages)
-          instructions?.let { add(SystemMessage(it.get())) }
+          instructions()?.let { add(SystemMessage(it.get())) }
         },
-        tools = tools,
+        tools = tools(),
         responseType = responseType,
         chatRequestBlock = { state -> llm(state) },
         exitCondition = AgentLlmExitCondition(),

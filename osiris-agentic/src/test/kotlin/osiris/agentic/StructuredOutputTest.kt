@@ -13,8 +13,8 @@ import osiris.tracing.EventLogger
 internal class StructuredOutputTest {
   private val network: Network =
     network("network") {
-      entrypoint = personCreator.name
-      agents += personCreator
+      entrypoint = PersonCreator.name
+      agents += PersonCreator
       listener(EventLogger)
     }
 

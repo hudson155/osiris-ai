@@ -13,8 +13,8 @@ import osiris.tracing.EventLogger
 internal class ToolsTest {
   private val network: Network =
     network("network") {
-      entrypoint = weatherAgent.name
-      agents += weatherAgent
+      entrypoint = WeatherAgent.name
+      agents += WeatherAgent
       listener(EventLogger)
     }
 
