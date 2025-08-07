@@ -33,7 +33,7 @@ internal class ToolsTest {
 
   private suspend fun verifyResponse(response: List<ChatMessage>) {
     evaluate(
-      model = testModelFactory.openAi("o4-mini"),
+      model = testModelFactory.openAi("gpt-5-mini"),
       messages = messages + response,
       criteria = """
         Should say that the weather in Calgary is 15 degrees Celsius and sunny,
