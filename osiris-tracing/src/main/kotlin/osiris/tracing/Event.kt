@@ -14,10 +14,12 @@ public abstract class Event {
     override val rootSpanId: Uuid,
     val at: Instant,
     val type: String,
+    val name: String,
     val content: Any?,
     val properties: Map<String, Any?>,
   ) : Event() {
     public data class Creator(
+      val name: String,
       val type: String,
       val content: Any?,
       val properties: Map<String, Any?> = emptyMap(),
@@ -33,6 +35,7 @@ public abstract class Event {
     val startAt: Instant,
     val endAt: Instant,
     val type: String,
+    val name: String,
     val level: TraceLevel,
     val startContent: Any?,
     val endContent: Any?,
@@ -40,6 +43,7 @@ public abstract class Event {
     val endProperties: Map<String, Any?>,
   ) : Event() {
     public data class Creator(
+      val name: String? = null,
       val content: Any?,
       val properties: Map<String, Any?> = emptyMap(),
     )
@@ -60,6 +64,7 @@ internal fun Event.Start.Companion.create(
     rootSpanId = rootSpanId,
     at = Instant.now(),
     type = creator.type,
+    name = creator.name,
     content = creator.content,
     properties = creator.properties,
   )
@@ -76,6 +81,7 @@ internal fun Event.End.Companion.create(
     startAt = start.at,
     endAt = Instant.now(),
     type = start.type,
+    name = creator.name ?: start.name,
     level = tracer.level,
     startContent = start.content,
     endContent = creator.content,

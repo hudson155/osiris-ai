@@ -11,7 +11,7 @@ public class Tracer private constructor(
   internal val rootSpanId: Uuid?,
   internal val spanId: Uuid?,
 ) : AbstractCoroutineContextElement(Tracer), Listener {
-  internal var level: TraceLevel = TraceLevel.Default
+  internal var level: TraceLevel = TraceLevel.Info
 
   public constructor(listeners: List<Listener>) : this(
     listeners = listeners,

@@ -7,6 +7,7 @@ import java.util.Queue
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.uuid.Uuid
 import osiris.tracing.Event
+import osiris.tracing.TraceLevel
 
 @Suppress("ForbiddenMethodCall")
 internal class BatchBuilder {
@@ -18,10 +19,18 @@ internal class BatchBuilder {
     var type: String
     val body = mutableMapOf<String, Any?>().apply {
       put("id", event.spanId)
-      put("name", event.type) // TODO: Improve.
+      put("name", event.name)
       put("input", event.startContent)
       put("output", event.endContent)
-      put("level", event.level)
+      put(
+        "level",
+        when (event.level) {
+          TraceLevel.Debug -> "DEBUG"
+          TraceLevel.Info -> "DEFAULT"
+          TraceLevel.Warn -> "WARNING"
+          TraceLevel.Error -> "ERROR"
+        },
+      )
       if (event.type == "Trace") {
         type = "trace-create"
         put("timestamp", event.startAt)
@@ -44,7 +53,7 @@ internal class BatchBuilder {
             ?: (event.startProperties["request"] as ChatRequest).modelName()
       }
       "Trace" -> {
-        traceId = event.rootSpanId
+        traceId = event.spanId
       }
     }
     ingestionEvents += IngestionEvent(

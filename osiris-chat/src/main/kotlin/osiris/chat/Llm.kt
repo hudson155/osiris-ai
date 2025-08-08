@@ -178,7 +178,7 @@ public suspend fun llm(
   )
   return withTracer(
     tracer = tracer,
-    buildStart = { TraceEvent.start(deriveText(messages)) },
+    buildStart = { TraceEvent.start("LLM", deriveText(messages)) },
     buildEnd = { TraceEvent.end(deriveText(it)) },
   ) {
     llm.execute()

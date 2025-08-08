@@ -51,7 +51,7 @@ public abstract class Network(
   ): NetworkState =
     withTracer(
       tracer = createTracer(listeners),
-      buildStart = { TraceEvent.start(deriveText(messages)) },
+      buildStart = { TraceEvent.start(name, deriveText(messages)) },
       buildEnd = { TraceEvent.end(deriveText(it.messages)) },
     ) {
       logger.debug { "Started execution: (name=$name, messages=$messages)." }

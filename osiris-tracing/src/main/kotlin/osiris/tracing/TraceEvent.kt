@@ -5,9 +5,10 @@ package osiris.tracing
  * Both the chat module and the agentic framework will have this as the top level span.
  */
 public object TraceEvent {
-  public fun start(content: String?): Event.Start.Creator =
+  public fun start(name: String, content: String?): Event.Start.Creator =
     Event.Start.Creator(
       type = "Trace",
+      name = "Trace: $name",
       content = content,
     )
 

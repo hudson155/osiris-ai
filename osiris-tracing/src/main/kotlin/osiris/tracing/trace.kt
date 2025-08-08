@@ -54,7 +54,7 @@ public suspend fun <T> trace(
       endEvent = Event.End.create(
         start = startEvent,
         tracer = innerTraceContext,
-        creator = Event.End.Creator(e.printStackTrace()),
+        creator = Event.End.Creator(content = e.printStackTrace()),
       )
     }
     throw e
