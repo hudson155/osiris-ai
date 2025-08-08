@@ -1,13 +1,8 @@
 package osiris.tracing
 
-import java.time.Instant
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
-
-public typealias BuildStart = () -> Event.Details
-
-public typealias BuildEnd<T> = (T) -> Event.Details
 
 /**
  * Traces a span, emitting an event at both the start and the end.
@@ -17,12 +12,12 @@ public suspend fun <T> trace(
   /**
    * Creates the details for the start event, which is emitted immediately.
    */
-  start: BuildStart,
+  buildStart: BuildStart,
   /**
    * Creates the details for the end event, which is emitted when [block] completes.
    * You can access [block]'s result. The result will be null if an exception was thrown.
    */
-  end: BuildEnd<T?>,
+  buildEnd: BuildEnd<T>,
   block: suspend () -> T,
 ): T {
   val outerTracer = currentCoroutineContext()[Tracer]
@@ -30,35 +25,29 @@ public suspend fun <T> trace(
     return block()
   }
   val spanId = Uuid.random()
-  val startEvent = Event(
-    spanId = spanId,
-    parentSpanId = outerTracer.spanId,
-    rootSpanId = outerTracer.rootSpanId ?: spanId,
-    start = Event.Start(
-      at = Instant.now(),
-      details = start(),
-    ),
-    end = null,
-  )
+  val startEvent = buildStart().let { creator ->
+    Event.Start.create(
+      spanId = spanId,
+      parentSpanId = outerTracer.spanId,
+      rootSpanId = outerTracer.rootSpanId ?: spanId,
+      creator = creator,
+    )
+  }
   outerTracer.event(startEvent)
   val innerTraceContext = outerTracer.withSpanId(startEvent.spanId)
-  var result: T? = null
+  var endEvent: Event? = null
   return try {
     withContext(innerTraceContext) {
-      result = block()
+      val result = block()
+      endEvent = buildEnd(result).let { Event.End.create(startEvent, innerTraceContext, it) }
       return@withContext result
     }
+  } catch (e: Throwable) {
+    if (endEvent == null) {
+      endEvent = Event.End.exception(startEvent, e)
+    }
+    throw e
   } finally {
-    val endEvent = Event(
-      spanId = startEvent.spanId,
-      parentSpanId = startEvent.parentSpanId,
-      rootSpanId = startEvent.rootSpanId,
-      start = startEvent.start,
-      end = Event.End(
-        at = Instant.now(),
-        details = end(result),
-      ),
-    )
-    outerTracer.event(endEvent)
+    outerTracer.event(checkNotNull(endEvent))
   }
 }

@@ -77,8 +77,8 @@ public abstract class Agent(
 
   private suspend fun execute(executionContext: ExecutionContext) {
     val response = trace(
-      start = { AgentEvent.Start(this, deriveText(executionContext.messages)) },
-      end = { response -> AgentEvent.End(response?.let { deriveText(it) }) },
+      buildStart = { AgentEvent.start(deriveText(executionContext.messages)) },
+      buildEnd = { AgentEvent.end(deriveText(it)) },
     ) {
       logger.debug { "Started Agent: (name=$name, messages=${executionContext.messages})." }
       val response = llm(

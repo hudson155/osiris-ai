@@ -7,7 +7,7 @@ import osiris.openAi.openAi
 import osiris.prompt.Instructions
 
 internal object PersonCreator : Agent("person_creator") {
-  override val responseType: KairoType<Person> = kairoType<Person>()
+  override val responseType: KairoType<Person> = kairoType()
 
   override suspend fun model(): ChatModel =
     testModelFactory.openAi("gpt-5-nano")

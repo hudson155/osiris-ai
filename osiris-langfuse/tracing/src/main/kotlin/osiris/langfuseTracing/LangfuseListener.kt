@@ -13,12 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import osiris.langfuse.Langfuse
-import osiris.tracing.AgentEvent
-import osiris.tracing.ChatEvent
 import osiris.tracing.Event
 import osiris.tracing.Listener
-import osiris.tracing.ToolEvent
-import osiris.tracing.TraceEvent
 
 /**
  * Enables Langfuse tracing.
@@ -31,13 +27,7 @@ public class LangfuseListener(
   private val batchBuilder: BatchBuilder = BatchBuilder()
 
   override fun event(event: Event) {
-    val end = event.end ?: return
-    when (end.details) {
-      is AgentEvent.End -> batchBuilder.agentEvent(event)
-      is ChatEvent.End -> batchBuilder.chatEvent(event)
-      is ToolEvent.End -> batchBuilder.toolEvent(event)
-      is TraceEvent.End -> batchBuilder.traceEvent(event)
-    }
+    batchBuilder.event(event)
   }
 
   override fun flush() {
@@ -59,36 +49,45 @@ public class LangfuseListener(
     public fun setUserId(block: suspend () -> String?): LangfuseTransform =
       transform@{ batchIngestion ->
         val userId = block()
-        return@transform transformEvents<TraceCreate> { ingestionEvent ->
-          ingestionEvent.copy(body = ingestionEvent.body.copy(userId = userId))
+        return@transform transformEvents { ingestionEvent ->
+          if (ingestionEvent.type != "trace-create") return@transformEvents ingestionEvent
+          ingestionEvent.copy(
+            body = ingestionEvent.body +
+              mapOf("userId" to userId),
+          )
         }.invoke(batchIngestion)
       }
 
     public fun setSessionId(block: suspend () -> String?): LangfuseTransform =
       transform@{ batchIngestion ->
         val sessionId = block()
-        return@transform transformEvents<TraceCreate> { ingestionEvent ->
-          ingestionEvent.copy(body = ingestionEvent.body.copy(sessionId = sessionId))
+        return@transform transformEvents { ingestionEvent ->
+          if (ingestionEvent.type != "trace-create") return@transformEvents ingestionEvent
+          ingestionEvent.copy(
+            body = ingestionEvent.body +
+              mapOf("sessionId" to sessionId),
+          )
         }.invoke(batchIngestion)
       }
 
     public fun appendMetadata(block: suspend () -> Map<String, Any>): LangfuseTransform =
       transform@{ batchIngestion ->
         val metadata = block()
-        return@transform transformEvents<TraceCreate> { ingestionEvent ->
-          ingestionEvent.copy(body = ingestionEvent.body.copy(metadata = ingestionEvent.body.metadata + metadata))
+        return@transform transformEvents { ingestionEvent ->
+          if (ingestionEvent.type != "trace-create") return@transformEvents ingestionEvent
+          ingestionEvent.copy(
+            body = ingestionEvent.body +
+              mapOf("metadata" to ingestionEvent.body["metadata"] as Map<*, *> + metadata),
+          )
         }.invoke(batchIngestion)
       }
 
-    public inline fun <reified T : IngestionEvent<*>> transformEvents(
-      crossinline block: suspend (ingestionEvent: T) -> T,
+    public fun transformEvents(
+      block: suspend (ingestionEvent: IngestionEvent) -> IngestionEvent,
     ): LangfuseTransform =
       transform@{ batchIngestion ->
         batchIngestion.copy(
-          batch = batchIngestion.batch.map { ingestionEvent ->
-            if (ingestionEvent !is T) return@map ingestionEvent
-            return@map block(ingestionEvent)
-          },
+          batch = batchIngestion.batch.map { block(it) },
         )
       }
   }

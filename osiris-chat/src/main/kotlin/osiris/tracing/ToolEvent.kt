@@ -7,13 +7,22 @@ import osiris.chat.Tool
 /**
  * Each tool call will have a span.
  */
-public object ToolEvent {
-  public data class Start(
-    val tool: Tool<*>,
-    val executionRequest: ToolExecutionRequest,
-  ) : Event.Details()
+internal object ToolEvent {
+  fun start(tool: Tool<*>, executionRequest: ToolExecutionRequest): Event.Start.Creator =
+    Event.Start.Creator(
+      type = "Tool",
+      content = executionRequest.arguments(),
+      properties = mapOf(
+        "tool" to tool,
+        "executionRequest" to executionRequest,
+      ),
+    )
 
-  public data class End(
-    val executionResult: ToolExecutionResultMessage?,
-  ) : Event.Details()
+  fun end(executionResult: ToolExecutionResultMessage): Event.End.Creator =
+    Event.End.Creator(
+      content = executionResult.text(),
+      properties = mapOf(
+        "executionResult" to executionResult,
+      ),
+    )
 }

@@ -24,7 +24,7 @@ internal class GuardrailTest {
       val isUserAskingAboutProvincialCapitals: Boolean,
     )
 
-    override val responseType: KairoType<Output> = kairoType<Output>()
+    override val responseType: KairoType<Output> = kairoType()
 
     override suspend fun model(): ChatModel =
       testModelFactory.openAi("gpt-5-nano")

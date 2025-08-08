@@ -11,6 +11,8 @@ public class Tracer private constructor(
   internal val rootSpanId: Uuid?,
   internal val spanId: Uuid?,
 ) : AbstractCoroutineContextElement(Tracer), Listener {
+  internal var level: TraceLevel = TraceLevel.Default
+
   public constructor(listeners: List<Listener>) : this(
     listeners = listeners,
     rootSpanId = null,
@@ -19,6 +21,12 @@ public class Tracer private constructor(
 
   public override fun event(event: Event) {
     listeners.forEach { it.event(event) }
+  }
+
+  public fun escalate(level: TraceLevel) {
+    if (level.ordinal > this.level.ordinal) {
+      this.level = level
+    }
   }
 
   public override fun flush() {
@@ -38,14 +46,14 @@ public class Tracer private constructor(
 @Suppress("LongParameterList")
 public suspend fun <T> withTracer(
   tracer: Tracer?,
-  start: () -> TraceEvent.Start,
-  end: (T?) -> TraceEvent.End,
+  buildStart: BuildStart,
+  buildEnd: BuildEnd<T>,
   block: suspend () -> T,
 ): T {
   if (tracer == null || currentCoroutineContext()[Tracer] != null) return block()
   try {
     return withContext(tracer) {
-      trace(start, end) {
+      trace(buildStart, buildEnd) {
         block()
       }
     }
@@ -53,3 +61,6 @@ public suspend fun <T> withTracer(
     tracer.flush()
   }
 }
+
+public suspend fun getTracer(): Tracer? =
+  currentCoroutineContext()[Tracer]

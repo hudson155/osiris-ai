@@ -31,7 +31,7 @@ public abstract class ToolExecutor {
     val toolName = executionRequest.name()
     val tool = tools.singleNullOrThrow { it.name == toolName }
     checkNotNull(tool) { "No Tool with name: $toolName." }
-    return trace({ ToolEvent.Start(tool, executionRequest) }, { ToolEvent.End(it) }) {
+    return trace({ ToolEvent.start(tool, executionRequest) }, { ToolEvent.end(it) }) {
       tool.execute(executionRequest)
     }
   }

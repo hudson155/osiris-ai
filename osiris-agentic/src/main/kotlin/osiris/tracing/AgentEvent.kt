@@ -1,17 +1,17 @@
 package osiris.tracing
 
-import osiris.agentic.Agent
-
 /**
  * Each Agent's turn will have a span.
  */
-public object AgentEvent {
-  public data class Start(
-    val agent: Agent,
-    val input: String?,
-  ) : Event.Details()
+internal object AgentEvent {
+  fun start(content: String?): Event.Start.Creator =
+    Event.Start.Creator(
+      type = "Agent",
+      content = content,
+    )
 
-  public data class End(
-    val output: String?,
-  ) : Event.Details()
+  fun end(content: String?): Event.End.Creator =
+    Event.End.Creator(
+      content = content,
+    )
 }

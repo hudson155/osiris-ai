@@ -17,7 +17,7 @@ import kairo.serialization.util.kairoRead
 import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
-import osiris.tracing.TraceEvent
+import osiris.tracing.Event
 import osiris.tracing.Tracer
 import osiris.tracing.trace
 import osiris.tracing.withTracer
@@ -77,7 +77,7 @@ internal class Llm(
 
   private suspend fun chat(chatRequest: ChatRequest) {
     logger.debug { "Chat request: $chatRequest." }
-    val chatResponse = trace({ ChatEvent.Start(chatRequest) }, { ChatEvent.End(it) }) {
+    val chatResponse = trace({ ChatEvent.start(chatRequest) }, { ChatEvent.end(it) }) {
       model.chat(chatRequest)
     }
     logger.debug { "Chat response: $chatResponse." }
@@ -178,8 +178,8 @@ public suspend fun llm(
   )
   return withTracer(
     tracer = tracer,
-    start = { TraceEvent.Start("Trace: LLM", deriveText(messages)) },
-    end = { response -> TraceEvent.End(response?.let { deriveText(it) }) },
+    buildStart = { Event.Start.Creator("Trace", deriveText(messages)) },
+    buildEnd = { Event.End.Creator(deriveText(it)) },
   ) {
     llm.execute()
   }
