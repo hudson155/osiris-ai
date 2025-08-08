@@ -2,16 +2,24 @@ package osiris.tracing
 
 import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.response.ChatResponse
+import osiris.chat.deriveText
 
-/**
- * Each separate request to the LLM will have a span.
- */
-public object ChatEvent {
-  public data class Start(
-    val request: ChatRequest,
-  ) : Event.Details()
+internal object ChatEvent {
+  fun start(request: ChatRequest): Event.Start.Creator =
+    Event.Start.Creator(
+      type = "Chat",
+      name = buildString {
+        append("Chat")
+        request.modelName()?.let { append(": $it") }
+      },
+      content = deriveText(request.messages()),
+      properties = mapOf("request" to request),
+    )
 
-  public data class End(
-    val response: ChatResponse?,
-  ) : Event.Details()
+  fun end(response: ChatResponse): Event.End.Creator =
+    Event.End.Creator(
+      name = response.modelName()?.let { "Chat: $it" },
+      content = response.aiMessage()?.let { deriveText(it) },
+      properties = mapOf("response" to response),
+    )
 }
