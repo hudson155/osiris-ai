@@ -17,7 +17,7 @@ import kairo.serialization.util.kairoRead
 import osiris.core.llmMapper
 import osiris.schema.LlmSchema
 import osiris.tracing.ChatEvent
-import osiris.tracing.Event
+import osiris.tracing.TraceEvent
 import osiris.tracing.Tracer
 import osiris.tracing.trace
 import osiris.tracing.withTracer
@@ -178,8 +178,8 @@ public suspend fun llm(
   )
   return withTracer(
     tracer = tracer,
-    buildStart = { Event.Start.Creator("Trace", deriveText(messages)) },
-    buildEnd = { Event.End.Creator(deriveText(it)) },
+    buildStart = { TraceEvent.start(deriveText(messages)) },
+    buildEnd = { TraceEvent.end(deriveText(it)) },
   ) {
     llm.execute()
   }

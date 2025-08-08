@@ -4,9 +4,6 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.data.message.ToolExecutionResultMessage
 import osiris.chat.Tool
 
-/**
- * Each tool call will have a span.
- */
 internal object ToolEvent {
   fun start(tool: Tool<*>, executionRequest: ToolExecutionRequest): Event.Start.Creator =
     Event.Start.Creator(

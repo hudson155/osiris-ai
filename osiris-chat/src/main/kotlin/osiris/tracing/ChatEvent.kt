@@ -4,9 +4,6 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.response.ChatResponse
 import osiris.chat.deriveText
 
-/**
- * Each separate request to the LLM will have a span.
- */
 internal object ChatEvent {
   fun start(request: ChatRequest): Event.Start.Creator =
     Event.Start.Creator(

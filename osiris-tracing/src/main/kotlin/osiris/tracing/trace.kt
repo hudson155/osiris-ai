@@ -39,12 +39,23 @@ public suspend fun <T> trace(
   return try {
     withContext(innerTraceContext) {
       val result = block()
-      endEvent = buildEnd(result).let { Event.End.create(startEvent, innerTraceContext, it) }
+      endEvent = buildEnd(result).let { creator ->
+        Event.End.create(
+          start = startEvent,
+          tracer = innerTraceContext,
+          creator = creator,
+        )
+      }
       return@withContext result
     }
   } catch (e: Throwable) {
+    innerTraceContext.escalate(TraceLevel.Error)
     if (endEvent == null) {
-      endEvent = Event.End.exception(startEvent, e)
+      endEvent = Event.End.create(
+        start = startEvent,
+        tracer = innerTraceContext,
+        creator = Event.End.Creator(e.printStackTrace()),
+      )
     }
     throw e
   } finally {
