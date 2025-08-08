@@ -6,7 +6,7 @@ internal object AgentEvent {
   fun start(agent: Agent, content: String?): Event.Start.Creator =
     Event.Start.Creator(
       type = "Agent",
-      name = agent.name,
+      name = "Agent: ${agent.name}",
       content = content,
       properties = mapOf("agent" to agent),
     )
