@@ -85,6 +85,9 @@ complexity:
   LongMethod:
     active: true
     threshold: 40
+    excludes:
+      - '**/src/test/kotlin/**/*Eval.kt'
+      - '**/src/test/kotlin/**/*Test.kt'
   LongParameterList:
     active: true
     functionThreshold: 4
@@ -103,6 +106,9 @@ complexity:
   NestedScopeFunctions:
     active: true
     threshold: 3
+    excludes:
+      - '**/src/test/kotlin/**/*Eval.kt'
+      - '**/src/test/kotlin/**/*Test.kt'
   ReplaceSafeCallChainWithRun:
     active: true
   StringLiteralDuplication:
@@ -165,7 +171,7 @@ exceptions:
   InstanceOfCheckForException:
     active: true
   NotImplementedDeclaration:
-    active: true
+    active: false
   ObjectExtendsThrowable:
     active: true
   PrintStackTrace:
@@ -461,6 +467,7 @@ naming:
     active: true
     functionPattern: '[a-z][A-Za-z0-9]*'
     excludes:
+      - '**/src/test/kotlin/**/*Eval.kt'
       - '**/src/test/kotlin/**/*Test.kt'
   FunctionParameterNaming:
     active: true
@@ -567,7 +574,7 @@ potential-bugs:
   NullCheckOnMutableProperty:
     active: true
   NullableToStringCall:
-    active: true
+    active: false
   PropertyUsedBeforeDeclaration:
     active: true
   UnconditionalJumpStatementInLoop:
@@ -595,7 +602,7 @@ potential-bugs:
 
 style:
   AlsoCouldBeApply:
-    active: true
+    active: false
   BracesOnIfStatements:
     active: true
     singleLine: 'never'
@@ -641,100 +648,78 @@ style:
     active: true
     # Keep these in sync with IntelliJ auto-import exclusions (codeInsightSettings.xml).
     imports:
-      - 'com.ctc.*'
-      - 'com.fasterxml.jackson.module.kotlin.jsonMapper'
-      - 'com.google.cloud.scheduler.v1beta*.*'
-      - 'com.google.cloud.secretmanager.v1beta*.*'
-      - 'com.google.cloud.tasks.v2beta*.*'
-      - 'com.google.common.base.Optional' # Use the JDK version instead.
-      - 'com.google.inject.TypeLiteral' # Use the Kotlin overload.
+      - 'com.apple.eawt.*'
+      - 'com.fasterxml.jackson.*'
+      - 'com.google.api.client.*'
+      - 'com.google.cloud.secretmanager.v1beta1.*'
+      - 'com.google.cloud.secretmanager.v1beta2.*'
+      - 'com.google.common.collect.Table'
+      - 'com.google.gson.*'
+      - 'com.sun.jdi.*'
       - 'com.sun.security.*'
-      - 'com.sun.tools.javac.comp.Flow'
-      - 'com.typesafe.config.Optional' # Use the JDK version instead.
-      - 'io.grpc.netty.*'
-      - 'io.kotest.core.spec.*' # Use JUnit test annotations.
-      - 'io.ktor.client.HttpClient' # Use kairo.rest.client.KairoClient.
-      - 'io.ktor.server.plugins.BadRequestException' # Use kairo.exception.BadRequestException.
-      - 'io.ktor.server.plugins.CannotTransformContentToTypeException'
-      - 'io.ktor.server.plugins.MissingRequestParameterException'
-      - 'io.ktor.server.plugins.NotFoundException' # Use kairo.exception.NotFoundException.
-      - 'io.ktor.server.plugins.ParameterConversionException'
-      - 'io.ktor.server.plugins.PayloadTooLargeException'
-      - 'io.ktor.server.plugins.UnsupportedMediaTypeException'
-      - 'jakarta.inject.*' # Use Google's injection annotations.
-      - 'jakarta.validation.constraints.*'
+      - 'com.sun.tools.javac.*'
+      - 'com.typesafe.config.Optional'
+      - 'io.kotest.core.spec.*'
+      - 'io.kotest.core.test.TestScope'
+      - 'io.ktor.http.ContentType.Application.Json'
+      - 'io.netty.util.AttributeKey'
       - 'java.awt.*'
-      - 'java.security.AuthProvider'
-      - 'java.security.Permission'
-      - 'java.time.LocalDateTime'
-      - 'java.time.LocalTime'
-      - 'java.time.OffsetDateTime'
-      - 'java.time.OffsetTime'
-      - 'java.time.ZonedDateTime'
-      - 'java.util.UUID' # Use kotlin.uuid.Uuid.
+      - 'java.beans.*'
+      - 'java.io.ObjectInputFilter.Config'
+      - 'java.nio.channels.*'
+      - 'java.time.*'
+      - 'java.util.Base64.*'
+      - 'java.util.Optional'
+      - 'java.util.UUID'
+      - 'java.util.concurrent.CancellationException'
+      - 'java.util.concurrent.CountDownLatch'
+      - 'java.util.concurrent.CyclicBarrier'
       - 'java.util.concurrent.Flow'
-      - 'javax.inject.*' # Use Google's injection annotations.
-      - 'javax.ws.rs.HttpMethod'
-      - 'jdk.tools.jlink.resources.plugins'
-      - 'kotlin.test.*'
-      - 'kotlin.time.*'
+      - 'java.util.concurrent.atomic.*'
+      - 'java.util.jar.*'
+      - 'java.util.logging.LogManager'
+      - 'java.xml.*'
+      - 'javax.annotation.Resources'
+      - 'javax.naming.*'
+      - 'javax.swing.*'
+      - 'javax.xml.*'
+      - 'jdk.internal.*'
+      - 'jdk.javadoc.*'
+      - 'jdk.jfr.*'
+      - 'kotlin.coroutines.cancellation.*'
+      - 'kotlinx.coroutines.time.*'
+      - 'kotlinx.datetime.Clock'
+      - 'kotlinx.serialization.Required'
+      - 'net.bytebuddy.*'
       - 'okhttp3.*'
+      - 'org.apache.http.*'
+      - 'org.apache.logging.log4j.core.jmx.*'
       - 'org.intellij.lang.annotations.Flow'
-      - 'org.junit.jupiter.api.Assertions.*' # Use Kotest.
-      - 'org.slf4j.Logger' # Use KLogger.
-      - 'org.slf4j.LoggerFactory' # Use KotlinLogging.
-      - 'org.threeten.*'
-      - 'si.mazi.*'
-      - 'sun.net.ftp.FtpDirEntry'
+      - 'org.jetbrains.exposed.v1.core.SqlExpressionBuilder'
+      - 'org.jetbrains.exposed.v1.core.statements.UpsertSqlExpressionBuilder'
+      - 'org.koin.core.annotation.Singleton'
+      - 'org.koin.core.component.*'
+      - 'org.koin.core.context.GlobalContext.*'
+      - 'org.koin.java.*'
+      - 'org.koin.mp.*'
+      - 'org.testcontainers.shaded.*'
+      - 'org.w3c.dom.*'
+      - 'org.xml.*'
+      - 'sun.awt.*'
+      - 'sun.net.*'
+      - 'sun.nio.*'
+      - 'sun.rmi.*'
+      - 'sun.security.*'
+      - 'sun.tools.*'
   ForbiddenMethodCall:
     active: true
     methods:
-      - 'com.fasterxml.jackson.core.JsonParser.readValueAs'
-      - 'com.fasterxml.jackson.databind.BeanProperty.getAnnotation'
-      - 'com.fasterxml.jackson.databind.ObjectMapper.convertValue'
-      - 'com.fasterxml.jackson.databind.ObjectMapper.readTree'
-      - 'com.fasterxml.jackson.databind.ObjectMapper.readValue'
-      - 'com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString'
-      - 'com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder'
-      - 'com.fasterxml.jackson.module.kotlin.jacksonObjectMapper'
-      - 'com.fasterxml.jackson.module.kotlin.jacksonTypeRef'
-      - 'com.fasterxml.jackson.module.kotlin.jsonMapper'
-      - 'com.fasterxml.jackson.module.kotlin.readValue'
-      - 'com.fasterxml.jackson.module.kotlin.readValueTyped'
-      - 'com.fasterxml.jackson.module.kotlin.readValues'
-      - 'com.fasterxml.jackson.module.kotlin.readValuesTyped'
-      - 'com.fasterxml.jackson.module.kotlin.registerKotlinModule'
-      - 'com.fasterxml.jackson.module.kotlin.treeToValue'
-      - 'com.google.inject.Binder.bind'
-      - 'com.google.inject.Injector.getExistingBinding'
-      - 'com.google.inject.Injector.getInstance(java.lang.Class)'
-      - 'com.google.inject.Key.get'
-      - 'com.google.inject.binder.LinkedBindingBuilder.to'
-      - 'com.google.inject.binder.LinkedBindingBuilder.toConstructor'
-      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(com.google.inject.Key)'
-      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(com.google.inject.TypeLiteral)'
-      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(jakarta.inject.Provider)'
-      - 'com.google.inject.binder.LinkedBindingBuilder.toProvider(java.lang.Class)'
-      - 'com.google.inject.binder.ScopedBindingBuilder.in'
-      - 'io.ktor.server.request.header' # Use headerSingleNullOrThrow instead.
       - 'java.lang.Runtime.getRuntime'
       - 'java.lang.System.currentTimeMillis'
       - 'java.lang.System.getenv'
       - 'java.lang.Thread.currentThread'
-      - 'java.time.Duration.get(java.time.temporal.TemporalUnit)'
-      - 'java.time.Instant.now()' # Use the overload that takes a Clock.
-      - 'java.time.LocalDate.now()' # Use the overload that takes a Clock.
-      - 'java.time.LocalTime.now()' # Use the overload that takes a Clock.
-      - 'java.time.Month.now()' # Use the overload that takes a Clock.
-      - 'java.time.MonthDay.now()' # Use the overload that takes a Clock.
-      - 'java.time.Year.now()' # Use the overload that takes a Clock.
-      - 'java.time.YearMonth.now()' # Use the overload that takes a Clock.
-      - 'java.time.format.DateTimeFormatter.ofPattern(java.lang.String)' # Use the overload that takes a Locale.
-      - 'kotlin.collections.singleOrNull' # singleNullOrThrow is less surprising.
       - 'kotlin.io.print'
       - 'kotlin.io.println'
-      - 'org.jdbi.v3.core.result.ResultBearing.mapTo'
-      - 'org.jdbi.v3.core.result.ResultIterable.list'
   ForbiddenSuppress:
     active: false
   ForbiddenVoid:
@@ -824,7 +809,7 @@ style:
   UnnecessaryInnerClass:
     active: true
   UnnecessaryLet:
-    active: true
+    active: false
   UnnecessaryParentheses:
     active: true
     allowForUnclearPrecedence: false
@@ -856,8 +841,7 @@ style:
   UseIfEmptyOrIfBlank:
     active: true
   UseIfInsteadOfWhen:
-    active: true
-    ignoreWhenContainingVariableDeclaration: false
+    active: false
   UseIsNullOrEmpty:
     active: true
   UseLet:

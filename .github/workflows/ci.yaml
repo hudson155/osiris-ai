@@ -6,10 +6,12 @@ permissions:
 on:
   pull_request:
     branches:
-      - "main"
+      - "osiris-0"
+      - "osiris-1"
   push:
     branches:
-      - "main"
+      - "osiris-0"
+      - "osiris-1"
   workflow_dispatch:
 
 concurrency:
@@ -38,9 +40,6 @@ jobs:
       - name: "Gradle test"
         run: |
           ./gradlew test
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          OPEN_AI_API_KEY: ${{ secrets.OPEN_AI_API_KEY }}
       - name: "Gradle detekt"
         run: |
           ./gradlew detektMain detektTest
