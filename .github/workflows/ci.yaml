@@ -7,9 +7,11 @@ on:
   pull_request:
     branches:
       - "osiris-0"
+      - "osiris-1"
   push:
     branches:
       - "osiris-0"
+      - "osiris-1"
   workflow_dispatch:
 
 concurrency:
