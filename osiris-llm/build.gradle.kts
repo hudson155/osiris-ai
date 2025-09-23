@@ -1,4 +1,4 @@
 plugins {
-  id("kairo-ai-library")
-  id("kairo-ai-library-publish")
+  id("osiris-library")
+  id("osiris-library-publish")
 }

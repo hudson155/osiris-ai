@@ -1,7 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
-  id("kairo-ai")
+  id("osiris")
   `java-library`
   kotlin("jvm")
   id("io.gitlab.arturbosch.detekt")

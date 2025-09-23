@@ -1,6 +1,6 @@
 plugins {
-  id("kairo-ai-platform")
-  id("kairo-ai-platform-publish")
+  id("osiris-platform")
+  id("osiris-platform-publish")
 }
 
 dependencies {
