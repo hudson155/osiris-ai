@@ -6,10 +6,10 @@ permissions:
 on:
   pull_request:
     branches:
-      - "main"
+      - "osiris-0"
   push:
     branches:
-      - "main"
+      - "osiris-0"
   workflow_dispatch:
 
 concurrency:
