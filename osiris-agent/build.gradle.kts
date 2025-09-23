@@ -6,5 +6,5 @@ plugins {
 
 dependencies {
   implementation(libs.kairo.serialization)
-  implementation(libs.langchain.core)
+  api(libs.langchain.core)
 }
