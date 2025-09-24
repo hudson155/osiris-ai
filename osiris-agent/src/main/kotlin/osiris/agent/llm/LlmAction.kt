@@ -7,7 +7,7 @@ import dev.langchain4j.data.message.UserMessage
 internal enum class LlmAction {
   Greet,
   Llm,
-  WaitingForUser
+  WaitingForUser,
   ;
 
   internal companion object {
