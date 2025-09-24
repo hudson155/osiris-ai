@@ -1,12 +1,9 @@
 plugins {
-  kotlin("plugin.serialization")
   id("osiris-library")
   id("osiris-library-publish")
 }
 
 dependencies {
-  api(project(":osiris-core"))
-
   implementation(libs.kairo.coroutines)
-  implementation(libs.kairo.serialization)
+  api(libs.langchain.core)
 }

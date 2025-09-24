@@ -1,5 +1,6 @@
 [libraries]
 
+kairo-coroutines = { module = "software.airborne.kairo:kairo-coroutines" }
 kairo-serialization = { module = "software.airborne.kairo:kairo-serialization" }
 
 langchain-core = { module = "dev.langchain4j:langchain4j-core" }

@@ -84,13 +84,16 @@ public sealed class MessageEvent : Event() {
     public companion object {
       public fun from(message: UserMessage): User =
         User(
-          contents = message.contents().map { content ->
+          message.contents().map { content ->
             when (content) {
               is TextContent -> Content.Text(content.text())
               else -> error("Unsupported content type (contentType=${content::class}).")
             }
           },
         )
+
+      public fun from(text: String): User =
+        User(listOf(Content.Text(text)))
     }
   }
 }
