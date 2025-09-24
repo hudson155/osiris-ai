@@ -13,6 +13,7 @@ public abstract class LlmAgent<C>(
     when (action) {
       LlmAction.Greet -> greet(context)
       LlmAction.Llm -> llm(context)
+      LlmAction.WaitingForUser -> Unit
     }
   }
 
