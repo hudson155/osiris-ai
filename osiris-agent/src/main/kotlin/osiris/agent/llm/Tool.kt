@@ -12,7 +12,7 @@ public abstract class Tool<I : Any, O : Any>(
   public val name: String,
 ) {
   public val inputType: KairoType<I> = KairoType.from(Tool::class, 0, this::class)
-  private val outputType: KairoType<O> = KairoType.from(Tool::class, 0, this::class)
+  public val outputType: KairoType<O> = KairoType.from(Tool::class, 1, this::class)
 
   public open val description: String? =
     null
