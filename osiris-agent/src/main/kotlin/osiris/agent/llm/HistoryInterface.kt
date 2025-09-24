@@ -1,4 +1,4 @@
-package osiris.agent
+package osiris.agent.llm
 
 import dev.langchain4j.data.message.ChatMessage
 
