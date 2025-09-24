@@ -4,13 +4,12 @@ import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ChatRequest
 import osiris.Model
-import osiris.event.MessageEvent
 
 public abstract class LlmAgent<C>(
   name: String,
 ) : Agent<C>(name) where C : Context, C : LlmContext {
   override suspend fun execute(context: C) {
-    val history = context.getHistory()
+    val history = context.history.get()
     val messages = buildList {
       add(instructions(context))
       addAll(history)
@@ -21,7 +20,7 @@ public abstract class LlmAgent<C>(
       messages(messages)
       llm(context)
     }
-    context.send(MessageEvent.Ai.from(name, aiResponse.aiMessage()))
+    context.history.append(aiResponse.aiMessage())
   }
 
   protected abstract suspend fun model(context: C): Model
