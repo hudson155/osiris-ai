@@ -1,6 +1,11 @@
 [libraries]
 
 kairo-coroutines = { module = "software.airborne.kairo:kairo-coroutines" }
+kairo-reflect = { module = "software.airborne.kairo:kairo-reflect" }
 kairo-serialization = { module = "software.airborne.kairo:kairo-serialization" }
+kairo-testing = { module = "software.airborne.kairo:kairo-testing" }
+kairo-util = { module = "software.airborne.kairo:kairo-util" }
 
 langchain-core = { module = "dev.langchain4j:langchain4j-core" }
+
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json" }

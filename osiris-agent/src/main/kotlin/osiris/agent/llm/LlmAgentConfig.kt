@@ -11,6 +11,9 @@ public interface LlmAgentConfig<C> {
 
   public fun instructions(context: C): SystemMessage
 
+  public fun tools(context: C): List<Tool<*, *>> =
+    emptyList()
+
   public suspend fun ChatRequest.Builder.llm(context: Context): Unit =
     Unit
 
