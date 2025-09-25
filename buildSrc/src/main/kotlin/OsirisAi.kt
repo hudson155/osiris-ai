@@ -1,7 +1,6 @@
 import java.net.URI
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 internal val javaVersion: JavaLanguageVersion = JavaLanguageVersion.of(21)
