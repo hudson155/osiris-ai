@@ -30,8 +30,6 @@ internal fun MavenPublication.license() {
   }
 }
 
-internal fun PublishToMavenRepository.requireVersion(version: Any) {
-  doFirst {
-    require(version is String && version != "unspecified") { "Version is not specified" }
-  }
+internal fun requireVersion(version: Any) {
+  require(version is String && version != "unspecified") { "Version is not specified" }
 }
