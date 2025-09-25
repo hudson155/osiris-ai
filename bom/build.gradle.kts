@@ -20,7 +20,7 @@ dependencies {
 
   // kairo
   // https://github.com/hudson155/kairo/releases
-  api(platform("software.airborne.kairo:bom-full:LOCAL-SNAPSHOT"))
+  api(platform("software.airborne.kairo:bom-full:6.0.0-alpha.1"))
 
   // langchain4j
   // https://github.com/langchain4j/langchain4j/releases
