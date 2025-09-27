@@ -11,8 +11,8 @@ internal fun RepositoryHandler.artifactRegistry() {
   }
 }
 
-internal object Airborne {
-  val kairo: String = "6.0.0-alpha.1"
+public object Airborne {
+  public val kairo: String = "software.airborne.kairo:bom-full:LOCAL-SNAPSHOT"
 }
 
 internal fun groupId(): String =
