@@ -8,7 +8,6 @@ import dev.langchain4j.model.chat.request.json.JsonNumberSchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
-import kotlin.reflect.typeOf
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -16,7 +15,7 @@ import kotlinx.serialization.serializer
 
 public object SchemaGenerator {
   public inline fun <reified T : Any> generate(): JsonSchemaElement =
-    generate(serializer(typeOf<T>()).descriptor)
+    generate(serializer<T>().descriptor)
 
   public fun generate(descriptor: SerialDescriptor, annotations: List<Annotation> = emptyList()): JsonSchemaElement =
     @Suppress("ElseCaseInsteadOfExhaustiveWhen")
