@@ -12,7 +12,7 @@ internal fun RepositoryHandler.artifactRegistry() {
 }
 
 public object Airborne {
-  public val kairo: String = "software.airborne.kairo:bom-full:LOCAL-SNAPSHOT"
+  public val kairo: String = "software.airborne.kairo:bom-full:6.0.0-alpha.1"
 }
 
 internal fun groupId(): String =
