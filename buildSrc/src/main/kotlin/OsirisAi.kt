@@ -11,6 +11,10 @@ internal fun RepositoryHandler.artifactRegistry() {
   }
 }
 
+internal object Airborne {
+  val kairo: String = "6.0.0-alpha.1"
+}
+
 internal fun groupId(): String =
   "software.airborne.osiris"
 

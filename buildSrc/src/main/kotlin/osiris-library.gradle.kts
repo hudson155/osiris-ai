@@ -34,6 +34,7 @@ kotlin {
 
 dependencies {
   api(platform(project(":bom")))
+  implementation(platform("software.airborne.kairo:bom-full:${Airborne.kairo}"))
   testRuntimeOnly("org.slf4j:slf4j-simple")
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${detekt.toolVersion}")
 }
