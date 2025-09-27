@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 import java.net.URI
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.publish.maven.MavenPublication
@@ -13,7 +15,7 @@ internal fun RepositoryHandler.artifactRegistry() {
 
 public object Airborne {
   // https://github.com/hudson155/kairo/releases
-  public val kairo: String = "software.airborne.kairo:bom-full:6.0.0-alpha.1"
+  public const val kairo: String = "software.airborne.kairo:bom-full:6.0.0-local.1"
 }
 
 internal fun groupId(): String =
