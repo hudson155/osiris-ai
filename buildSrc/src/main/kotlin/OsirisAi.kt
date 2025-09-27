@@ -11,6 +11,11 @@ internal fun RepositoryHandler.artifactRegistry() {
   }
 }
 
+public object Airborne {
+  // https://github.com/hudson155/kairo/releases
+  public val kairo: String = "software.airborne.kairo:bom-full:6.0.0-alpha.1"
+}
+
 internal fun groupId(): String =
   "software.airborne.osiris"
 
