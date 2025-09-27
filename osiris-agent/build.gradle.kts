@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
   api(project(":osiris-core"))
-  implementation(project(":osiris-schema"))
+  api(project(":osiris-schema"))
 
   implementation(libs.kairo.reflect)
   implementation(libs.kairo.serialization)
