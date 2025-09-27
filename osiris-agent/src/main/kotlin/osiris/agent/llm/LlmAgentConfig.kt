@@ -9,7 +9,7 @@ import osiris.agent.Context
 public interface LlmAgentConfig {
   public suspend fun model(context: Context): Model
 
-  public fun instructions(context: Context): SystemMessage
+  public fun instructions(context: Context): SystemMessage?
 
   public fun tools(context: Context): List<Tool<*, *>> =
     emptyList()
