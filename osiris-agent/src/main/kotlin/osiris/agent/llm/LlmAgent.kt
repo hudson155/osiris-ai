@@ -21,13 +21,15 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
   }
 
   private suspend fun runGreet(context: Context) {
-    val messages = listOf(instructions(context), greeting(context) ?: return)
+    val greeting = greeting(context) ?: return
+    val instructions = instructions(context)
+    val messages = listOfNotNull(instructions, greeting)
     chat(context, tools = emptyList(), messages = messages)
   }
 
   private suspend fun runLlm(context: Context) {
     val messages = buildList {
-      add(instructions(context))
+      instructions(context)?.let { add(it) }
       addAll(context.history.get())
     }
     chat(context, tools = tools(context), messages = messages)
