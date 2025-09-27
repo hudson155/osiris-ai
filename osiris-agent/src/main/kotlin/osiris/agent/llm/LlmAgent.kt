@@ -4,6 +4,7 @@ import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.model.chat.request.ResponseFormat
+import dev.langchain4j.model.chat.request.ResponseFormatType
 import dev.langchain4j.model.chat.request.json.JsonSchema
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import osiris.agent.Agent
@@ -77,7 +78,7 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
       if (schema != null) {
         responseFormat(
           ResponseFormat.builder().apply {
-            responseFormat(ResponseFormat.JSON)
+            type(ResponseFormatType.JSON)
             jsonSchema(
               JsonSchema.builder().apply {
                 rootElement(schema)
