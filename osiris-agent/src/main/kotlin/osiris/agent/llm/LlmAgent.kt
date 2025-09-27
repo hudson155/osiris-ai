@@ -3,6 +3,9 @@ package osiris.agent.llm
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.ToolExecutionResultMessage
+import dev.langchain4j.model.chat.request.ResponseFormat
+import dev.langchain4j.model.chat.request.json.JsonSchema
+import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import osiris.agent.Agent
 import osiris.agent.Context
 
@@ -24,7 +27,12 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
     val greeting = greeting(context) ?: return
     val instructions = instructions(context)
     val messages = listOfNotNull(instructions, greeting)
-    chat(context, tools = emptyList(), messages = messages)
+    chat(
+      context = context,
+      tools = emptyList(),
+      schema = schema(context),
+      messages = messages,
+    )
   }
 
   private suspend fun runLlm(context: Context) {
@@ -32,7 +40,12 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
       instructions(context)?.let { add(it) }
       addAll(context.history.get())
     }
-    chat(context, tools = tools(context), messages = messages)
+    chat(
+      context = context,
+      tools = tools(context),
+      schema = schema(context),
+      messages = messages,
+    )
   }
 
   private suspend fun runTools(context: Context) {
@@ -50,11 +63,29 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
   }
 
   // TODO: LLM retries?
-  private suspend fun chat(context: Context, tools: List<Tool<*, *>>, messages: List<ChatMessage>) {
+  @Suppress("LongParameterList")
+  private suspend fun chat(
+    context: Context,
+    tools: List<Tool<*, *>>,
+    schema: JsonSchemaElement?,
+    messages: List<ChatMessage>,
+  ) {
     val model = model(context)
     val aiResponse = model.chat {
       messages(messages)
       toolSpecifications(tools.map { it.specification() })
+      if (schema != null) {
+        responseFormat(
+          ResponseFormat.builder().apply {
+            responseFormat(ResponseFormat.JSON)
+            jsonSchema(
+              JsonSchema.builder().apply {
+                rootElement(schema)
+              }.build(),
+            )
+          }.build(),
+        )
+      }
       llm(context)
     }
     context.history.append(aiResponse.aiMessage())
