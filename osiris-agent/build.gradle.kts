@@ -10,5 +10,6 @@ dependencies {
   implementation(libs.kairo.reflect)
   implementation(libs.kairo.serialization)
   implementation(libs.kairo.util)
+  api(libs.ktor.utils)
   implementation(libs.serialization.json)
 }

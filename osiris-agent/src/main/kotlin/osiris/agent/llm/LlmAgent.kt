@@ -6,10 +6,8 @@ import dev.langchain4j.data.message.ToolExecutionResultMessage
 import osiris.agent.Agent
 import osiris.agent.Context
 
-public abstract class LlmAgent<C>(
-  name: String,
-) : Agent<C>(name), LlmAgentConfig<C> where C : Context, C : LlmContext {
-  final override suspend fun run(context: C) {
+public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
+  final override suspend fun run(context: Context) {
     while (true) { // TODO: Limit how many iterations.
       val history = context.history.get()
       val action = LlmAction.fromHistory(history)
@@ -22,12 +20,12 @@ public abstract class LlmAgent<C>(
     }
   }
 
-  private suspend fun runGreet(context: C) {
+  private suspend fun runGreet(context: Context) {
     val messages = listOf(instructions(context), greeting(context) ?: return)
     chat(context, tools = emptyList(), messages = messages)
   }
 
-  private suspend fun runLlm(context: C) {
+  private suspend fun runLlm(context: Context) {
     val messages = buildList {
       add(instructions(context))
       addAll(context.history.get())
@@ -35,7 +33,7 @@ public abstract class LlmAgent<C>(
     chat(context, tools = tools(context), messages = messages)
   }
 
-  private suspend fun runTools(context: C) {
+  private suspend fun runTools(context: Context) {
     val tools = tools(context)
     val toolExecutionRequests = (context.history.get().last() as AiMessage).toolExecutionRequests()
     // TODO: Parallel tool execution.
@@ -50,7 +48,7 @@ public abstract class LlmAgent<C>(
   }
 
   // TODO: LLM retries?
-  private suspend fun chat(context: C, tools: List<Tool<*, *>>, messages: List<ChatMessage>) {
+  private suspend fun chat(context: Context, tools: List<Tool<*, *>>, messages: List<ChatMessage>) {
     val model = model(context)
     val aiResponse = model.chat {
       messages(messages)

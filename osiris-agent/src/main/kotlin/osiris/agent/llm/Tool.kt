@@ -6,6 +6,7 @@ import kairo.reflect.KairoType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import osiris.agent.Context
 import osiris.schema.SchemaGenerator
 
 public abstract class Tool<I : Any, O : Any>(
@@ -18,13 +19,13 @@ public abstract class Tool<I : Any, O : Any>(
     null
 
   @Suppress("UNCHECKED_CAST")
-  public suspend fun run(context: LlmContext, inputString: String): String {
+  public suspend fun run(context: Context, inputString: String): String {
     val input = Json.decodeFromString(serializer(inputType.kotlinType) as KSerializer<I>, inputString)
     val output = run(context, input)
     return Json.encodeToString(serializer(outputType.kotlinType) as KSerializer<O>, output)
   }
 
-  public abstract suspend fun run(context: LlmContext, input: I): O
+  public abstract suspend fun run(context: Context, input: I): O
 }
 
 public fun <I : Any> Tool<I, *>.specification(): ToolSpecification =

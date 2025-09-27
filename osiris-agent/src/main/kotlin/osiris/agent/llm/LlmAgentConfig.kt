@@ -6,17 +6,17 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import osiris.Model
 import osiris.agent.Context
 
-public interface LlmAgentConfig<C> {
-  public suspend fun model(context: C): Model
+public interface LlmAgentConfig {
+  public suspend fun model(context: Context): Model
 
-  public fun instructions(context: C): SystemMessage
+  public fun instructions(context: Context): SystemMessage
 
-  public fun tools(context: C): List<Tool<*, *>> =
+  public fun tools(context: Context): List<Tool<*, *>> =
     emptyList()
 
   public suspend fun ChatRequest.Builder.llm(context: Context): Unit =
     Unit
 
-  public fun greeting(context: C): UserMessage? =
+  public fun greeting(context: Context): UserMessage? =
     null
 }
