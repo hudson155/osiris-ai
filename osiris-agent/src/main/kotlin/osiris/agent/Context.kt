@@ -1,3 +1,5 @@
 package osiris.agent
 
-public abstract class Context
+import io.ktor.util.Attributes
+
+public class Context : Attributes by Attributes(concurrent = true)
