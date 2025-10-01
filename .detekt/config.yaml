@@ -463,8 +463,7 @@ naming:
   ForbiddenClassName:
     active: false
   FunctionMaxLength:
-    active: true
-    maximumFunctionNameLength: 60
+    active: false
   FunctionMinLength:
     active: true
     minimumFunctionNameLength: 2
@@ -661,10 +660,15 @@ style:
       - 'com.google.gson.*'
       - 'com.google.protobuf.*'
       - 'com.sun.jdi.*'
+      - 'com.sun.org.apache.bcel.*'
+      - 'com.sun.org.apache.xalan.*'
       - 'com.sun.security.*'
+      - 'com.sun.tools.classfile.*'
       - 'com.sun.tools.javac.*'
+      - 'com.sun.tools.jdeps.*'
       - 'com.typesafe.config.Optional'
       - 'dev.langchain4j.internal.*'
+      - 'io.grpc.*'
       - 'io.kotest.core.spec.*'
       - 'io.kotest.core.test.TestScope'
       - 'io.ktor.http.ContentType.Application.Json'
@@ -674,10 +678,12 @@ style:
       - 'java.awt.*'
       - 'java.beans.*'
       - 'java.io.ObjectInputFilter.Config'
+      - 'java.net.http.*'
       - 'java.nio.channels.*'
       - 'java.time.*'
       - 'java.util.Base64.*'
       - 'java.util.Optional'
+      - 'java.util.Random'
       - 'java.util.UUID'
       - 'java.util.concurrent.CancellationException'
       - 'java.util.concurrent.CountDownLatch'
@@ -689,7 +695,9 @@ style:
       - 'java.xml.*'
       - 'javax.annotation.Resources'
       - 'javax.naming.*'
+      - 'javax.sound.*'
       - 'javax.swing.*'
+      - 'javax.tools.*'
       - 'javax.xml.*'
       - 'jdk.internal.*'
       - 'jdk.javadoc.*'
@@ -716,6 +724,7 @@ style:
       - 'org.w3c.dom.*'
       - 'org.xml.*'
       - 'sun.awt.*'
+      - 'sun.jvm.*'
       - 'sun.net.*'
       - 'sun.nio.*'
       - 'sun.rmi.*'
@@ -730,6 +739,7 @@ style:
       - 'java.lang.Thread.currentThread'
       - 'kotlin.io.print'
       - 'kotlin.io.println'
+      - 'kotlinx.serialization.json.Json'
   ForbiddenSuppress:
     active: false
   ForbiddenVoid:
