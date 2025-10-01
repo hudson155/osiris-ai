@@ -81,6 +81,7 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
             type(ResponseFormatType.JSON)
             jsonSchema(
               JsonSchema.builder().apply {
+                name(name)
                 rootElement(schema)
               }.build(),
             )
