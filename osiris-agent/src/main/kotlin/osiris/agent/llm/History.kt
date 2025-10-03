@@ -10,7 +10,7 @@ public abstract class History {
   public abstract suspend fun append(message: ChatMessage)
 }
 
-private val key: AttributeKey<History> = AttributeKey<History>("History")
+private val key: AttributeKey<History> = AttributeKey("history")
 
 public var Context.history: History
   get() = computeIfAbsent(key) { InMemoryHistory() }
