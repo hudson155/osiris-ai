@@ -20,5 +20,5 @@ dependencies {
 
   // langchain4j
   // https://github.com/langchain4j/langchain4j/releases
-  api(platform("dev.langchain4j:langchain4j-bom:1.5.0"))
+  api(platform("dev.langchain4j:langchain4j-bom:1.7.1"))
 }
