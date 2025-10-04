@@ -21,6 +21,7 @@ public object SchemaGenerator {
     @Suppress("ElseCaseInsteadOfExhaustiveWhen")
     when (descriptor.kind) {
       is StructureKind.CLASS -> generateClass(descriptor, annotations)
+      is StructureKind.OBJECT -> generateObject(descriptor, annotations)
       is PrimitiveKind.BOOLEAN -> generateBoolean(descriptor, annotations)
       is PrimitiveKind.INT -> generateInteger(descriptor, annotations)
       is PrimitiveKind.LONG -> generateInteger(descriptor, annotations)
@@ -50,6 +51,15 @@ public object SchemaGenerator {
       annotation<Schema.Description>(allAnnotations)?.let { description(it.value) }
       addProperties(properties)
       required(properties.keys.toList())
+    }.build()
+    return if (descriptor.isNullable) schema.orNull() else schema
+  }
+
+  private fun generateObject(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonSchemaElement {
+    val allAnnotations = descriptor.annotations + annotations
+    val schema = JsonObjectSchema.builder().apply {
+      annotation<Schema.Description>(allAnnotations)?.let { description(it.value) }
+      required()
     }.build()
     return if (descriptor.isNullable) schema.orNull() else schema
   }

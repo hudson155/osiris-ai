@@ -31,6 +31,7 @@ internal class SchemaGeneratorClassTest {
     val double: Double,
     val string: String,
     val nested: NestedSchema,
+    val obj: ObjSchema,
   ) {
     @Serializable
     data class NestedSchema(
@@ -41,6 +42,9 @@ internal class SchemaGeneratorClassTest {
       val double: Double,
       val string: String,
     )
+
+    @Serializable
+    data object ObjSchema
   }
 
   @Test
@@ -107,7 +111,13 @@ internal class SchemaGeneratorClassTest {
                 required("boolean", "int", "long", "float", "double", "string")
               }.build(),
             )
-            required("boolean", "int", "long", "float", "double", "string", "nested")
+            addProperty(
+              "obj",
+              JsonObjectSchema.builder().apply {
+                required()
+              }.build(),
+            )
+            required("boolean", "int", "long", "float", "double", "string", "nested", "obj")
           }.build(),
         )
     }
