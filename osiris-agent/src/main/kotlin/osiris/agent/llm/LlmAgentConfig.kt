@@ -11,17 +11,17 @@ import osiris.agent.tool.Tool
 public interface LlmAgentConfig {
   public suspend fun model(context: Context): Model
 
-  public fun instructions(context: Context): SystemMessage?
+  public suspend fun instructions(context: Context): SystemMessage?
 
-  public fun tools(context: Context): List<Tool<*, *>> =
+  public suspend fun tools(context: Context): List<Tool<*, *>> =
     emptyList()
 
-  public fun schema(context: Context): JsonSchemaElement? =
+  public suspend fun schema(context: Context): JsonSchemaElement? =
     null
 
   public suspend fun ChatRequest.Builder.llm(context: Context): Unit =
     Unit
 
-  public fun greeting(context: Context): UserMessage? =
+  public suspend fun greeting(context: Context): UserMessage? =
     null
 }
