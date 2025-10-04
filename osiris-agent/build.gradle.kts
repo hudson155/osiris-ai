@@ -7,6 +7,7 @@ dependencies {
   api(project(":osiris-core"))
   api(project(":osiris-schema"))
 
+  implementation(libs.kairo.logging)
   implementation(libs.kairo.reflect)
   implementation(libs.kairo.serialization)
   implementation(libs.kairo.util)
