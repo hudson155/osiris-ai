@@ -6,6 +6,7 @@ import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import osiris.Model
 import osiris.agent.Context
+import osiris.agent.tool.Tool
 
 public interface LlmAgentConfig {
   public suspend fun model(context: Context): Model

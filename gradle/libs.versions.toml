@@ -1,6 +1,7 @@
 [libraries]
 
 kairo-coroutines = { module = "software.airborne.kairo:kairo-coroutines" }
+kairo-logging = { module = "software.airborne.kairo:kairo-logging" }
 kairo-reflect = { module = "software.airborne.kairo:kairo-reflect" }
 kairo-serialization = { module = "software.airborne.kairo:kairo-serialization" }
 kairo-testing = { module = "software.airborne.kairo:kairo-testing" }

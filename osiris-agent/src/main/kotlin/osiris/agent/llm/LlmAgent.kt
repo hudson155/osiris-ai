@@ -10,6 +10,8 @@ import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import osiris.agent.Agent
 import osiris.agent.Context
 import osiris.agent.history.history
+import osiris.agent.tool.Tool
+import osiris.agent.tool.specification
 
 public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
   final override suspend fun run(context: Context) {
