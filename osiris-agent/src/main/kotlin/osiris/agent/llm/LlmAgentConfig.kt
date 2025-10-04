@@ -11,7 +11,7 @@ import osiris.agent.tool.Tool
 public interface LlmAgentConfig {
   public suspend fun model(context: Context): Model
 
-  public suspend fun instructions(context: Context): List<  SystemMessage>
+  public suspend fun instructions(context: Context): List<SystemMessage>
 
   public suspend fun tools(context: Context): List<Tool<*, *>> =
     emptyList()
