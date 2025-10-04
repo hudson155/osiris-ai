@@ -29,8 +29,7 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
 
   private suspend fun runGreet(context: Context) {
     val greeting = greeting(context) ?: return
-    val instructions = instructions(context)
-    val messages = listOfNotNull(instructions, greeting)
+    val messages = instructions(context) + greeting
     chat(
       context = context,
       tools = emptyList(),
@@ -40,10 +39,7 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
   }
 
   private suspend fun runLlm(context: Context) {
-    val messages = buildList {
-      instructions(context)?.let { add(it) }
-      addAll(context.history.get())
-    }
+    val messages = instructions(context) + context.history.get()
     chat(
       context = context,
       tools = tools(context),
