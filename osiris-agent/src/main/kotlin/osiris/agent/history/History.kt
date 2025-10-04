@@ -1,4 +1,4 @@
-package osiris.agent.llm
+package osiris.agent.history
 
 import dev.langchain4j.data.message.ChatMessage
 import io.ktor.util.AttributeKey
