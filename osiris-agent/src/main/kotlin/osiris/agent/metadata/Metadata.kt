@@ -6,7 +6,9 @@ import osiris.agent.Context
 public abstract class Metadata {
   public abstract suspend fun get(): Map<String, String>
 
-  public abstract suspend fun set(key: String, value: String)
+  public abstract suspend fun set(key: String, value: String?)
+
+  public abstract suspend fun transform(key: String, transform: (value: String?) -> String?)
 }
 
 private val key: AttributeKey<Metadata> = AttributeKey("metadata")
