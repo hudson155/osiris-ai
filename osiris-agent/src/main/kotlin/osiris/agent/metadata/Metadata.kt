@@ -8,7 +8,10 @@ public abstract class Metadata {
 
   public abstract suspend fun set(key: String, value: String?)
 
-  public abstract suspend fun transform(key: String, transform: (value: String?) -> String?)
+  public open suspend fun transform(key: String, transform: (value: String?) -> String?) {
+    val value = get()[key]
+    set(key, transform(value))
+  }
 }
 
 private val key: AttributeKey<Metadata> = AttributeKey("metadata")
