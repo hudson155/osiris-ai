@@ -1,6 +1,7 @@
 package osiris.schema
 
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
+import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
 import dev.langchain4j.model.chat.request.json.JsonEnumSchema
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema
@@ -28,6 +29,7 @@ public object SchemaGenerator {
       is StructureKind.CLASS -> generateClass(descriptor, annotations)
       is StructureKind.OBJECT -> generateObject(descriptor, annotations)
       is PolymorphicKind.SEALED -> generatePolymorphic(descriptor, annotations)
+      is StructureKind.LIST -> generateList(descriptor, annotations)
       is SerialKind.ENUM -> generateEnum(descriptor, annotations)
       is PrimitiveKind.BOOLEAN -> generateBoolean(descriptor, annotations)
       is PrimitiveKind.INT -> generateInteger(descriptor, annotations)
@@ -37,8 +39,6 @@ public object SchemaGenerator {
       is PrimitiveKind.STRING -> generateString(descriptor, annotations)
       else -> error("Unsupported kind (kind=${descriptor.kind}).")
     }
-  // TODO: Enum
-  // TODO: List
 
   private fun generateClass(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonSchemaElement {
     val allAnnotations = descriptor.annotations + annotations
@@ -118,6 +118,14 @@ public object SchemaGenerator {
       addProperties(properties)
       required(properties.keys.toList())
     }.build()
+
+  private fun generateList(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonSchemaElement {
+    val schema = JsonArraySchema.builder().apply {
+      annotation<Schema.Description>(annotations)?.let { description(it.value) }
+      items(generate(descriptor.getElementDescriptor(0), descriptor.getElementAnnotations(0)))
+    }.build()
+    return if (descriptor.isNullable) schema.orNull() else schema
+  }
 
   private fun generateEnum(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonSchemaElement {
     val schema = JsonEnumSchema.builder().apply {

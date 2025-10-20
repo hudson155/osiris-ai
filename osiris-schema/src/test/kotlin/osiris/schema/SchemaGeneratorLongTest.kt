@@ -1,5 +1,6 @@
 package osiris.schema
 
+import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import io.kotest.matchers.shouldBe
@@ -22,13 +23,22 @@ internal class SchemaGeneratorLongTest {
   fun `long, in object`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(val value: Long)
+      data class TestSchema(
+        val value: Long,
+        val values: List<Long>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addIntegerProperty("value")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                items(JsonIntegerSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
@@ -37,13 +47,23 @@ internal class SchemaGeneratorLongTest {
   fun `long, with description`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(@Schema.Description("my long") val value: Long)
+      data class TestSchema(
+        @Schema.Description("my long") val value: Long,
+        @Schema.Description("my longs") val values: List<Long>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addIntegerProperty("value", "my long")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                description("my longs")
+                items(JsonIntegerSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }

@@ -1,5 +1,6 @@
 package osiris.schema
 
+import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonEnumSchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import io.kotest.matchers.shouldBe
@@ -35,7 +36,10 @@ internal class SchemaGeneratorEnumTest {
   fun `string, in object`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(val value: Genre)
+      data class TestSchema(
+        val value: Genre,
+        val values: List<Genre>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
@@ -44,7 +48,17 @@ internal class SchemaGeneratorEnumTest {
               "value",
               listOf("Fantasy", "History", "Religion", "Romance", "Science", "ScienceFiction"),
             )
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                items(
+                  JsonEnumSchema.builder().apply {
+                    enumValues("Fantasy", "History", "Religion", "Romance", "Science", "ScienceFiction")
+                  }.build(),
+                )
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
@@ -53,7 +67,10 @@ internal class SchemaGeneratorEnumTest {
   fun `string, with description`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(@Schema.Description("my enum") val value: Genre)
+      data class TestSchema(
+        @Schema.Description("my enum") val value: Genre,
+        @Schema.Description("my enums") val values: List<Genre>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
@@ -63,7 +80,18 @@ internal class SchemaGeneratorEnumTest {
               listOf("Fantasy", "History", "Religion", "Romance", "Science", "ScienceFiction"),
               "my enum",
             )
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                description("my enums")
+                items(
+                  JsonEnumSchema.builder().apply {
+                    enumValues("Fantasy", "History", "Religion", "Romance", "Science", "ScienceFiction")
+                  }.build(),
+                )
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
