@@ -39,7 +39,6 @@ public object SchemaGenerator {
       is PrimitiveKind.STRING -> generateString(descriptor, annotations)
       else -> error("Unsupported kind (kind=${descriptor.kind}).")
     }
-  // TODO: List
 
   private fun generateClass(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonSchemaElement {
     val allAnnotations = descriptor.annotations + annotations
