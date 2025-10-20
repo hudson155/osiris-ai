@@ -20,7 +20,7 @@ internal class SchemaGeneratorLongTest {
     }
 
   @Test
-  fun `int, in object`(): Unit =
+  fun `long, in object`(): Unit =
     runTest {
       @Serializable
       data class TestSchema(
