@@ -1,5 +1,6 @@
 package osiris.schema
 
+import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonNumberSchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import io.kotest.matchers.shouldBe
@@ -22,13 +23,22 @@ internal class SchemaGeneratorFloatTest {
   fun `float, in object`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(val value: Float)
+      data class TestSchema(
+        val value: Float,
+        val values: List<Float>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addNumberProperty("value")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                items(JsonNumberSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
@@ -37,13 +47,23 @@ internal class SchemaGeneratorFloatTest {
   fun `float, with description`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(@Schema.Description("my float") val value: Float)
+      data class TestSchema(
+        @Schema.Description("my float") val value: Float,
+        @Schema.Description("my floats") val values: List<Float>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addNumberProperty("value", "my float")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                description("my floats")
+                items(JsonNumberSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }

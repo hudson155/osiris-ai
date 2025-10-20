@@ -1,5 +1,6 @@
 package osiris.schema
 
+import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import io.kotest.matchers.shouldBe
@@ -22,13 +23,22 @@ internal class SchemaGeneratorStringTest {
   fun `string, in object`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(val value: String)
+      data class TestSchema(
+        val value: String,
+        val values: List<String>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addStringProperty("value")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                items(JsonStringSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
@@ -37,13 +47,23 @@ internal class SchemaGeneratorStringTest {
   fun `string, with description`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(@Schema.Description("my string") val value: String)
+      data class TestSchema(
+        @Schema.Description("my string") val value: String,
+        @Schema.Description("my strings") val values: List<String>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addStringProperty("value", "my string")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                description("my strings")
+                items(JsonStringSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
