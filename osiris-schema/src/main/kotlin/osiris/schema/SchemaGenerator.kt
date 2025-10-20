@@ -12,8 +12,10 @@ import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.elementDescriptors
+import kotlinx.serialization.descriptors.elementNames
 import kotlinx.serialization.serializer
 
 public object SchemaGenerator {
@@ -26,6 +28,7 @@ public object SchemaGenerator {
       is StructureKind.CLASS -> generateClass(descriptor, annotations)
       is StructureKind.OBJECT -> generateObject(descriptor, annotations)
       is PolymorphicKind.SEALED -> generatePolymorphic(descriptor, annotations)
+      is SerialKind.ENUM -> generateEnum(descriptor, annotations)
       is PrimitiveKind.BOOLEAN -> generateBoolean(descriptor, annotations)
       is PrimitiveKind.INT -> generateInteger(descriptor, annotations)
       is PrimitiveKind.LONG -> generateInteger(descriptor, annotations)
@@ -115,6 +118,14 @@ public object SchemaGenerator {
       addProperties(properties)
       required(properties.keys.toList())
     }.build()
+
+  private fun generateEnum(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonSchemaElement {
+    val schema = JsonEnumSchema.builder().apply {
+      annotation<Schema.Description>(annotations)?.let { description(it.value) }
+      enumValues(descriptor.elementNames.toList())
+    }.build()
+    return if (descriptor.isNullable) schema.orNull() else schema
+  }
 
   private fun generateBoolean(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonSchemaElement {
     val schema = JsonBooleanSchema.builder().apply {
