@@ -1,5 +1,6 @@
 package osiris.schema
 
+import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import io.kotest.matchers.shouldBe
@@ -22,13 +23,22 @@ internal class SchemaGeneratorBooleanTest {
   fun `boolean, in object`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(val value: Boolean)
+      data class TestSchema(
+        val value: Boolean,
+        val values: List<Boolean>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addBooleanProperty("value")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                items(JsonBooleanSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
@@ -37,13 +47,23 @@ internal class SchemaGeneratorBooleanTest {
   fun `boolean, with description`(): Unit =
     runTest {
       @Serializable
-      data class TestSchema(@Schema.Description("my boolean") val value: Boolean)
+      data class TestSchema(
+        @Schema.Description("my boolean") val value: Boolean,
+        @Schema.Description("my booleans") val values: List<Boolean>,
+      )
 
       SchemaGenerator.generate<TestSchema>()
         .shouldBe(
           JsonObjectSchema.builder().apply {
             addBooleanProperty("value", "my boolean")
-            required("value")
+            addProperty(
+              "values",
+              JsonArraySchema.builder().apply {
+                description("my booleans")
+                items(JsonBooleanSchema.builder().build())
+              }.build(),
+            )
+            required("value", "values")
           }.build(),
         )
     }
