@@ -7,7 +7,7 @@ import osiris.agent.Context
 import osiris.agent.history.history
 
 public suspend fun Agent.run(userMessage: UserMessage): String {
-  val context = Context().apply { history.append(userMessage) }
+  val context = Context().apply { history.append(userMessage, null) }
   run(context)
   val aiMessage = context.history.get().last() as AiMessage
   return aiMessage.text()
