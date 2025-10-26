@@ -58,7 +58,7 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
       val toolInput = toolExecutionRequest.arguments()
       val toolOutput = tool.run(context, toolInput)
       val toolExecutionResult = ToolExecutionResultMessage.from(toolExecutionRequest, toolOutput)
-      context.history.append(toolExecutionResult)
+      context.history.append(toolExecutionResult, this)
     }
   }
 
@@ -89,6 +89,6 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
       }
       llm(context)
     }
-    context.history.append(aiResponse.aiMessage())
+    context.history.append(aiResponse.aiMessage(), this)
   }
 }
