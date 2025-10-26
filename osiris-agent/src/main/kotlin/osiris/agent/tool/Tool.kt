@@ -6,9 +6,9 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kairo.reflect.KairoType
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import osiris.agent.Context
+import osiris.json
 import osiris.schema.SchemaGenerator
 
 private val logger: KLogger = KotlinLogging.logger {}
@@ -24,10 +24,10 @@ public abstract class Tool<I : Any, O : Any>(
 
   @Suppress("UNCHECKED_CAST")
   public suspend fun run(context: Context, inputString: String): String {
-    val input = Json.decodeFromString(serializer(inputType.kotlinType) as KSerializer<I>, inputString)
+    val input = json.decodeFromString(serializer(inputType.kotlinType) as KSerializer<I>, inputString)
     try {
       val output = run(context, input)
-      return Json.encodeToString(serializer(outputType.kotlinType) as KSerializer<O>, output)
+      return json.encodeToString(serializer(outputType.kotlinType) as KSerializer<O>, output)
     } catch (e: ToolException) {
       logger.debug(e) { "Handled tool exception." }
       return e.message
