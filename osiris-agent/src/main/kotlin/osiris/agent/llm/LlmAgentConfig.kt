@@ -8,6 +8,7 @@ import osiris.Model
 import osiris.agent.Context
 import osiris.agent.tool.Tool
 
+@Suppress("RedundantSuspendModifier")
 public interface LlmAgentConfig {
   public suspend fun model(context: Context): Model
 
