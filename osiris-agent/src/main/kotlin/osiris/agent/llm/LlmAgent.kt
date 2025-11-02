@@ -63,7 +63,6 @@ public abstract class LlmAgent(name: String) : Agent(name), LlmAgentConfig {
   }
 
   // TODO: LLM retries?
-  @Suppress("LongParameterList")
   private suspend fun chat(
     context: Context,
     tools: List<Tool<*, *>>,

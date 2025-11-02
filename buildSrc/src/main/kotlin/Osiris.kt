@@ -15,7 +15,7 @@ internal fun RepositoryHandler.artifactRegistry() {
 
 public object Airborne {
   // https://github.com/hudson155/kairo/releases
-  public const val kairo: String = "software.airborne.kairo:bom-full:6.0.0-beta.1"
+  public const val kairo: String = "software.airborne.kairo:bom-full:6.0.0-beta.5"
 }
 
 internal fun groupId(): String =

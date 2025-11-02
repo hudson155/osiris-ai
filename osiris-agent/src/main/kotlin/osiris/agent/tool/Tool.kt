@@ -4,6 +4,7 @@ import dev.langchain4j.agent.tool.ToolSpecification
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.utils.io.CancellationException
 import kairo.reflect.KairoType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
@@ -31,6 +32,8 @@ public abstract class Tool<I : Any, O : Any>(
     } catch (e: ToolException) {
       logger.debug(e) { "Handled tool exception." }
       return e.message
+    } catch (e: CancellationException) {
+      throw e
     } catch (e: Exception) {
       logger.error(e) { "Unhandled tool exception." }
       return "Error"
