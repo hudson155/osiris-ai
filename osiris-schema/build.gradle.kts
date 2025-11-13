@@ -12,7 +12,7 @@ kotlin {
 
 dependencies {
   implementation(libs.kairo.serialization)
-  implementation(libs.langchain.core)
+  implementation(libs.langchain)
 
   testImplementation(libs.kairo.testing)
 }
