@@ -9,6 +9,6 @@ kairo-util = { module = "software.airborne.kairo:kairo-util" }
 
 ktor-utils = { module = "io.ktor:ktor-utils" }
 
-langchain-core = { module = "dev.langchain4j:langchain4j-core" }
+langchain = { module = "dev.langchain4j:langchain4j-core" }
 
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json" }
