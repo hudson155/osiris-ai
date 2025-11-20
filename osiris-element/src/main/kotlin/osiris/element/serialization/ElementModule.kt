@@ -16,6 +16,7 @@ import osiris.element.element.NumberedListElement
 import osiris.element.element.ParagraphElement
 import osiris.element.element.SpanElement
 import osiris.element.element.TextElement
+import osiris.element.element.ThematicBreakElement
 
 public fun elementModule(): SerializersModule =
   SerializersModule {
@@ -32,5 +33,6 @@ public fun elementModule(): SerializersModule =
       subclass(ParagraphElement::class)
       subclass(SpanElement::class)
       subclass(TextElement::class)
+      subclass(ThematicBreakElement::class)
     }
   }
