@@ -15,15 +15,15 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "Span",
-          "elements": [
-            {
-              "type": "Text",
-              "content": "Hi, my name is Jeff."
-            }
-          ]
-        }
+          {
+            "type": "Span",
+            "elements": [
+              {
+                "type": "Text",
+                "content": "Hi, my name is Jeff."
+              }
+            ]
+          }
         """.trimIndent(),
       )
     }
@@ -39,16 +39,16 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "Span",
-          "elements": [
-            {
-              "type": "Text",
-              "content": "Hi, my name is Jeff."
-            }
-          ],
-          "bold": true
-        }
+          {
+            "type": "Span",
+            "elements": [
+              {
+                "type": "Text",
+                "content": "Hi, my name is Jeff."
+              }
+            ],
+            "bold": true
+          }
         """.trimIndent(),
       )
     }
@@ -64,16 +64,16 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "Span",
-          "elements": [
-            {
-              "type": "Text",
-              "content": "Hi, my name is Jeff."
-            }
-          ],
-          "italic": true
-        }
+          {
+            "type": "Span",
+            "elements": [
+              {
+                "type": "Text",
+                "content": "Hi, my name is Jeff."
+              }
+            ],
+            "italic": true
+          }
         """.trimIndent(),
       )
     }

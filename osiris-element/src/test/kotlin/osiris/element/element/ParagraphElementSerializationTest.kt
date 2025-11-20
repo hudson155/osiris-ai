@@ -31,50 +31,50 @@ internal class ParagraphElementSerializationTest : ElementSerializationTest() {
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "Paragraph",
-          "elements": [
-            {
-              "type": "Text",
-              "content": "A paragraph can contain "
-            },
-            {
-              "type": "Span",
-              "elements": [
-                {
-                  "type": "Text",
-                  "content": "bold text"
-                }
-              ],
-              "bold": true
-            },
-            {
-              "type": "Text",
-              "content": " and "
-            },
-            {
-              "type": "Span",
-              "elements": [
-                {
-                  "type": "Text",
-                  "content": "italic text"
-                }
-              ],
-              "italic": true
-            },
-            {
-              "type": "Text",
-              "content": "."
-            },
-            {
-              "type": "LineBreak"
-            },
-            {
-              "type": "Text",
-              "content": "It can also contain line breaks."
-            }
-          ]
-        }
+          {
+            "type": "Paragraph",
+            "elements": [
+              {
+                "type": "Text",
+                "content": "A paragraph can contain "
+              },
+              {
+                "type": "Span",
+                "elements": [
+                  {
+                    "type": "Text",
+                    "content": "bold text"
+                  }
+                ],
+                "bold": true
+              },
+              {
+                "type": "Text",
+                "content": " and "
+              },
+              {
+                "type": "Span",
+                "elements": [
+                  {
+                    "type": "Text",
+                    "content": "italic text"
+                  }
+                ],
+                "italic": true
+              },
+              {
+                "type": "Text",
+                "content": "."
+              },
+              {
+                "type": "LineBreak"
+              },
+              {
+                "type": "Text",
+                "content": "It can also contain line breaks."
+              }
+            ]
+          }
         """.trimIndent(),
       )
     }

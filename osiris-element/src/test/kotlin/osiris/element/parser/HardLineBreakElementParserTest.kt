@@ -14,8 +14,8 @@ internal class HardLineBreakElementParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        First line\
-        Second line
+          First line\
+          Second line
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(

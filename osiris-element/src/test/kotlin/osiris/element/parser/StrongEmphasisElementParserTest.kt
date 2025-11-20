@@ -14,7 +14,7 @@ internal class StrongEmphasisElementParserTest {
     runTest {
       val string =
         """
-        Some text is **bolded** in __different ways__.
+          Some text is **bolded** in __different ways__.
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(

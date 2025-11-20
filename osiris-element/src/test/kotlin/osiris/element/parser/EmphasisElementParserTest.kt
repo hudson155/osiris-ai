@@ -14,7 +14,7 @@ internal class EmphasisElementParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        Some text is *italicized* in _different ways_.
+          Some text is *italicized* in _different ways_.
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(

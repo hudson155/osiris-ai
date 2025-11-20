@@ -11,9 +11,9 @@ internal class LineBreakElementSerializationTest : ElementSerializationTest() {
       val element = LineBreakElement
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "LineBreak"
-        }
+          {
+            "type": "LineBreak"
+          }
         """.trimIndent(),
       )
     }

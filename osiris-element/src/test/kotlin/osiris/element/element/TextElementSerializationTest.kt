@@ -11,10 +11,10 @@ internal class TextElementSerializationTest : ElementSerializationTest() {
       val element = TextElement("Hi, my name is Jeff.")
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "Text",
-          "content": "Hi, my name is Jeff."
-        }
+          {
+            "type": "Text",
+            "content": "Hi, my name is Jeff."
+          }
         """.trimIndent(),
       )
     }

@@ -13,9 +13,9 @@ internal class ParagraphElementParserTest {
     runTest {
       val string =
         """
-        I see your message, but it doesn't seem related to Highbeam,
-        your business, or the financial and consumer brand industries.
-        How can I assist you with those topics?
+          I see your message, but it doesn't seem related to Highbeam,
+          your business, or the financial and consumer brand industries.
+          How can I assist you with those topics?
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
@@ -37,25 +37,25 @@ internal class ParagraphElementParserTest {
     runTest {
       val string =
         """
-          Focus on Cash Flow:
-        As an ecommerce founder, managing cash flow is critical.
-        Keep a close eye on your cash and ensure you're balancing your inventory investment
-        with the necessary funds to cover marketing, staffing, and operational costs.
-        Leverage tools like forecasting and financial modeling
-        to predict short-term cash needs and avoid unexpected cash shortages.
+            Focus on Cash Flow:
+          As an ecommerce founder, managing cash flow is critical.
+          Keep a close eye on your cash and ensure you're balancing your inventory investment
+          with the necessary funds to cover marketing, staffing, and operational costs.
+          Leverage tools like forecasting and financial modeling
+          to predict short-term cash needs and avoid unexpected cash shortages.
 
-        Optimize for Retention:
-         While acquiring new customers is important, retaining them is crucial for growth
-          Create an experience that turns first-time buyers into repeat customers.
-         This includes offering exceptional customer service and loyalty programs.
-        The lifetime value of your customers should always be a priority.
+          Optimize for Retention:
+           While acquiring new customers is important, retaining them is crucial for growth
+            Create an experience that turns first-time buyers into repeat customers.
+           This includes offering exceptional customer service and loyalty programs.
+          The lifetime value of your customers should always be a priority.
 
-        Leverage Data for Growth:
-         Data is your best friend when scaling an ecommerce business.
-          Dive into your analytics to understand sales trends and marketing performance.
-           Use this information to refine your strategies and make data-driven decisions.
-            Whether it's optimizing your ad spend, adjusting your product offerings,
-             or improving your website experience.
+          Leverage Data for Growth:
+           Data is your best friend when scaling an ecommerce business.
+            Dive into your analytics to understand sales trends and marketing performance.
+             Use this information to refine your strategies and make data-driven decisions.
+              Whether it's optimizing your ad spend, adjusting your product offerings,
+               or improving your website experience.
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
