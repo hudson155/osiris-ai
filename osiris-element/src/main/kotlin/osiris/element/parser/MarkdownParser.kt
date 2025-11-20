@@ -1,5 +1,6 @@
 package osiris.element.parser
 
+import com.vladsch.flexmark.ast.BlockQuote
 import com.vladsch.flexmark.ast.Emphasis
 import com.vladsch.flexmark.ast.HardLineBreak
 import com.vladsch.flexmark.ast.Heading
@@ -30,6 +31,7 @@ public sealed class MarkdownParser<T : Node> {
 
     protected fun parse(node: Node): List<Element> =
       when (node) {
+        is BlockQuote -> BlockQuoteMarkdownParser.parse(node)
         is Document -> DocumentMarkdownParser.parse(node)
         is Emphasis -> EmphasisMarkdownParser.parse(node)
         is HardLineBreak -> HardLineBreakMarkdownParser.parse(node)
