@@ -3,6 +3,7 @@ package osiris.element.serialization
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
+import osiris.element.element.BlockQuoteElement
 import osiris.element.element.Element
 import osiris.element.element.HeadingElement
 import osiris.element.element.LineBreakElement
@@ -13,6 +14,7 @@ import osiris.element.element.TextElement
 public fun elementModule(): SerializersModule =
   SerializersModule {
     polymorphic(Element::class) {
+      subclass(BlockQuoteElement::class)
       subclass(HeadingElement::class)
       subclass(LineBreakElement::class)
       subclass(ParagraphElement::class)
