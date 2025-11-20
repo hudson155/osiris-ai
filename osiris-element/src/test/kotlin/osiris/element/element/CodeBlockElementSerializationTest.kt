@@ -14,16 +14,16 @@ internal class CodeBlockElementSerializationTest : ElementSerializationTest() {
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "CodeBlock",
-          "language": null,
-          "elements": [
-            {
-              "type": "Text",
-              "content": "My code block\n\nMore LOC"
-            }
-          ]
-        }
+          {
+            "type": "CodeBlock",
+            "language": null,
+            "elements": [
+              {
+                "type": "Text",
+                "content": "My code block\n\nMore LOC"
+              }
+            ]
+          }
         """.trimIndent(),
       )
     }
@@ -37,16 +37,16 @@ internal class CodeBlockElementSerializationTest : ElementSerializationTest() {
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "CodeBlock",
-          "language": "kotlin",
-          "elements": [
-            {
-              "type": "Text",
-              "content": "My code block\n\nMore LOC"
-            }
-          ]
-        }
+          {
+            "type": "CodeBlock",
+            "language": "kotlin",
+            "elements": [
+              {
+                "type": "Text",
+                "content": "My code block\n\nMore LOC"
+              }
+            ]
+          }
         """.trimIndent(),
       )
     }

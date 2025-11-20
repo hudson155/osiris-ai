@@ -1,11 +1,11 @@
 package osiris.element.parser
 
-import osiris.element.element.CodeBlockElement
-import osiris.element.element.TextElement
-import osiris.element.parser.MarkdownParser
 import io.kotest.matchers.collections.shouldContainExactly
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.element.element.CodeBlockElement
+import osiris.element.element.TextElement
+import osiris.element.parser.MarkdownParser
 
 internal class FencedCodeBlockElementParserTest : ElementParserTest() {
   @Test
@@ -13,11 +13,11 @@ internal class FencedCodeBlockElementParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        ```
-        My code block
+          ```
+          My code block
 
-        More LOC
-        ```
+          More LOC
+          ```
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
@@ -34,11 +34,11 @@ internal class FencedCodeBlockElementParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        ```kotlin
-        My code block
+          ```kotlin
+          My code block
 
-        More LOC
-        ```
+          More LOC
+          ```
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(

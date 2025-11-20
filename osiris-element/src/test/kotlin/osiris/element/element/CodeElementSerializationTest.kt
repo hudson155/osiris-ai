@@ -11,10 +11,10 @@ internal class CodeElementSerializationTest : ElementSerializationTest() {
       val element = CodeElement("inline code")
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "Code",
-          "content": "inline code"
-        }
+          {
+            "type": "Code",
+            "content": "inline code"
+          }
         """.trimIndent(),
       )
     }

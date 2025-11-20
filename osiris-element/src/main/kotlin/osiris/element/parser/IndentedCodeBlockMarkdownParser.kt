@@ -1,8 +1,8 @@
 package osiris.element.parser
 
 import com.vladsch.flexmark.ast.IndentedCodeBlock
-import osiris.element.element.Element
 import osiris.element.element.CodeBlockElement
+import osiris.element.element.Element
 import osiris.element.element.TextElement
 
 internal object IndentedCodeBlockMarkdownParser : MarkdownParser<IndentedCodeBlock>() {
