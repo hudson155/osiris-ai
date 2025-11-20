@@ -1,11 +1,11 @@
 package osiris.element.parser
 
-import osiris.element.element.HeadingElement
-import osiris.element.element.ParagraphElement
-import osiris.element.parser.MarkdownParser
 import io.kotest.matchers.collections.shouldContainExactly
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.element.element.HeadingElement
+import osiris.element.element.ParagraphElement
+import osiris.element.parser.MarkdownParser
 
 internal class HeadingParserTest : ElementParserTest() {
   @Test
@@ -13,10 +13,10 @@ internal class HeadingParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        # **_Heading 1_**
-        Foo
-        ## Heading 2
-        Bar
+          # **_Heading 1_**
+          Foo
+          ## Heading 2
+          Bar
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(

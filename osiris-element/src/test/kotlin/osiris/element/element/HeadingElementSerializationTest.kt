@@ -11,11 +11,11 @@ internal class HeadingElementSerializationTest : ElementSerializationTest() {
       val element = HeadingElement(level = 2, text = "Heading 2")
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "Heading",
-          "level": 2,
-          "text": "Heading 2"
-        }
+          {
+            "type": "Heading",
+            "level": 2,
+            "text": "Heading 2"
+          }
         """.trimIndent(),
       )
     }
