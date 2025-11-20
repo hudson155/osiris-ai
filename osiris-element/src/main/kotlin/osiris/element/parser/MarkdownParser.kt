@@ -19,6 +19,7 @@ import com.vladsch.flexmark.ast.SoftLineBreak
 import com.vladsch.flexmark.ast.StrongEmphasis
 import com.vladsch.flexmark.ast.Text
 import com.vladsch.flexmark.ast.TextBase
+import com.vladsch.flexmark.ast.ThematicBreak
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.parser.Parser
 import com.vladsch.flexmark.util.ast.Document
@@ -61,6 +62,7 @@ public sealed class MarkdownParser<T : Node> {
         is StrongEmphasis -> StrongEmphasisMarkdownParser.parse(node)
         is Text -> TextMarkdownParser.parse(node)
         is TextBase -> TextBaseMarkdownParser.parse(node)
+        is ThematicBreak -> ThematicBreakMarkdownParser.parse(node)
         else -> error("Unsupported node: ${node::class.qualifiedName}.")
       }
   }
