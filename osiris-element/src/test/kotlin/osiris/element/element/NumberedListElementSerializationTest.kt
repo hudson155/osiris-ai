@@ -22,65 +22,65 @@ internal class NumberedListElementSerializationTest : ElementSerializationTest()
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "NumberedList",
-          "items": [
-            [
-              {
-                "type": "Paragraph",
-                "elements": [
-                  {
-                    "type": "Text",
-                    "content": "1"
-                  }
-                ]
-              },
-              {
-                "type": "NumberedList",
-                "items": [
-                  [
+          {
+            "type": "NumberedList",
+            "items": [
+              [
+                {
+                  "type": "Paragraph",
+                  "elements": [
                     {
-                      "type": "Paragraph",
-                      "elements": [
-                        {
-                          "type": "Text",
-                          "content": "2"
-                        }
-                      ]
+                      "type": "Text",
+                      "content": "1"
                     }
                   ]
-                ]
-              }
-            ],
-            [
-              {
-                "type": "Paragraph",
-                "elements": [
-                  {
-                    "type": "Text",
-                    "content": "3"
-                  }
-                ]
-              },
-              {
-                "type": "NumberedList",
-                "items": [
-                  [
+                },
+                {
+                  "type": "NumberedList",
+                  "items": [
+                    [
+                      {
+                        "type": "Paragraph",
+                        "elements": [
+                          {
+                            "type": "Text",
+                            "content": "2"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ],
+              [
+                {
+                  "type": "Paragraph",
+                  "elements": [
                     {
-                      "type": "Paragraph",
-                      "elements": [
-                        {
-                          "type": "Text",
-                          "content": "4"
-                        }
-                      ]
+                      "type": "Text",
+                      "content": "3"
                     }
                   ]
-                ]
-              }
+                },
+                {
+                  "type": "NumberedList",
+                  "items": [
+                    [
+                      {
+                        "type": "Paragraph",
+                        "elements": [
+                          {
+                            "type": "Text",
+                            "content": "4"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
             ]
-          ]
-        }
+          }
         """.trimIndent(),
       )
     }

@@ -1,11 +1,11 @@
 package osiris.element.parser
 
-import osiris.element.element.BulletedListElement
-import osiris.element.element.ParagraphElement
-import osiris.element.parser.MarkdownParser
 import io.kotest.matchers.collections.shouldContainExactly
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.element.element.BulletedListElement
+import osiris.element.element.ParagraphElement
+import osiris.element.parser.MarkdownParser
 
 internal class BulletListParserTest : ElementParserTest() {
   @Test
@@ -13,9 +13,9 @@ internal class BulletListParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        - first
-         - second
-          - third
+          - first
+           - second
+            - third
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
@@ -35,9 +35,9 @@ internal class BulletListParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        * first
-         * second
-          * third
+          * first
+           * second
+            * third
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
@@ -57,12 +57,12 @@ internal class BulletListParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-         - 1
-           - 2
-          - 3
-            * 4
-           * 5
-        * 6
+           - 1
+             - 2
+            - 3
+              * 4
+             * 5
+          * 6
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
