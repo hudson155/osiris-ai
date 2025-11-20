@@ -1,9 +1,13 @@
 package osiris.element.parser
 
 import com.vladsch.flexmark.ast.BlockQuote
+import com.vladsch.flexmark.ast.BulletList
+import com.vladsch.flexmark.ast.BulletListItem
 import com.vladsch.flexmark.ast.Emphasis
 import com.vladsch.flexmark.ast.HardLineBreak
 import com.vladsch.flexmark.ast.Heading
+import com.vladsch.flexmark.ast.OrderedList
+import com.vladsch.flexmark.ast.OrderedListItem
 import com.vladsch.flexmark.ast.Paragraph
 import com.vladsch.flexmark.ast.SoftLineBreak
 import com.vladsch.flexmark.ast.StrongEmphasis
@@ -32,10 +36,14 @@ public sealed class MarkdownParser<T : Node> {
     protected fun parse(node: Node): List<Element> =
       when (node) {
         is BlockQuote -> BlockQuoteMarkdownParser.parse(node)
+        is BulletList -> BulletListMarkdownParser.parse(node)
+        is BulletListItem -> BulletListItemMarkdownParser.parse(node)
         is Document -> DocumentMarkdownParser.parse(node)
         is Emphasis -> EmphasisMarkdownParser.parse(node)
         is HardLineBreak -> HardLineBreakMarkdownParser.parse(node)
         is Heading -> HeadingMarkdownParser.parse(node)
+        is OrderedList -> OrderedListMarkdownParser.parse(node)
+        is OrderedListItem -> OrderedListItemMarkdownParser.parse(node)
         is Paragraph -> ParagraphMarkdownParser.parse(node)
         is SoftLineBreak -> SoftLineBreakMarkdownParser.parse(node)
         is StrongEmphasis -> StrongEmphasisMarkdownParser.parse(node)
