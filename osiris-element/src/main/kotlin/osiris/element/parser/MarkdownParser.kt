@@ -1,5 +1,6 @@
 package osiris.element.parser
 
+import com.vladsch.flexmark.ast.AutoLink
 import com.vladsch.flexmark.ast.BlockQuote
 import com.vladsch.flexmark.ast.BulletList
 import com.vladsch.flexmark.ast.BulletListItem
@@ -9,6 +10,8 @@ import com.vladsch.flexmark.ast.FencedCodeBlock
 import com.vladsch.flexmark.ast.HardLineBreak
 import com.vladsch.flexmark.ast.Heading
 import com.vladsch.flexmark.ast.IndentedCodeBlock
+import com.vladsch.flexmark.ast.Link
+import com.vladsch.flexmark.ast.MailLink
 import com.vladsch.flexmark.ast.OrderedList
 import com.vladsch.flexmark.ast.OrderedListItem
 import com.vladsch.flexmark.ast.Paragraph
@@ -38,6 +41,7 @@ public sealed class MarkdownParser<T : Node> {
 
     protected fun parse(node: Node): List<Element> =
       when (node) {
+        is AutoLink -> AutoLinkMarkdownParser.parse(node)
         is BlockQuote -> BlockQuoteMarkdownParser.parse(node)
         is BulletList -> BulletListMarkdownParser.parse(node)
         is BulletListItem -> BulletListItemMarkdownParser.parse(node)
@@ -48,6 +52,8 @@ public sealed class MarkdownParser<T : Node> {
         is HardLineBreak -> HardLineBreakMarkdownParser.parse(node)
         is Heading -> HeadingMarkdownParser.parse(node)
         is IndentedCodeBlock -> IndentedCodeBlockMarkdownParser.parse(node)
+        is Link -> LinkMarkdownParser.parse(node)
+        is MailLink -> MailLinkMarkdownParser.parse(node)
         is OrderedList -> OrderedListMarkdownParser.parse(node)
         is OrderedListItem -> OrderedListItemMarkdownParser.parse(node)
         is Paragraph -> ParagraphMarkdownParser.parse(node)
