@@ -2,6 +2,7 @@ package osiris.element.parser
 
 import com.vladsch.flexmark.ast.Emphasis
 import com.vladsch.flexmark.ast.HardLineBreak
+import com.vladsch.flexmark.ast.Heading
 import com.vladsch.flexmark.ast.Paragraph
 import com.vladsch.flexmark.ast.SoftLineBreak
 import com.vladsch.flexmark.ast.StrongEmphasis
@@ -32,6 +33,7 @@ public sealed class MarkdownParser<T : Node> {
         is Document -> DocumentMarkdownParser.parse(node)
         is Emphasis -> EmphasisMarkdownParser.parse(node)
         is HardLineBreak -> HardLineBreakMarkdownParser.parse(node)
+        is Heading -> HeadingMarkdownParser.parse(node)
         is Paragraph -> ParagraphMarkdownParser.parse(node)
         is SoftLineBreak -> SoftLineBreakMarkdownParser.parse(node)
         is StrongEmphasis -> StrongEmphasisMarkdownParser.parse(node)
