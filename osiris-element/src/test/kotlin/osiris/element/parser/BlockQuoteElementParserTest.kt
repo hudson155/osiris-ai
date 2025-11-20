@@ -14,11 +14,11 @@ internal class BlockQuoteElementParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-        Here's a block quote:
-        > Never eat
-        > shredded wheat
-        >
-        > Please
+          Here's a block quote:
+          > Never eat
+          > shredded wheat
+          >
+          > Please
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(

@@ -22,37 +22,37 @@ internal class BlockQuoteElementSerializationTest : ElementSerializationTest() {
       )
       json.encodeToString<Element>(element).shouldBe(
         """
-        {
-          "type": "BlockQuote",
-          "elements": [
-            {
-              "type": "Paragraph",
-              "elements": [
-                {
-                  "type": "Text",
-                  "content": "Never eat"
-                },
-                {
-                  "type": "Text",
-                  "content": " "
-                },
-                {
-                  "type": "Text",
-                  "content": "shredded wheat"
-                }
-              ]
-            },
-            {
-              "type": "Paragraph",
-              "elements": [
-                {
-                  "type": "Text",
-                  "content": "Please"
-                }
-              ]
-            }
-          ]
-        }
+          {
+            "type": "BlockQuote",
+            "elements": [
+              {
+                "type": "Paragraph",
+                "elements": [
+                  {
+                    "type": "Text",
+                    "content": "Never eat"
+                  },
+                  {
+                    "type": "Text",
+                    "content": " "
+                  },
+                  {
+                    "type": "Text",
+                    "content": "shredded wheat"
+                  }
+                ]
+              },
+              {
+                "type": "Paragraph",
+                "elements": [
+                  {
+                    "type": "Text",
+                    "content": "Please"
+                  }
+                ]
+              }
+            ]
+          }
         """.trimIndent(),
       )
     }
