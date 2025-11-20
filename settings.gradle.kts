@@ -4,4 +4,5 @@ include(":bom")
 
 include(":osiris-agent")
 include(":osiris-core")
+include(":osiris-element")
 include(":osiris-schema")
