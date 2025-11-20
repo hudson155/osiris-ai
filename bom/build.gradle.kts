@@ -18,6 +18,11 @@ dependencies {
     }
   }
 
+  // flexmark
+  // https://github.com/vsch/flexmark-java/tags
+  val flexmarkVersion = "0.64.8"
+  constraints.api("com.vladsch.flexmark:flexmark-all:$flexmarkVersion")
+
   // langchain4j
   // https://github.com/langchain4j/langchain4j/releases
   api(platform("dev.langchain4j:langchain4j-bom:1.8.0"))
