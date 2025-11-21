@@ -5,7 +5,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.element.element.ParagraphElement
 import osiris.element.element.ThematicBreakElement
-import osiris.element.parser.MarkdownParser
 
 internal class ThematicBreakParserTest : ElementParserTest() {
   @Test
@@ -19,9 +18,9 @@ internal class ThematicBreakParserTest : ElementParserTest() {
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
-        ParagraphElement.plaintext("Some content"),
+        ParagraphElement.text("Some content"),
         ThematicBreakElement,
-        ParagraphElement.plaintext("Some other content"),
+        ParagraphElement.text("Some other content"),
       )
     }
   }
@@ -39,9 +38,9 @@ internal class ThematicBreakParserTest : ElementParserTest() {
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
-        ParagraphElement.plaintext("Some content"),
+        ParagraphElement.text("Some content"),
         ThematicBreakElement,
-        ParagraphElement.plaintext("Some other content"),
+        ParagraphElement.text("Some other content"),
       )
     }
   }
@@ -57,9 +56,9 @@ internal class ThematicBreakParserTest : ElementParserTest() {
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
-        ParagraphElement.plaintext("Some content"),
+        ParagraphElement.text("Some content"),
         ThematicBreakElement,
-        ParagraphElement.plaintext("Some other content"),
+        ParagraphElement.text("Some other content"),
       )
     }
   }

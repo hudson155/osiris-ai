@@ -11,12 +11,12 @@ internal class BulletedListElementWithChildListsTest : ElementWithChildListsTest
       val element = BulletedListElement(
         listOf(
           listOf(
-            ParagraphElement.plaintext("1"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("2")))),
+            ParagraphElement.text("1"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("2")))),
           ),
           listOf(
-            ParagraphElement.plaintext("3"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("4")))),
+            ParagraphElement.text("3"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("4")))),
           ),
         ),
       )
@@ -30,36 +30,36 @@ internal class BulletedListElementWithChildListsTest : ElementWithChildListsTest
       val element = BulletedListElement(
         listOf(
           listOf(
-            ParagraphElement.plaintext("1"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("2")))),
+            ParagraphElement.text("1"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("2")))),
           ),
           listOf(
-            ParagraphElement.plaintext("3"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("4")))),
+            ParagraphElement.text("3"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("4")))),
           ),
         ),
       )
       element.withChildLists(
         listOf(
           listOf(
-            ParagraphElement.plaintext("4"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("5")))),
+            ParagraphElement.text("4"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("5")))),
           ),
           listOf(
-            ParagraphElement.plaintext("6"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("7")))),
+            ParagraphElement.text("6"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("7")))),
           ),
         ),
       ).shouldBe(
         BulletedListElement(
           listOf(
             listOf(
-              ParagraphElement.plaintext("4"),
-              BulletedListElement(listOf(listOf(ParagraphElement.plaintext("5")))),
+              ParagraphElement.text("4"),
+              BulletedListElement(listOf(listOf(ParagraphElement.text("5")))),
             ),
             listOf(
-              ParagraphElement.plaintext("6"),
-              BulletedListElement(listOf(listOf(ParagraphElement.plaintext("7")))),
+              ParagraphElement.text("6"),
+              BulletedListElement(listOf(listOf(ParagraphElement.text("7")))),
             ),
           ),
         ),

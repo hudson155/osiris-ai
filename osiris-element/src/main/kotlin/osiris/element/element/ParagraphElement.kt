@@ -19,7 +19,7 @@ public data class ParagraphElement(
   }
 
   public companion object {
-    public fun plaintext(text: String): ParagraphElement =
+    public fun text(text: String): ParagraphElement =
       ParagraphElement(listOf(TextElement(text)))
   }
 }

@@ -17,7 +17,7 @@ internal class BlockQuoteElementSerializationTest : ElementSerializationTest() {
               TextElement("shredded wheat"),
             ),
           ),
-          ParagraphElement.plaintext("Please"),
+          ParagraphElement.text("Please"),
         ),
       )
       json.encodeToString<Element>(element).shouldBe(

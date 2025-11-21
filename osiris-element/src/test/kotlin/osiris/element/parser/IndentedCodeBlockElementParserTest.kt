@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import osiris.element.element.CodeBlockElement
 import osiris.element.element.ParagraphElement
 import osiris.element.element.TextElement
-import osiris.element.parser.MarkdownParser
 
 internal class IndentedCodeBlockElementParserTest : ElementParserTest() {
   @Test
@@ -21,7 +20,7 @@ internal class IndentedCodeBlockElementParserTest : ElementParserTest() {
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
-        ParagraphElement.plaintext("Here's a code block:"),
+        ParagraphElement.text("Here's a code block:"),
         CodeBlockElement(
           language = null,
           elements = listOf(TextElement("My code block\nSecond line")),
