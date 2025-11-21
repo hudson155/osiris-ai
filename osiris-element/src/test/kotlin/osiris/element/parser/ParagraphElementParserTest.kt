@@ -13,19 +13,16 @@ internal class ParagraphElementParserTest {
     runTest {
       val string =
         """
-          I see your message, but it doesn't seem related to Highbeam,
-          your business, or the financial and consumer brand industries.
-          How can I assist you with those topics?
+          I see your message, but it doesn't seem related to relevant topics.
+          How can I assist you with a relevant topic?
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
         ParagraphElement(
           listOf(
-            TextElement("I see your message, but it doesn't seem related to Highbeam,"),
+            TextElement("I see your message, but it doesn't seem related to relevant topics."),
             TextElement(" "),
-            TextElement("your business, or the financial and consumer brand industries."),
-            TextElement(" "),
-            TextElement("How can I assist you with those topics?"),
+            TextElement("How can I assist you with a relevant topic?"),
           ),
         ),
       )

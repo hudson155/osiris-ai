@@ -12,12 +12,12 @@ internal class MailLinkElementParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-          support@highbeam.co
+          jeff@example.com
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
         ParagraphElement(
-          listOf(MailtoLinkElement(content = "support@highbeam.co", href = "support@highbeam.co")),
+          listOf(MailtoLinkElement(content = "jeff@example.com", href = "jeff@example.com")),
         ),
       )
     }
