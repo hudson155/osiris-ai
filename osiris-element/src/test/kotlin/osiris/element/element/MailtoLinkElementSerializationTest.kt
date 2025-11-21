@@ -8,13 +8,13 @@ internal class MailtoLinkElementSerializationTest : ElementSerializationTest() {
   @Test
   fun test(): Unit =
     runTest {
-      val element = MailtoLinkElement(content = "support@highbeam.co", href = "support@highbeam.co")
+      val element = MailtoLinkElement(content = "jeff@example.com", href = "jeff@example.com")
       json.encodeToString<Element>(element).shouldBe(
         """
           {
             "type": "MailtoLink",
-            "content": "support@highbeam.co",
-            "href": "support@highbeam.co"
+            "content": "jeff@example.com",
+            "href": "jeff@example.com"
           }
         """.trimIndent(),
       )

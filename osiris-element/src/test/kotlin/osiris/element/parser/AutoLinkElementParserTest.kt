@@ -13,14 +13,14 @@ internal class AutoLinkElementParserTest : ElementParserTest() {
     runTest {
       val string =
         """
-          An auto-link has no special syntax but https://www.highbeam.co/ just shows up somewhere.
+          An auto-link has no special syntax but https://airborne.software/ just shows up somewhere.
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
         ParagraphElement(
           listOf(
             TextElement("An auto-link has no special syntax but "),
-            ExternalLinkElement(content = "https://www.highbeam.co/", href = "https://www.highbeam.co/"),
+            ExternalLinkElement(content = "https://airborne.software/", href = "https://airborne.software/"),
             TextElement(" just shows up somewhere."),
           ),
         ),
