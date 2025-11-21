@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import osiris.element.element.BlockQuoteElement
 import osiris.element.element.ParagraphElement
 import osiris.element.element.TextElement
-import osiris.element.parser.MarkdownParser
 
 internal class BlockQuoteElementParserTest : ElementParserTest() {
   @Test
@@ -22,7 +21,7 @@ internal class BlockQuoteElementParserTest : ElementParserTest() {
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
-        ParagraphElement.plaintext("Here's a block quote:"),
+        ParagraphElement.text("Here's a block quote:"),
         BlockQuoteElement(
           listOf(
             ParagraphElement(
@@ -32,7 +31,7 @@ internal class BlockQuoteElementParserTest : ElementParserTest() {
                 TextElement("shredded wheat"),
               ),
             ),
-            ParagraphElement.plaintext("Please"),
+            ParagraphElement.text("Please"),
           ),
         ),
       )

@@ -5,7 +5,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.element.element.HeadingElement
 import osiris.element.element.ParagraphElement
-import osiris.element.parser.MarkdownParser
 
 internal class HeadingParserTest : ElementParserTest() {
   @Test
@@ -21,9 +20,9 @@ internal class HeadingParserTest : ElementParserTest() {
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
         HeadingElement(level = 1, text = "**_Heading 1_**"),
-        ParagraphElement.plaintext("Foo"),
+        ParagraphElement.text("Foo"),
         HeadingElement(level = 2, text = "Heading 2"),
-        ParagraphElement.plaintext("Bar"),
+        ParagraphElement.text("Bar"),
       )
     }
   }

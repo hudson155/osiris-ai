@@ -11,12 +11,12 @@ internal class BulletedListElementSerializationTest : ElementSerializationTest()
       val element = BulletedListElement(
         listOf(
           listOf(
-            ParagraphElement.plaintext("1"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("2")))),
+            ParagraphElement.text("1"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("2")))),
           ),
           listOf(
-            ParagraphElement.plaintext("3"),
-            BulletedListElement(listOf(listOf(ParagraphElement.plaintext("4")))),
+            ParagraphElement.text("3"),
+            BulletedListElement(listOf(listOf(ParagraphElement.text("4")))),
           ),
         ),
       )

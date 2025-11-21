@@ -5,7 +5,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.element.element.BulletedListElement
 import osiris.element.element.ParagraphElement
-import osiris.element.parser.MarkdownParser
 
 internal class BulletListParserTest : ElementParserTest() {
   @Test
@@ -21,9 +20,9 @@ internal class BulletListParserTest : ElementParserTest() {
       elements.shouldContainExactly(
         BulletedListElement(
           listOf(
-            listOf(ParagraphElement.plaintext("first")),
-            listOf(ParagraphElement.plaintext("second")),
-            listOf(ParagraphElement.plaintext("third")),
+            listOf(ParagraphElement.text("first")),
+            listOf(ParagraphElement.text("second")),
+            listOf(ParagraphElement.text("third")),
           ),
         ),
       )
@@ -43,9 +42,9 @@ internal class BulletListParserTest : ElementParserTest() {
       elements.shouldContainExactly(
         BulletedListElement(
           listOf(
-            listOf(ParagraphElement.plaintext("first")),
-            listOf(ParagraphElement.plaintext("second")),
-            listOf(ParagraphElement.plaintext("third")),
+            listOf(ParagraphElement.text("first")),
+            listOf(ParagraphElement.text("second")),
+            listOf(ParagraphElement.text("third")),
           ),
         ),
       )
@@ -69,19 +68,19 @@ internal class BulletListParserTest : ElementParserTest() {
         BulletedListElement(
           listOf(
             listOf(
-              ParagraphElement.plaintext("1"),
-              BulletedListElement(listOf(listOf(ParagraphElement.plaintext("2")))),
+              ParagraphElement.text("1"),
+              BulletedListElement(listOf(listOf(ParagraphElement.text("2")))),
             ),
             listOf(
-              ParagraphElement.plaintext("3"),
-              BulletedListElement(listOf(listOf(ParagraphElement.plaintext("4")))),
+              ParagraphElement.text("3"),
+              BulletedListElement(listOf(listOf(ParagraphElement.text("4")))),
             ),
           ),
         ),
         BulletedListElement(
           listOf(
-            listOf(ParagraphElement.plaintext("5")),
-            listOf(ParagraphElement.plaintext("6")),
+            listOf(ParagraphElement.text("5")),
+            listOf(ParagraphElement.text("6")),
           ),
         ),
       )

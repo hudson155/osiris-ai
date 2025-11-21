@@ -17,7 +17,7 @@ internal class BlockQuoteElementWithChildListsTest : ElementWithChildListsTest()
               TextElement("shredded wheat"),
             ),
           ),
-          ParagraphElement.plaintext("Please"),
+          ParagraphElement.text("Please"),
         ),
       )
       element.withChildLists(element.childLists)
@@ -36,7 +36,7 @@ internal class BlockQuoteElementWithChildListsTest : ElementWithChildListsTest()
               TextElement("shredded wheat"),
             ),
           ),
-          ParagraphElement.plaintext("Please"),
+          ParagraphElement.text("Please"),
         ),
       )
       element.withChildLists(
@@ -49,7 +49,7 @@ internal class BlockQuoteElementWithChildListsTest : ElementWithChildListsTest()
                 TextElement("shredded wheat"),
               ),
             ),
-            ParagraphElement.plaintext("Thanks"),
+            ParagraphElement.text("Thanks"),
           ),
         ),
       ).shouldBe(
@@ -62,7 +62,7 @@ internal class BlockQuoteElementWithChildListsTest : ElementWithChildListsTest()
                 TextElement("shredded wheat"),
               ),
             ),
-            ParagraphElement.plaintext("Thanks"),
+            ParagraphElement.text("Thanks"),
           ),
         ),
       )

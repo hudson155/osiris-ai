@@ -11,12 +11,12 @@ internal class NumberedListElementSerializationTest : ElementSerializationTest()
       val element = NumberedListElement(
         listOf(
           listOf(
-            ParagraphElement.plaintext("1"),
-            NumberedListElement(listOf(listOf(ParagraphElement.plaintext("2")))),
+            ParagraphElement.text("1"),
+            NumberedListElement(listOf(listOf(ParagraphElement.text("2")))),
           ),
           listOf(
-            ParagraphElement.plaintext("3"),
-            NumberedListElement(listOf(listOf(ParagraphElement.plaintext("4")))),
+            ParagraphElement.text("3"),
+            NumberedListElement(listOf(listOf(ParagraphElement.text("4")))),
           ),
         ),
       )

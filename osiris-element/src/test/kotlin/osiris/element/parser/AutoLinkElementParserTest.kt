@@ -37,7 +37,7 @@ internal class AutoLinkElementParserTest : ElementParserTest() {
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
-        ParagraphElement.plaintext("Relative links like /foo/bar?baz=qux should NOT be detected."),
+        ParagraphElement.text("Relative links like /foo/bar?baz=qux should NOT be detected."),
       )
     }
   }
