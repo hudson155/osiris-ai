@@ -22,7 +22,9 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
                 "type": "Text",
                 "content": "Hi, my name is Jeff."
               }
-            ]
+            ],
+            "bold": false,
+            "italic": false
           }
         """.trimIndent(),
       )
@@ -47,7 +49,8 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
                 "content": "Hi, my name is Jeff."
               }
             ],
-            "bold": true
+            "bold": true,
+            "italic": false
           }
         """.trimIndent(),
       )
@@ -72,6 +75,7 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
                 "content": "Hi, my name is Jeff."
               }
             ],
+            "bold": false,
             "italic": true
           }
         """.trimIndent(),

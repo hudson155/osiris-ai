@@ -46,7 +46,8 @@ internal class ParagraphElementSerializationTest : ElementSerializationTest() {
                     "content": "bold text"
                   }
                 ],
-                "bold": true
+                "bold": true,
+                "italic": false
               },
               {
                 "type": "Text",
@@ -60,6 +61,7 @@ internal class ParagraphElementSerializationTest : ElementSerializationTest() {
                     "content": "italic text"
                   }
                 ],
+                "bold": false,
                 "italic": true
               },
               {

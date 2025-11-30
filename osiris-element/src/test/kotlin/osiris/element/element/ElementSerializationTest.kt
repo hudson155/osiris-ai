@@ -1,13 +1,13 @@
 package osiris.element.element
 
-import kairo.serialization.prettyPrint
+import kairo.serialization.json
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.plus
 import osiris.element.serialization.elementModule
 
 internal abstract class ElementSerializationTest {
-  protected val json: Json = Json {
-    prettyPrint()
-    serializersModule += elementModule()
-  }
+  protected val json: Json =
+    json(prettyPrint = true) {
+      serializersModule += elementModule()
+    }
 }
