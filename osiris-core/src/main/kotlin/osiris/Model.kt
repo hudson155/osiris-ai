@@ -1,5 +1,6 @@
 package osiris
 
+import dev.langchain4j.model.ModelProvider
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.response.ChatResponse
@@ -11,6 +12,8 @@ import kotlinx.coroutines.withContext
 public class Model(
   private val model: ChatModel,
 ) {
+  public val modelProvider: ModelProvider get() = model.provider()
+
   public suspend fun chat(block: suspend ChatRequest.Builder.() -> Unit): ChatResponse {
     val aiRequest = ChatRequest.builder().apply { block() }.build()
     return async { model.chat(aiRequest) }
