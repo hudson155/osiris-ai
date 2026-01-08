@@ -9,7 +9,7 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 public class Model(
-  private val model: ChatModel,
+  public val model: ChatModel,
 ) {
   public suspend fun chat(block: suspend ChatRequest.Builder.() -> Unit): ChatResponse {
     val aiRequest = ChatRequest.builder().apply { block() }.build()
