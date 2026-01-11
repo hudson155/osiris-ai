@@ -23,6 +23,8 @@ public abstract class Tool<I : Any, O : Any>(
   public open val description: String? =
     null
 
+  public open val executionPolicy: ToolExecutionPolicy? = null
+
   @Suppress("UNCHECKED_CAST")
   public suspend fun run(context: Context, inputString: String): String {
     val input = Json.decodeFromString(serializer(inputType.kotlinType) as KSerializer<I>, inputString)
