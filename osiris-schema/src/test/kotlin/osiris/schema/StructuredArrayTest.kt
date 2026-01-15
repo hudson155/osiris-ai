@@ -22,9 +22,9 @@ internal class StructuredArrayTest {
               JsonArraySchema.builder().apply {
                 items(JsonStringSchema.builder().build())
               }.build(),
-              JsonNullSchema
+              JsonNullSchema,
             )
-          }.build()
+          }.build(),
         )
     }
 
@@ -37,10 +37,9 @@ internal class StructuredArrayTest {
             items(
               JsonAnyOfSchema.builder().apply {
                 anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
-              }.build()
+              }.build(),
             )
-          }.build()
-
+          }.build(),
         )
     }
 
@@ -50,8 +49,8 @@ internal class StructuredArrayTest {
       Structured.generate(
         List::class.createType(
           arguments = listOf(KTypeProjection.invariant(typeOf<String>())),
-          annotations = listOf(Structured.Description("An array"))
-        )
+          annotations = listOf(Structured.Description("An array")),
+        ),
       ).shouldBe(
         JsonArraySchema.builder().apply {
           description("An array")
@@ -67,7 +66,7 @@ internal class StructuredArrayTest {
         .shouldBe(
           JsonArraySchema.builder().apply {
             items(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -78,7 +77,7 @@ internal class StructuredArrayTest {
         .shouldBe(
           JsonArraySchema.builder().apply {
             items(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 }

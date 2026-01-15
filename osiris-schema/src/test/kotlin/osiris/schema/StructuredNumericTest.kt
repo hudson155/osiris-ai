@@ -1,7 +1,6 @@
 package osiris.schema
 
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
-import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema
 import dev.langchain4j.model.chat.request.json.JsonNullSchema
 import dev.langchain4j.model.chat.request.json.JsonNumberSchema
@@ -23,7 +22,7 @@ internal class StructuredNumericTest {
         .shouldBe(
           JsonAnyOfSchema.builder().apply {
             anyOf(JsonIntegerSchema.builder().build(), JsonNullSchema)
-          }.build()
+          }.build(),
         )
     }
 
@@ -34,7 +33,7 @@ internal class StructuredNumericTest {
         .shouldBe(
           JsonAnyOfSchema.builder().apply {
             anyOf(JsonNumberSchema.builder().build(), JsonNullSchema)
-          }.build()
+          }.build(),
         )
     }
 
@@ -43,8 +42,8 @@ internal class StructuredNumericTest {
     runTest {
       Structured.generate(
         Long::class.createType(
-          annotations = listOf(Structured.Description("An integer"))
-        )
+          annotations = listOf(Structured.Description("An integer")),
+        ),
       ).shouldBe(
         JsonIntegerSchema.builder().apply {
           description("An integer")
@@ -57,8 +56,8 @@ internal class StructuredNumericTest {
     runTest {
       Structured.generate(
         Double::class.createType(
-          annotations = listOf(Structured.Description("A number"))
-        )
+          annotations = listOf(Structured.Description("A number")),
+        ),
       ).shouldBe(
         JsonNumberSchema.builder().apply {
           description("A number")
@@ -71,8 +70,8 @@ internal class StructuredNumericTest {
     runTest {
       Structured.generate(
         Unit::class.createType(
-          annotations = listOf(Structured.Type(StructureType.Integer))
-        )
+          annotations = listOf(Structured.Type(StructureType.Integer)),
+        ),
       ).shouldBe(JsonIntegerSchema.builder().build())
     }
 
@@ -81,8 +80,8 @@ internal class StructuredNumericTest {
     runTest {
       Structured.generate(
         Unit::class.createType(
-          annotations = listOf(Structured.Type(StructureType.Number))
-        )
+          annotations = listOf(Structured.Type(StructureType.Number)),
+        ),
       ).shouldBe(JsonNumberSchema.builder().build())
     }
 

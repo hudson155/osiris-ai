@@ -56,7 +56,7 @@ internal class StructuredObjectTest {
               }.build(),
               JsonNullSchema,
             )
-          }.build()
+          }.build(),
         )
     }
 
@@ -65,8 +65,8 @@ internal class StructuredObjectTest {
     runTest {
       Structured.generate(
         DataObject::class.createType(
-          annotations = listOf(Structured.Description("An object"))
-        )
+          annotations = listOf(Structured.Description("An object")),
+        ),
       ).shouldBe(
         JsonObjectSchema.builder().apply {
           description("An object")
@@ -84,7 +84,7 @@ internal class StructuredObjectTest {
           JsonObjectSchema.builder().apply {
             required()
             additionalProperties(false)
-          }.build()
+          }.build(),
         )
     }
 
@@ -99,7 +99,7 @@ internal class StructuredObjectTest {
               "ints",
               JsonArraySchema.builder().apply {
                 items(JsonIntegerSchema.builder().build())
-              }.build()
+              }.build(),
             )
             addProperty(
               "nested",
@@ -108,11 +108,11 @@ internal class StructuredObjectTest {
                 addStringProperty("string")
                 required("string")
                 additionalProperties(false)
-              }.build()
+              }.build(),
             )
             required("boolean", "ints", "nested")
             additionalProperties(false)
-          }.build()
+          }.build(),
         )
     }
 
@@ -140,7 +140,7 @@ internal class StructuredObjectTest {
                 additionalProperties(false)
               }.build(),
             )
-          }.build()
+          }.build(),
         )
     }
 }

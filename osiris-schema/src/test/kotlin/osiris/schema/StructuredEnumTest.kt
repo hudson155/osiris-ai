@@ -1,7 +1,6 @@
 package osiris.schema
 
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
-import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
 import dev.langchain4j.model.chat.request.json.JsonEnumSchema
 import dev.langchain4j.model.chat.request.json.JsonNullSchema
 import io.kotest.matchers.shouldBe
@@ -33,12 +32,12 @@ internal class StructuredEnumTest {
                   "Religion",
                   "Romance",
                   "Science",
-                  "ScienceFiction"
+                  "ScienceFiction",
                 )
               }.build(),
-              JsonNullSchema
+              JsonNullSchema,
             )
-          }.build()
+          }.build(),
         )
     }
 
@@ -47,8 +46,8 @@ internal class StructuredEnumTest {
     runTest {
       Structured.generate(
         Genre::class.createType(
-          annotations = listOf(Structured.Description("An enum"))
-        )
+          annotations = listOf(Structured.Description("An enum")),
+        ),
       ).shouldBe(
         JsonEnumSchema.builder().apply {
           description("An enum")
@@ -58,9 +57,9 @@ internal class StructuredEnumTest {
             "Religion",
             "Romance",
             "Science",
-            "ScienceFiction"
+            "ScienceFiction",
           )
-        }.build()
+        }.build(),
       )
     }
 
@@ -76,9 +75,9 @@ internal class StructuredEnumTest {
               "Religion",
               "Romance",
               "Science",
-              "ScienceFiction"
+              "ScienceFiction",
             )
-          }.build()
+          }.build(),
         )
     }
 }

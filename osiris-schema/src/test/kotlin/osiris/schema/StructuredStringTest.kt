@@ -20,7 +20,7 @@ internal class StructuredStringTest {
         .shouldBe(
           JsonAnyOfSchema.builder().apply {
             anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
-          }.build()
+          }.build(),
         )
     }
 
@@ -29,8 +29,8 @@ internal class StructuredStringTest {
     runTest {
       Structured.generate(
         String::class.createType(
-          annotations = listOf(Structured.Description("A string"))
-        )
+          annotations = listOf(Structured.Description("A string")),
+        ),
       ).shouldBe(
         JsonStringSchema.builder().apply {
           description("A string")
@@ -43,8 +43,8 @@ internal class StructuredStringTest {
     runTest {
       Structured.generate(
         Unit::class.createType(
-          annotations = listOf(Structured.Type(StructureType.String))
-        )
+          annotations = listOf(Structured.Type(StructureType.String)),
+        ),
       ).shouldBe(JsonStringSchema.builder().build())
     }
 

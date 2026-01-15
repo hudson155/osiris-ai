@@ -16,7 +16,7 @@ internal class StructuredBooleanTest {
         .shouldBe(
           JsonAnyOfSchema.builder().apply {
             anyOf(JsonBooleanSchema.builder().build(), JsonNullSchema)
-          }.build()
+          }.build(),
         )
     }
 
@@ -25,8 +25,8 @@ internal class StructuredBooleanTest {
     runTest {
       Structured.generate(
         Boolean::class.createType(
-          annotations = listOf(Structured.Description("A boolean"))
-        )
+          annotations = listOf(Structured.Description("A boolean")),
+        ),
       ).shouldBe(
         JsonBooleanSchema.builder().apply {
           description("A boolean")
@@ -39,8 +39,8 @@ internal class StructuredBooleanTest {
     runTest {
       Structured.generate(
         Unit::class.createType(
-          annotations = listOf(Structured.Type(StructureType.Boolean))
-        )
+          annotations = listOf(Structured.Type(StructureType.Boolean)),
+        ),
       ).shouldBe(JsonBooleanSchema.builder().build())
     }
 

@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package dev.langchain4j.model.chat.request.json
 
 /**

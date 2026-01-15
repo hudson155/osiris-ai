@@ -58,12 +58,12 @@ internal data class StructuredBuilder(
   /**
    * Type support here is based on kairo-serialization's type support.
    */
+  @Suppress("LongMethod")
   private fun getWellKnownKind(): Kind? =
     when (type.classifier) {
       CharArray::class -> Kind.String
       Char::class -> Kind.String
       String::class -> Kind.String
-
       BigDecimal::class -> Kind.Number
       BigInteger::class -> Kind.Integer
       Byte::class -> Kind.Integer
@@ -76,7 +76,6 @@ internal data class StructuredBuilder(
       ULong::class -> Kind.Integer
       Short::class -> Kind.Integer
       UShort::class -> Kind.Integer
-
       java.time.DayOfWeek::class -> Kind.String
       kotlinx.datetime.DayOfWeek::class -> Kind.String
       java.time.Duration::class -> Kind.String
@@ -104,12 +103,9 @@ internal data class StructuredBuilder(
       kotlinx.datetime.TimeZone::class -> Kind.String
       java.time.ZoneOffset::class -> Kind.String
       kotlinx.datetime.FixedOffsetTimeZone::class -> Kind.String
-
       Boolean::class -> Kind.Boolean
-
       java.util.UUID::class -> Kind.String
       kotlin.uuid.Uuid::class -> Kind.String
-
       else -> null
     }
 
@@ -241,7 +237,7 @@ internal data class StructuredBuilder(
             )
           }
           if (type.isMarkedNullable) add(JsonNullSchema)
-        }
+        },
       )
     }.build()
   }
