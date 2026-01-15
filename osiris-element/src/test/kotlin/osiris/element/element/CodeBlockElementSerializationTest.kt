@@ -12,7 +12,7 @@ internal class CodeBlockElementSerializationTest : ElementSerializationTest() {
         language = null,
         elements = listOf(TextElement("My code block\n\nMore LOC")),
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "CodeBlock",
@@ -35,7 +35,7 @@ internal class CodeBlockElementSerializationTest : ElementSerializationTest() {
         language = "kotlin",
         elements = listOf(TextElement("My code block\n\nMore LOC")),
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "CodeBlock",

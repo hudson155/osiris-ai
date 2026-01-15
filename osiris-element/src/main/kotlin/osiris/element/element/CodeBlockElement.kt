@@ -1,16 +1,12 @@
 package osiris.element.element
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+import com.fasterxml.jackson.annotation.JsonIgnore
 
-@Serializable
-@SerialName("CodeBlock")
 public data class CodeBlockElement(
   val language: String?,
   val elements: List<Element>,
 ) : Element(), Element.WithChildLists {
-  @Transient
+  @JsonIgnore
   override val childLists: List<List<Element>> =
     listOf(elements)
 

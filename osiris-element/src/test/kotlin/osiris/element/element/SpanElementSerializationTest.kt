@@ -13,7 +13,7 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
           TextElement("Hi, my name is Jeff."),
         ),
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "Span",
@@ -39,7 +39,7 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
         ),
         bold = true,
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "Span",
@@ -65,7 +65,7 @@ internal class SpanElementSerializationTest : ElementSerializationTest() {
         ),
         italic = true,
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "Span",

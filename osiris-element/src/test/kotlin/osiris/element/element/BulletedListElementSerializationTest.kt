@@ -20,7 +20,7 @@ internal class BulletedListElementSerializationTest : ElementSerializationTest()
           ),
         ),
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "BulletedList",

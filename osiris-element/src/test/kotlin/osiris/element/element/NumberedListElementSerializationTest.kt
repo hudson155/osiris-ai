@@ -20,7 +20,7 @@ internal class NumberedListElementSerializationTest : ElementSerializationTest()
           ),
         ),
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "NumberedList",

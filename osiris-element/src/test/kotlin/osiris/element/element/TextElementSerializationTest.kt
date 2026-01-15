@@ -9,7 +9,7 @@ internal class TextElementSerializationTest : ElementSerializationTest() {
   fun test(): Unit =
     runTest {
       val element = TextElement("Hi, my name is Jeff.")
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "Text",

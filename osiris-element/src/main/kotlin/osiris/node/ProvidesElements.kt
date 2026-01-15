@@ -1,4 +1,4 @@
-package osiris.agent
+package osiris.node
 
 import osiris.element.element.Element
 import osiris.element.parser.MarkdownParser

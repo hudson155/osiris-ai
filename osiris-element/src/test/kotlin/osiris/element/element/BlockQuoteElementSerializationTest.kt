@@ -20,7 +20,7 @@ internal class BlockQuoteElementSerializationTest : ElementSerializationTest() {
           ParagraphElement.text("Please"),
         ),
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "BlockQuote",

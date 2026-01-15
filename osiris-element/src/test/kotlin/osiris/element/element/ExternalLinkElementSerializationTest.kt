@@ -9,7 +9,7 @@ internal class ExternalLinkElementSerializationTest : ElementSerializationTest()
   fun test(): Unit =
     runTest {
       val element = ExternalLinkElement(content = "Airborne website", href = "https://airborne.software/")
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "ExternalLink",
