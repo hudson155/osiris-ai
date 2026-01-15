@@ -1,18 +1,13 @@
 plugins {
-  kotlin("plugin.serialization")
   id("osiris-library")
   id("osiris-library-publish")
 }
 
-kotlin {
-  compilerOptions {
-    freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
-  }
-}
-
 dependencies {
-  implementation(libs.kairo.serialization)
-  implementation(libs.langchain)
+  implementation(libs.kairo.datetime)
+  implementation(libs.kairo.reflect)
+  compileOnly(libs.langchain) // Forced peer dependency.
 
   testImplementation(libs.kairo.testing)
+  testImplementation(libs.langchain)
 }
