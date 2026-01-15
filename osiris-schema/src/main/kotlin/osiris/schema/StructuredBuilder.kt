@@ -36,7 +36,7 @@ internal data class StructuredBuilder(
   }
 
   fun generate(): JsonSchemaElement {
-    getExplicitKind(this@StructuredBuilder.type)?.let { return kind(it) }
+    getExplicitKind()?.let { return kind(it) }
     getWellKnownKind()?.let { return kind(it) }
     getEnumKind()?.let { return kind(it) }
     getArrayKind()?.let { return kind(it) }
@@ -44,7 +44,7 @@ internal data class StructuredBuilder(
     throw IllegalArgumentException("Unable to determine type for $type.")
   }
 
-  private fun getExplicitKind(type: KType): Kind? {
+  private fun getExplicitKind(): Kind? {
     val typeAnnotations = type.findAnnotations<Structured.Type>()
     if (typeAnnotations.isEmpty()) return null
     return when (typeAnnotations.single().value) {
@@ -55,6 +55,9 @@ internal data class StructuredBuilder(
     }
   }
 
+  /**
+   * Type support here is based on kairo-serialization's type support.
+   */
   private fun getWellKnownKind(): Kind? =
     when (type.classifier) {
       CharArray::class -> Kind.String

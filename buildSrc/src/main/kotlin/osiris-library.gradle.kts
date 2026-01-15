@@ -22,19 +22,17 @@ kotlin {
     allWarningsAsErrors = true
     freeCompilerArgs.add("-Xannotation-default-target=param-property")
     freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
-    freeCompilerArgs.add("-Xcontext-parameters")
     freeCompilerArgs.add("-Xjsr305=strict")
     freeCompilerArgs.add("-Xlambdas=indy")
     freeCompilerArgs.add("-opt-in=kotlin.concurrent.atomics.ExperimentalAtomicApi")
-    freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
     freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
   }
 }
 
 dependencies {
   implementation(platform(Airborne.kairo))
+  implementation(platform(project(":bom")))
   detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper:${detekt.toolVersion.get()}")
-  api(platform(project(":bom")))
   testRuntimeOnly("org.slf4j:slf4j-simple")
 }
 
