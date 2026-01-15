@@ -1,8 +1,8 @@
 package osiris.element.element
 
-import kotlinx.serialization.Serializable
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 
-@Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 public abstract class Element {
   public interface WithChildLists {
     public val childLists: List<List<Element>>

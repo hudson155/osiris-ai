@@ -29,7 +29,7 @@ internal class ParagraphElementSerializationTest : ElementSerializationTest() {
           TextElement("It can also contain line breaks."),
         ),
       )
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "Paragraph",

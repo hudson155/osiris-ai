@@ -9,7 +9,7 @@ internal class CodeElementSerializationTest : ElementSerializationTest() {
   fun test(): Unit =
     runTest {
       val element = CodeElement("inline code")
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "Code",

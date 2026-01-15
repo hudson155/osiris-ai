@@ -8,13 +8,13 @@ internal class HeadingElementSerializationTest : ElementSerializationTest() {
   @Test
   fun test(): Unit =
     runTest {
-      val element = HeadingElement(level = 2, text = "Heading 2")
-      json.encodeToString<Element>(element).shouldBe(
+      val element = HeadingElement(level = 2, content = "Heading 2")
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "Heading",
             "level": 2,
-            "text": "Heading 2"
+            "content": "Heading 2"
           }
         """.trimIndent(),
       )

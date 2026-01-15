@@ -19,9 +19,9 @@ internal class HeadingParserTest : ElementParserTest() {
         """.trimIndent()
       val elements = MarkdownParser.parse(string)
       elements.shouldContainExactly(
-        HeadingElement(level = 1, text = "**_Heading 1_**"),
+        HeadingElement(level = 1, content = "**_Heading 1_**"),
         ParagraphElement.text("Foo"),
-        HeadingElement(level = 2, text = "Heading 2"),
+        HeadingElement(level = 2, content = "Heading 2"),
         ParagraphElement.text("Bar"),
       )
     }

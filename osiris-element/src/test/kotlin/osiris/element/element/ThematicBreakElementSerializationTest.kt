@@ -9,7 +9,7 @@ internal class ThematicBreakElementSerializationTest : ElementSerializationTest(
   fun test(): Unit =
     runTest {
       val element = ThematicBreakElement
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "ThematicBreak"

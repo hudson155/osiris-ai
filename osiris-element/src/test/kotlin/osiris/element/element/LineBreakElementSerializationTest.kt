@@ -9,7 +9,7 @@ internal class LineBreakElementSerializationTest : ElementSerializationTest() {
   fun test(): Unit =
     runTest {
       val element = LineBreakElement
-      json.encodeToString<Element>(element).shouldBe(
+      json.serialize<Element>(element).shouldBe(
         """
           {
             "type": "LineBreak"

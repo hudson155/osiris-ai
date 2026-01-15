@@ -1,17 +1,13 @@
 package osiris.element.element
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+import com.fasterxml.jackson.annotation.JsonIgnore
 
-@Serializable
-@SerialName("Span")
 public data class SpanElement(
   val elements: List<Element>,
   val bold: Boolean = false,
   val italic: Boolean = false,
 ) : Element(), Element.WithChildLists {
-  @Transient
+  @JsonIgnore
   override val childLists: List<List<Element>> =
     listOf(elements)
 
