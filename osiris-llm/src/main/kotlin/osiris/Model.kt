@@ -39,7 +39,7 @@ public class Model(
   }
 }
 
-private val key: AttributeKey<Model> = AttributeKey("model")
+private val key: AttributeKey<Model> = AttributeKey("defaultModel")
 
 /**
  * Setting the default LLM model is optional.
