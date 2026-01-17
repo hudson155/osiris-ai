@@ -11,7 +11,7 @@ public abstract class LlmAgent(name: String) : Agent(name) {
   public enum class Action {
     CallLlm,
     ExecuteTools,
-    Exit
+    Exit,
   }
 
   context(context: Context)
