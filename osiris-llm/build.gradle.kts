@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  api(project(":osiris-agent"))
+  compileOnly(project(":osiris-agent")) // Forced peer dependency.
 
   implementation(libs.kairo.logging)
   api(libs.kairo.serialization)
