@@ -2,7 +2,7 @@ package osiris
 
 /**
  * The Osiris [Agent] interface can be used to implement any type of agent.
- * It's not strictly tied to an LLM implementation.
+ * It's not strictly tied to being an LLM implementation.
  *
  * For an LLM implementation, see osiris-llm.
  */
