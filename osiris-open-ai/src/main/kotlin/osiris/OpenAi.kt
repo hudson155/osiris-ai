@@ -7,6 +7,10 @@ import kairo.protectedString.ProtectedString
 
 private val key: AttributeKey<ProtectedString> = AttributeKey("openAiApiKey")
 
+/**
+ * Set the OpenAI API key,
+ * which is used by [openAi].
+ */
 public var ModelFactory.openAiApiKey: ProtectedString?
   get() = attributes.getOrNull(key)
   set(value) {
@@ -17,6 +21,10 @@ public var ModelFactory.openAiApiKey: ProtectedString?
     }
   }
 
+/**
+ * Instantiates a [Model] for OpenAI,
+ * using good defaults.
+ */
 public fun ModelFactory.openAi(name: String, block: OpenAiChatModelBuilder.() -> Unit = {}): Model {
   val apiKey = requireNotNull(openAiApiKey) { "OpenAI API key must be set to create a model." }
   val model = OpenAiChatModel.builder().apply {
