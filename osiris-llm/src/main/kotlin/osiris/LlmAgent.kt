@@ -10,7 +10,7 @@ import dev.langchain4j.model.chat.request.ResponseFormat
 /**
  * An [Agent] implementation specific to LLM execution.
  *
- * Supports tool calls.
+ * Supports [Tool] calls.
  *
  * [execute] calls the LLM in a loop until a response is provided.
  */
@@ -27,7 +27,7 @@ public abstract class LlmAgent(name: String) : Agent(name) {
       val action = determineAction()
       when (action) {
         Action.CallLlm -> callLlm()
-        Action.ExecuteTools -> throw NotImplementedError()
+        Action.ExecuteTools -> executeTools()
         Action.Exit -> break
       }
     }
@@ -56,6 +56,7 @@ public abstract class LlmAgent(name: String) : Agent(name) {
     val model = model()
     val response = model.chat {
       messages(determineMessages())
+      toolSpecifications(tools().map { it.getToolSpecification() })
       responseFormat()?.let { responseFormat(it) }
       configureChatRequest()
     }
@@ -67,7 +68,7 @@ public abstract class LlmAgent(name: String) : Agent(name) {
    * By default, the [Context]'s default model is used.
    */
   context(context: Context)
-  protected open fun model(): Model =
+  protected open suspend fun model(): Model =
     requireNotNull(context.defaultModel) { "No model specified, and default model not set." }
 
   /**
@@ -98,6 +99,13 @@ public abstract class LlmAgent(name: String) : Agent(name) {
   protected open suspend fun greeting(): UserMessage? = null
 
   /**
+   * Specifies the available [Tool]s.
+   */
+  context(context: Context)
+  protected open suspend fun tools(): List<Tool> =
+    emptyList()
+
+  /**
    * Specifies the response format for structured output.
    */
   context(context: Context)
@@ -108,6 +116,18 @@ public abstract class LlmAgent(name: String) : Agent(name) {
    * Configures the [ChatRequest].
    */
   context(context: Context)
-  protected open fun ChatRequest.Builder.configureChatRequest(): Unit =
+  protected open suspend fun ChatRequest.Builder.configureChatRequest(): Unit =
     Unit
+
+  context(context: Context)
+  private suspend fun executeTools() {
+    val tools = tools()
+    val lastMessage = context.history.lastOrNull() as AiMessage
+    // TODO: Execute Tools in parallel.
+    val resultMessages = lastMessage.toolExecutionRequests().map { request ->
+      val tool = tools.single { it.name == request.name() }
+      return@map tool.execute(request)
+    }
+    context.history.append(resultMessages)
+  }
 }
