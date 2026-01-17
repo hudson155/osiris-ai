@@ -14,7 +14,6 @@ dependencies {
   testImplementation(project(":osiris-agent"))
   testImplementation(project(":osiris-evaluator"))
   testImplementation(project(":osiris-open-ai"))
-  testImplementation(project(":osiris-schema"))
 
   testImplementation(libs.kairo.dependencyInjectionTesting)
   testImplementation(libs.kairo.testing)
