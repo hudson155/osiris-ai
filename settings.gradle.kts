@@ -4,6 +4,7 @@ include(":bom")
 
 include(":osiris-agent")
 include(":osiris-element")
+include(":osiris-evaluator")
 include(":osiris-llm")
 include(":osiris-open-ai")
 include(":osiris-schema")
