@@ -17,6 +17,10 @@ public class InMemoryHistory : History() {
     mutex.withLock { this.messages.toList() } // Create a copy of the list.
 
   context(context: Context)
+  override suspend fun lastOrNull(): ChatMessage? =
+    mutex.withLock { this.messages.lastOrNull() }
+
+  context(context: Context)
   override suspend fun append(messages: List<ChatMessage>) {
     mutex.withLock { this.messages += messages }
   }
