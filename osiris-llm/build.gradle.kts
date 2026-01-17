@@ -11,6 +11,7 @@ dependencies {
   api(libs.kairo.serialization)
   api(libs.langchain4j)
 
+  testImplementation(project(":osiris-agent"))
   testImplementation(project(":osiris-evaluator"))
   testImplementation(project(":osiris-open-ai"))
   testImplementation(project(":osiris-schema"))
