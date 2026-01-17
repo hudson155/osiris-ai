@@ -12,7 +12,6 @@ import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import java.math.BigDecimal
 import java.math.BigInteger
-import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -35,6 +34,10 @@ internal data class StructuredBuilder(
     String,
   }
 
+  /**
+   * Tries several strategies to determine the kind, in sequence.
+   * The first match is used.
+   */
   fun generate(): JsonSchemaElement {
     getExplicitKind()?.let { return kind(it) }
     getWellKnownKind()?.let { return kind(it) }
@@ -44,6 +47,9 @@ internal data class StructuredBuilder(
     throw IllegalArgumentException("Unable to determine type for $type.")
   }
 
+  /**
+   * For parameters annotated with [Structured.Type].
+   */
   private fun getExplicitKind(): Kind? {
     val typeAnnotations = type.findAnnotations<Structured.Type>()
     if (typeAnnotations.isEmpty()) return null
@@ -56,6 +62,8 @@ internal data class StructuredBuilder(
   }
 
   /**
+   * Automatically determines the kind for "well-known" types.
+   *
    * Type support here is based on kairo-serialization's type support.
    */
   @Suppress("LongMethod")
@@ -124,12 +132,18 @@ internal data class StructuredBuilder(
     return null
   }
 
+  /**
+   * For enums.
+   */
   private fun getEnumKind(): Kind? {
     val kClass = type.classifier as? KClass<*> ?: return null
     if (kClass.java.isEnum) return Kind.Enum
     return null
   }
 
+  /**
+   * For array-like types.
+   */
   private fun getArrayKind(): Kind? =
     when (type.classifier) {
       List::class -> Kind.Array
@@ -137,6 +151,9 @@ internal data class StructuredBuilder(
       else -> null
     }
 
+  /**
+   * For Kotlin classes.
+   */
   private fun getKotlinKind(): Kind? {
     val kClass = type.classifier as? KClass<*> ?: return null
     if (kClass.isSealed) return Kind.Polymorphic
@@ -237,7 +254,9 @@ internal data class StructuredBuilder(
         buildList {
           kClass.sealedSubclasses.forEach { subclass ->
             val discriminatorAnnotations = subclass.findAnnotations<Structured.Discriminator>()
-            require(discriminatorAnnotations.isNotEmpty())
+            require(discriminatorAnnotations.isNotEmpty()) {
+              "${error.structuredOutput(kClass)}: Must define ${error.discriminatorAnnotation}."
+            }
             val discriminator = discriminatorAnnotations.single().value
             val builder = copy(path = "$path[$discriminator]", type = subclass.createType())
             val schema = builder.generate() as JsonObjectSchema
@@ -274,11 +293,20 @@ internal data class StructuredBuilder(
     }.build()
   }
 
+  /**
+   * Descriptions are permitted on the type itself and on its use as a parameter.
+   * If a description is found on both, the parameter description takes precedence.
+   */
   private fun getDescription(): String? {
-    val classifierAnnotations = (type.classifier as KAnnotatedElement).findAnnotations<Structured.Description>()
-    if (classifierAnnotations.isNotEmpty()) return classifierAnnotations.single().value
     val typeAnnotations = type.findAnnotations<Structured.Description>()
-    if (typeAnnotations.isNotEmpty()) return typeAnnotations.single().value
+    if (typeAnnotations.isNotEmpty()) {
+      return typeAnnotations.single().value
+    }
+    val kClass = type.classifier as KClass<*>
+    val classifierAnnotations = kClass.findAnnotations<Structured.Description>()
+    if (classifierAnnotations.isNotEmpty()) {
+      return classifierAnnotations.single().value
+    }
     return null
   }
 }

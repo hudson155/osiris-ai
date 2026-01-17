@@ -2,6 +2,7 @@ package osiris.schema
 
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonNullSchema
+import dev.langchain4j.model.chat.request.json.JsonSchema
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import io.kotest.matchers.shouldBe
 import kotlin.reflect.full.createType
@@ -16,10 +17,15 @@ internal class StructuredStringTest {
   @Test
   fun nullable(): Unit =
     runTest {
-      Structured.generate<String?>()
+      Structured.schema<String?>("schema")
         .shouldBe(
-          JsonAnyOfSchema.builder().apply {
-            anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonAnyOfSchema.builder().apply {
+                anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
+              }.build(),
+            )
           }.build(),
         )
     }
@@ -27,13 +33,19 @@ internal class StructuredStringTest {
   @Test
   fun `with description`(): Unit =
     runTest {
-      Structured.generate(
-        String::class.createType(
+      Structured.schema(
+        type = String::class.createType(
           annotations = listOf(Structured.Description("A string")),
         ),
+        name = "schema",
       ).shouldBe(
-        JsonStringSchema.builder().apply {
-          description("A string")
+        JsonSchema.builder().apply {
+          name("schema")
+          rootElement(
+            JsonStringSchema.builder().apply {
+              description("A string")
+            }.build(),
+          )
         }.build(),
       )
     }
@@ -41,45 +53,76 @@ internal class StructuredStringTest {
   @Test
   fun `explicit (Unit to String)`(): Unit =
     runTest {
-      Structured.generate(
-        Unit::class.createType(
+      Structured.schema(
+        type = Unit::class.createType(
           annotations = listOf(Structured.Type(StructureType.String)),
         ),
-      ).shouldBe(JsonStringSchema.builder().build())
+        name = "schema",
+      ).shouldBe(
+        JsonSchema.builder().apply {
+          name("schema")
+          rootElement(JsonStringSchema.builder().build())
+        }.build(),
+      )
     }
 
   @Test
   fun `well-known (CharArray)`(): Unit =
     runTest {
-      Structured.generate<CharArray>()
-        .shouldBe(JsonStringSchema.builder().build())
+      Structured.schema<CharArray>("schema")
+        .shouldBe(
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(JsonStringSchema.builder().build())
+          }.build(),
+        )
     }
 
   @Test
   fun `well-known (Char)`(): Unit =
     runTest {
-      Structured.generate<Char>()
-        .shouldBe(JsonStringSchema.builder().build())
+      Structured.schema<Char>("schema")
+        .shouldBe(
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(JsonStringSchema.builder().build())
+          }.build(),
+        )
     }
 
   @Test
   fun `well-known (String)`(): Unit =
     runTest {
-      Structured.generate<String>()
-        .shouldBe(JsonStringSchema.builder().build())
+      Structured.schema<String>("schema")
+        .shouldBe(
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(JsonStringSchema.builder().build())
+          }.build(),
+        )
     }
 
   @Test
   fun `well-known (Java UUID)`(): Unit =
     runTest {
-      Structured.generate<java.util.UUID>()
-        .shouldBe(JsonStringSchema.builder().build())
+      Structured.schema<java.util.UUID>("schema")
+        .shouldBe(
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(JsonStringSchema.builder().build())
+          }.build(),
+        )
     }
 
   @Test
   fun `well-known (Kotlin Uuid)`(): Unit =
     runTest {
-      Structured.generate<kotlin.uuid.Uuid>()
-        .shouldBe(JsonStringSchema.builder().build())
+      Structured.schema<kotlin.uuid.Uuid>("schema")
+        .shouldBe(
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(JsonStringSchema.builder().build())
+          }.build(),
+        )
     }
 }

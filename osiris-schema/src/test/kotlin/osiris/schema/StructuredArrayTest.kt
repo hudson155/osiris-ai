@@ -3,6 +3,7 @@ package osiris.schema
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonNullSchema
+import dev.langchain4j.model.chat.request.json.JsonSchema
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import io.kotest.matchers.shouldBe
 import kotlin.reflect.KTypeProjection
@@ -15,14 +16,19 @@ internal class StructuredArrayTest {
   @Test
   fun nullable(): Unit =
     runTest {
-      Structured.generate<List<String>?>()
+      Structured.schema<List<String>?>("schema")
         .shouldBe(
-          JsonAnyOfSchema.builder().apply {
-            anyOf(
-              JsonArraySchema.builder().apply {
-                items(JsonStringSchema.builder().build())
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonAnyOfSchema.builder().apply {
+                anyOf(
+                  JsonArraySchema.builder().apply {
+                    items(JsonStringSchema.builder().build())
+                  }.build(),
+                  JsonNullSchema,
+                )
               }.build(),
-              JsonNullSchema,
             )
           }.build(),
         )
@@ -31,12 +37,17 @@ internal class StructuredArrayTest {
   @Test
   fun `nullable elements`(): Unit =
     runTest {
-      Structured.generate<List<String?>>()
+      Structured.schema<List<String?>>("schema")
         .shouldBe(
-          JsonArraySchema.builder().apply {
-            items(
-              JsonAnyOfSchema.builder().apply {
-                anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonArraySchema.builder().apply {
+                items(
+                  JsonAnyOfSchema.builder().apply {
+                    anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
+                  }.build(),
+                )
               }.build(),
             )
           }.build(),
@@ -46,15 +57,21 @@ internal class StructuredArrayTest {
   @Test
   fun `with description`(): Unit =
     runTest {
-      Structured.generate(
-        List::class.createType(
+      Structured.schema(
+        type = List::class.createType(
           arguments = listOf(KTypeProjection.invariant(typeOf<String>())),
           annotations = listOf(Structured.Description("An array")),
         ),
+        name = "schema",
       ).shouldBe(
-        JsonArraySchema.builder().apply {
-          description("An array")
-          items(JsonStringSchema.builder().build())
+        JsonSchema.builder().apply {
+          name("schema")
+          rootElement(
+            JsonArraySchema.builder().apply {
+              description("An array")
+              items(JsonStringSchema.builder().build())
+            }.build(),
+          )
         }.build(),
       )
     }
@@ -62,10 +79,15 @@ internal class StructuredArrayTest {
   @Test
   fun list(): Unit =
     runTest {
-      Structured.generate<List<String>>()
+      Structured.schema<List<String>>("schema")
         .shouldBe(
-          JsonArraySchema.builder().apply {
-            items(JsonStringSchema.builder().build())
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonArraySchema.builder().apply {
+                items(JsonStringSchema.builder().build())
+              }.build(),
+            )
           }.build(),
         )
     }
@@ -73,10 +95,15 @@ internal class StructuredArrayTest {
   @Test
   fun set(): Unit =
     runTest {
-      Structured.generate<Set<String>>()
+      Structured.schema<Set<String>>("schema")
         .shouldBe(
-          JsonArraySchema.builder().apply {
-            items(JsonStringSchema.builder().build())
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonArraySchema.builder().apply {
+                items(JsonStringSchema.builder().build())
+              }.build(),
+            )
           }.build(),
         )
     }
