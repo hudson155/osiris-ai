@@ -4,6 +4,7 @@ flexmark = { module = "com.vladsch.flexmark:flexmark-all" }
 
 kairo-datetime = { module = "software.airborne.kairo:kairo-datetime" }
 kairo-logging = { module = "software.airborne.kairo:kairo-logging" }
+kairo-protectedString = { module = "software.airborne.kairo:kairo-protected-string" }
 kairo-reflect = { module = "software.airborne.kairo:kairo-reflect" }
 kairo-serialization = { module = "software.airborne.kairo:kairo-serialization" }
 kairo-testing = { module = "software.airborne.kairo:kairo-testing" }
@@ -11,3 +12,4 @@ kairo-testing = { module = "software.airborne.kairo:kairo-testing" }
 ktorUtils = { module = "io.ktor:ktor-utils" }
 
 langchain4j = { module = "dev.langchain4j:langchain4j-core" }
+langchain4j-openAi = { module = "dev.langchain4j:langchain4j-open-ai" }
