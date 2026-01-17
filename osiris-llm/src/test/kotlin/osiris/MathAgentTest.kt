@@ -3,6 +3,7 @@ package osiris
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.UserMessage
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kairo.testing.postcondition
 import kairo.testing.setup
 import kairo.testing.test
@@ -26,8 +27,8 @@ internal class MathAgentTest {
           mathAgent.execute()
         }
         postcondition {
-          val aiMessage = history.lastOrNull() as AiMessage?
-          aiMessage?.text().shouldBe("4")
+          history.lastOrNull().shouldBeInstanceOf<AiMessage>().text()
+            .shouldBe("4")
         }
       }
     }
