@@ -302,8 +302,8 @@ internal data class StructuredBuilder(
     if (typeAnnotations.isNotEmpty()) {
       return typeAnnotations.single().value
     }
-    val kClass = type.classifier as? KClass<*>
-    val classifierAnnotations = kClass?.findAnnotations<Structured.Description>().orEmpty()
+    val kClass = type.classifier as KClass<*>
+    val classifierAnnotations = kClass.findAnnotations<Structured.Description>()
     if (classifierAnnotations.isNotEmpty()) {
       return classifierAnnotations.single().value
     }

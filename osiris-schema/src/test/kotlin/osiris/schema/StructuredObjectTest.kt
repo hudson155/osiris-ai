@@ -74,14 +74,11 @@ internal class StructuredObjectTest {
     runTest {
       Structured.schema(
         DataObject::class.createType(
-          annotations = listOf(
-            Structured.Name("Override"),
-            Structured.Description("An object"),
-          ),
+          annotations = listOf(Structured.Description("An object")),
         ),
       ).shouldBe(
         JsonSchema.builder().apply {
-          name("Override")
+          name("My data object")
           rootElement(
             JsonObjectSchema.builder().apply {
               description("An object")

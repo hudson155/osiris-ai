@@ -52,15 +52,11 @@ public object Structured {
 
   private fun getName(type: KType, name: String?): String {
     if (name != null) return name
-    val typeAnnotations = type.findAnnotations<Name>()
-    if (typeAnnotations.isNotEmpty()) {
-      return typeAnnotations.single().value
-    }
-    val kClass = type.classifier as? KClass<*>
-    val classifierAnnotations = kClass?.findAnnotations<Name>().orEmpty()
+    val kClass = type.classifier as KClass<*>
+    val classifierAnnotations = kClass.findAnnotations<Name>()
     if (classifierAnnotations.isNotEmpty()) {
       return classifierAnnotations.single().value
     }
-    throw IllegalArgumentException("${error.structuredOutput(kClass!!)}: Must define ${error.nameAnnotation}.")
+    throw IllegalArgumentException("${error.structuredOutput(kClass)}: Must define ${error.nameAnnotation}.")
   }
 }
