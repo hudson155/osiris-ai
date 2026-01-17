@@ -40,6 +40,10 @@ public class Model(
 
 private val key: AttributeKey<Model> = AttributeKey("model")
 
+/**
+ * Setting the default LLM model is optional.
+ * The default LLM model will be automatically used if none is specified for the use case.
+ */
 public var Context.defaultModel: Model?
   get() = attributes.getOrNull(key)
   set(value) {
