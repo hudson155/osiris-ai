@@ -14,8 +14,10 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 internal class StructuredObjectTest {
+  @Structured.Name("My data object")
   internal data object DataObject
 
+  @Structured.Name("My data class")
   internal data class DataClass(
     val boolean: Boolean,
     val ints: List<Int>,
@@ -27,6 +29,7 @@ internal class StructuredObjectTest {
     )
   }
 
+  @Structured.Name("My animal")
   @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
   @JsonSubTypes(
     JsonSubTypes.Type(Animal.Dog::class, name = "Dog"),
@@ -47,10 +50,10 @@ internal class StructuredObjectTest {
   @Test
   fun nullable(): Unit =
     runTest {
-      Structured.schema<DataObject?>("schema")
+      Structured.schema<DataObject?>()
         .shouldBe(
           JsonSchema.builder().apply {
-            name("schema")
+            name("My data object")
             rootElement(
               JsonAnyOfSchema.builder().apply {
                 anyOf(
@@ -70,13 +73,15 @@ internal class StructuredObjectTest {
   fun `with description`(): Unit =
     runTest {
       Structured.schema(
-        type = DataObject::class.createType(
-          annotations = listOf(Structured.Description("An object")),
+        DataObject::class.createType(
+          annotations = listOf(
+            Structured.Name("Override"),
+            Structured.Description("An object"),
+          ),
         ),
-        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
-          name("schema")
+          name("Override")
           rootElement(
             JsonObjectSchema.builder().apply {
               description("An object")
@@ -91,10 +96,10 @@ internal class StructuredObjectTest {
   @Test
   fun `data object`(): Unit =
     runTest {
-      Structured.schema<DataObject>("schema")
+      Structured.schema<DataObject>()
         .shouldBe(
           JsonSchema.builder().apply {
-            name("schema")
+            name("My data object")
             rootElement(
               JsonObjectSchema.builder().apply {
                 required()
@@ -108,10 +113,10 @@ internal class StructuredObjectTest {
   @Test
   fun `data class`(): Unit =
     runTest {
-      Structured.schema<DataClass>("schema")
+      Structured.schema<DataClass>()
         .shouldBe(
           JsonSchema.builder().apply {
-            name("schema")
+            name("My data class")
             rootElement(
               JsonObjectSchema.builder().apply {
                 addBooleanProperty("boolean")
@@ -141,10 +146,10 @@ internal class StructuredObjectTest {
   @Test
   fun `sealed class`(): Unit =
     runTest {
-      Structured.schema<Animal>("schema")
+      Structured.schema<Animal>()
         .shouldBe(
           JsonSchema.builder().apply {
-            name("schema")
+            name("My animal")
             rootElement(
               JsonAnyOfSchema.builder().apply {
                 anyOf(

@@ -12,7 +12,6 @@ import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import java.math.BigDecimal
 import java.math.BigInteger
-import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -299,13 +298,14 @@ internal data class StructuredBuilder(
    * If a description is found on both, the parameter description takes precedence.
    */
   private fun getDescription(): String? {
-    val classifierAnnotations = (type.classifier as? KAnnotatedElement)?.findAnnotations<Structured.Description>()
-    if (classifierAnnotations != null && classifierAnnotations.isNotEmpty()) {
-      return classifierAnnotations.single().value
-    }
     val typeAnnotations = type.findAnnotations<Structured.Description>()
     if (typeAnnotations.isNotEmpty()) {
       return typeAnnotations.single().value
+    }
+    val kClass = type.classifier as? KClass<*>
+    val classifierAnnotations = kClass?.findAnnotations<Structured.Description>().orEmpty()
+    if (classifierAnnotations.isNotEmpty()) {
+      return classifierAnnotations.single().value
     }
     return null
   }
