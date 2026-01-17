@@ -8,6 +8,7 @@ dependencies {
   compileOnly(project(":osiris-agent")) // Forced peer dependency.
 
   implementation(libs.kairo.logging)
+  implementation(libs.kairo.reflect)
   api(libs.kairo.serialization)
   api(libs.langchain4j)
 
