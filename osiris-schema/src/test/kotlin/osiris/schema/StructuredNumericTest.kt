@@ -26,7 +26,7 @@ internal class StructuredNumericTest {
             rootElement(
               JsonAnyOfSchema.builder().apply {
                 anyOf(JsonIntegerSchema.builder().build(), JsonNullSchema)
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -42,7 +42,7 @@ internal class StructuredNumericTest {
             rootElement(
               JsonAnyOfSchema.builder().apply {
                 anyOf(JsonNumberSchema.builder().build(), JsonNullSchema)
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -55,14 +55,14 @@ internal class StructuredNumericTest {
         type = Long::class.createType(
           annotations = listOf(Structured.Description("An integer")),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(
             JsonIntegerSchema.builder().apply {
               description("An integer")
-            }.build()
+            }.build(),
           )
         }.build(),
       )
@@ -75,14 +75,14 @@ internal class StructuredNumericTest {
         type = Double::class.createType(
           annotations = listOf(Structured.Description("A number")),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(
             JsonNumberSchema.builder().apply {
               description("A number")
-            }.build()
+            }.build(),
           )
         }.build(),
       )
@@ -95,12 +95,12 @@ internal class StructuredNumericTest {
         type = Unit::class.createType(
           annotations = listOf(Structured.Type(StructureType.Integer)),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(JsonIntegerSchema.builder().build())
-        }.build()
+        }.build(),
       )
     }
 
@@ -111,12 +111,12 @@ internal class StructuredNumericTest {
         type = Unit::class.createType(
           annotations = listOf(Structured.Type(StructureType.Number)),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(JsonNumberSchema.builder().build())
-        }.build()
+        }.build(),
       )
     }
 
@@ -128,7 +128,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonNumberSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -140,7 +140,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -152,7 +152,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -164,7 +164,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -176,7 +176,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonNumberSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -188,7 +188,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonNumberSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -200,7 +200,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -212,7 +212,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -224,7 +224,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -236,7 +236,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -248,7 +248,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -260,7 +260,7 @@ internal class StructuredNumericTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonIntegerSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 }

@@ -28,7 +28,7 @@ internal class StructuredArrayTest {
                   }.build(),
                   JsonNullSchema,
                 )
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -48,7 +48,7 @@ internal class StructuredArrayTest {
                     anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
                   }.build(),
                 )
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -62,7 +62,7 @@ internal class StructuredArrayTest {
           arguments = listOf(KTypeProjection.invariant(typeOf<String>())),
           annotations = listOf(Structured.Description("An array")),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
@@ -70,7 +70,7 @@ internal class StructuredArrayTest {
             JsonArraySchema.builder().apply {
               description("An array")
               items(JsonStringSchema.builder().build())
-            }.build()
+            }.build(),
           )
         }.build(),
       )
@@ -86,7 +86,7 @@ internal class StructuredArrayTest {
             rootElement(
               JsonArraySchema.builder().apply {
                 items(JsonStringSchema.builder().build())
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -102,7 +102,7 @@ internal class StructuredArrayTest {
             rootElement(
               JsonArraySchema.builder().apply {
                 items(JsonStringSchema.builder().build())
-              }.build()
+              }.build(),
             )
           }.build(),
         )

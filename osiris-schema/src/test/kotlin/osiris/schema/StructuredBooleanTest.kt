@@ -20,7 +20,7 @@ internal class StructuredBooleanTest {
             rootElement(
               JsonAnyOfSchema.builder().apply {
                 anyOf(JsonBooleanSchema.builder().build(), JsonNullSchema)
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -33,14 +33,14 @@ internal class StructuredBooleanTest {
         type = Boolean::class.createType(
           annotations = listOf(Structured.Description("A boolean")),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(
             JsonBooleanSchema.builder().apply {
               description("A boolean")
-            }.build()
+            }.build(),
           )
         }.build(),
       )
@@ -53,12 +53,12 @@ internal class StructuredBooleanTest {
         type = Unit::class.createType(
           annotations = listOf(Structured.Type(StructureType.Boolean)),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(JsonBooleanSchema.builder().build())
-        }.build()
+        }.build(),
       )
     }
 
@@ -70,7 +70,7 @@ internal class StructuredBooleanTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonBooleanSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 }

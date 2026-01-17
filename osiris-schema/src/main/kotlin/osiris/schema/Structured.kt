@@ -8,15 +8,28 @@ import kotlin.reflect.full.findAnnotations
 import kotlin.reflect.typeOf
 
 public object Structured {
+  /**
+   * The name of the schema.
+   * Some LLM providers use this for caching.
+   */
   @Target(AnnotationTarget.CLASS)
   public annotation class Name(val value: String)
 
+  /**
+   * The discriminator is needed when generating schemas that include sealed (polymorphic) classes.
+   */
   @Target(AnnotationTarget.CLASS)
   public annotation class Discriminator(val value: String)
 
+  /**
+   * Use this to override the default [StructureType].
+   */
   @Target(AnnotationTarget.VALUE_PARAMETER)
   public annotation class Type(val value: StructureType)
 
+  /**
+   * Use this to add an optional description.
+   */
   @Target(AnnotationTarget.CLASS, AnnotationTarget.VALUE_PARAMETER)
   public annotation class Description(val value: String)
 

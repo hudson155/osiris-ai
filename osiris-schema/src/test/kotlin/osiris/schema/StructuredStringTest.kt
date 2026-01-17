@@ -24,7 +24,7 @@ internal class StructuredStringTest {
             rootElement(
               JsonAnyOfSchema.builder().apply {
                 anyOf(JsonStringSchema.builder().build(), JsonNullSchema)
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -37,14 +37,14 @@ internal class StructuredStringTest {
         type = String::class.createType(
           annotations = listOf(Structured.Description("A string")),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(
             JsonStringSchema.builder().apply {
               description("A string")
-            }.build()
+            }.build(),
           )
         }.build(),
       )
@@ -57,12 +57,12 @@ internal class StructuredStringTest {
         type = Unit::class.createType(
           annotations = listOf(Structured.Type(StructureType.String)),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
           rootElement(JsonStringSchema.builder().build())
-        }.build()
+        }.build(),
       )
     }
 
@@ -74,7 +74,7 @@ internal class StructuredStringTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -86,7 +86,7 @@ internal class StructuredStringTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -98,7 +98,7 @@ internal class StructuredStringTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -110,7 +110,7 @@ internal class StructuredStringTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -122,7 +122,7 @@ internal class StructuredStringTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 }

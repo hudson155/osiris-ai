@@ -18,7 +18,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -30,7 +30,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -42,7 +42,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -54,7 +54,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -66,7 +66,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -78,7 +78,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -90,7 +90,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -102,7 +102,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -114,7 +114,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -126,7 +126,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -138,7 +138,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -150,7 +150,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -162,7 +162,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -174,7 +174,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -186,7 +186,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -198,7 +198,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -210,7 +210,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -222,7 +222,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -234,7 +234,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -246,7 +246,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -258,7 +258,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -270,7 +270,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -282,7 +282,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -294,7 +294,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -306,7 +306,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -318,7 +318,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 
@@ -330,7 +330,7 @@ internal class StructuredTimeTest {
           JsonSchema.builder().apply {
             name("schema")
             rootElement(JsonStringSchema.builder().build())
-          }.build()
+          }.build(),
         )
     }
 }

@@ -41,7 +41,7 @@ internal class StructuredEnumTest {
                   }.build(),
                   JsonNullSchema,
                 )
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -54,7 +54,7 @@ internal class StructuredEnumTest {
         type = Genre::class.createType(
           annotations = listOf(Structured.Description("An enum")),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
@@ -69,7 +69,7 @@ internal class StructuredEnumTest {
                 "Science",
                 "ScienceFiction",
               )
-            }.build()
+            }.build(),
           )
         }.build(),
       )
@@ -92,7 +92,7 @@ internal class StructuredEnumTest {
                   "Science",
                   "ScienceFiction",
                 )
-              }.build()
+              }.build(),
             )
           }.build(),
         )

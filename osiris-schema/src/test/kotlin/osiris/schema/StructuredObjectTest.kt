@@ -60,7 +60,7 @@ internal class StructuredObjectTest {
                   }.build(),
                   JsonNullSchema,
                 )
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -73,7 +73,7 @@ internal class StructuredObjectTest {
         type = DataObject::class.createType(
           annotations = listOf(Structured.Description("An object")),
         ),
-        name = "schema"
+        name = "schema",
       ).shouldBe(
         JsonSchema.builder().apply {
           name("schema")
@@ -82,7 +82,7 @@ internal class StructuredObjectTest {
               description("An object")
               required()
               additionalProperties(false)
-            }.build()
+            }.build(),
           )
         }.build(),
       )
@@ -99,7 +99,7 @@ internal class StructuredObjectTest {
               JsonObjectSchema.builder().apply {
                 required()
                 additionalProperties(false)
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -132,7 +132,7 @@ internal class StructuredObjectTest {
                 )
                 required("boolean", "ints", "nested")
                 additionalProperties(false)
-              }.build()
+              }.build(),
             )
           }.build(),
         )
@@ -165,7 +165,7 @@ internal class StructuredObjectTest {
                     additionalProperties(false)
                   }.build(),
                 )
-              }.build()
+              }.build(),
             )
           }.build(),
         )

@@ -35,6 +35,10 @@ internal data class StructuredBuilder(
     String,
   }
 
+  /**
+   * Tries several strategies to determine the kind, in sequence.
+   * The first match is used.
+   */
   fun generate(): JsonSchemaElement {
     getExplicitKind()?.let { return kind(it) }
     getWellKnownKind()?.let { return kind(it) }
@@ -44,6 +48,9 @@ internal data class StructuredBuilder(
     throw IllegalArgumentException("Unable to determine type for $type.")
   }
 
+  /**
+   * For parameters annotated with [Structured.Type].
+   */
   private fun getExplicitKind(): Kind? {
     val typeAnnotations = type.findAnnotations<Structured.Type>()
     if (typeAnnotations.isEmpty()) return null
@@ -56,6 +63,8 @@ internal data class StructuredBuilder(
   }
 
   /**
+   * Automatically determines the kind for "well-known" types.
+   *
    * Type support here is based on kairo-serialization's type support.
    */
   @Suppress("LongMethod")
@@ -124,12 +133,18 @@ internal data class StructuredBuilder(
     return null
   }
 
+  /**
+   * For enums.
+   */
   private fun getEnumKind(): Kind? {
     val kClass = type.classifier as? KClass<*> ?: return null
     if (kClass.java.isEnum) return Kind.Enum
     return null
   }
 
+  /**
+   * For array-like types.
+   */
   private fun getArrayKind(): Kind? =
     when (type.classifier) {
       List::class -> Kind.Array
@@ -137,6 +152,9 @@ internal data class StructuredBuilder(
       else -> null
     }
 
+  /**
+   * For Kotlin classes.
+   */
   private fun getKotlinKind(): Kind? {
     val kClass = type.classifier as? KClass<*> ?: return null
     if (kClass.isSealed) return Kind.Polymorphic
@@ -276,11 +294,19 @@ internal data class StructuredBuilder(
     }.build()
   }
 
+  /**
+   * Descriptions are permitted on the type itself and on its use as a parameter.
+   * If a description is found on both, the parameter description takes precedence.
+   */
   private fun getDescription(): String? {
-    val classifierAnnotations = (type.classifier as KAnnotatedElement).findAnnotations<Structured.Description>()
-    if (classifierAnnotations.isNotEmpty()) return classifierAnnotations.single().value
+    val classifierAnnotations = (type.classifier as? KAnnotatedElement)?.findAnnotations<Structured.Description>()
+    if (classifierAnnotations != null && classifierAnnotations.isNotEmpty()) {
+      return classifierAnnotations.single().value
+    }
     val typeAnnotations = type.findAnnotations<Structured.Description>()
-    if (typeAnnotations.isNotEmpty()) return typeAnnotations.single().value
+    if (typeAnnotations.isNotEmpty()) {
+      return typeAnnotations.single().value
+    }
     return null
   }
 }
