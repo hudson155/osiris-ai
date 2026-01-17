@@ -12,7 +12,7 @@ import osiris.history
 import osiris.json
 import osiris.schema.Structured
 
-@Structured.Name("Eval")
+@Structured.Name("eval")
 internal data class Eval(
   @Structured.Description("Briefly explain the rationale behind the score.")
   val explanation: String? = null, // Rationale before boolean.

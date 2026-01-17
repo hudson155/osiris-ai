@@ -6,9 +6,7 @@ package osiris
  *
  * For an LLM implementation, see osiris-llm.
  */
-public abstract class Agent(
-  public val name: String,
-) {
+public abstract class Agent(public val name: String) {
   context(context: Context)
   public abstract suspend fun execute()
 }
