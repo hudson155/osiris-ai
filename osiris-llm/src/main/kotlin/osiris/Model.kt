@@ -13,12 +13,13 @@ import kotlinx.coroutines.withContext
 
 private val logger: KLogger = KotlinLogging.logger {}
 
+/**
+ * LLM [Model] wraps Langchain4j's [ChatModel],
+ * primarily to make it work properly with Kotlin coroutines.
+ */
 public class Model(
   private val model: ChatModel,
 ) {
-  @Target(AnnotationTarget.VALUE_PARAMETER)
-  public annotation class Id(val provider: String, val name: String)
-
   public suspend fun chat(block: suspend ChatRequest.Builder.() -> Unit): ChatResponse {
     val chatRequest = ChatRequest.builder().apply { block() }.build()
     logger.debug { "Chat request (chatRequest=$chatRequest)." }

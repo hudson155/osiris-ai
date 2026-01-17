@@ -8,5 +8,5 @@ dependencies {
 
   implementation(libs.kairo.logging)
   api(libs.kairo.serialization)
-  api(libs.langchain)
+  api(libs.langchain4j)
 }

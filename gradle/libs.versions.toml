@@ -10,4 +10,4 @@ kairo-testing = { module = "software.airborne.kairo:kairo-testing" }
 
 ktorUtils = { module = "io.ktor:ktor-utils" }
 
-langchain = { module = "dev.langchain4j:langchain4j-core" }
+langchain4j = { module = "dev.langchain4j:langchain4j-core" }
