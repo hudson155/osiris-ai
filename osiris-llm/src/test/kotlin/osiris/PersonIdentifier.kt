@@ -8,7 +8,7 @@ import osiris.schema.Structured
 
 @Single
 internal class PersonIdentifier : LlmAgent("person_identifier") {
-  @Structured.Name("Person")
+  @Structured.Name("person")
   internal data class Output(
     val name: String,
     val age: Int,
