@@ -5,6 +5,7 @@ import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.data.message.SystemMessage
 import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ChatRequest
+import dev.langchain4j.model.chat.request.ResponseFormat
 
 /**
  * An [Agent] implementation specific to LLM execution.
@@ -55,6 +56,7 @@ public abstract class LlmAgent(name: String) : Agent(name) {
     val model = model()
     val response = model.chat {
       messages(determineMessages())
+      responseFormat()?.let { responseFormat(it) }
       configureChatRequest()
     }
     context.history.append(response.aiMessage())
@@ -94,6 +96,13 @@ public abstract class LlmAgent(name: String) : Agent(name) {
    */
   context(context: Context)
   protected open suspend fun greeting(): UserMessage? = null
+
+  /**
+   * Specifies the response format for structured output.
+   */
+  context(context: Context)
+  protected open suspend fun responseFormat(): ResponseFormat? =
+    null
 
   /**
    * Configures the [ChatRequest].
