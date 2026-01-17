@@ -26,19 +26,18 @@ internal data class Eval(
 context(context: Context)
 public suspend fun evaluate(
   criteria: String,
-  model: Model? = null,
+  model: Model = requireNotNull(context.defaultModel) { "No model specified, and default model not set." },
   /**
    * LLMs don't do a consistent job at binary pass/fail without a good explanation of how strict the cutoff should be.
    * For this reason, an integer [threshold] between 1 and 10 (inclusive) is used instead of binary pass/fail.
    */
   threshold: Int = 7,
 ) {
-  val model = requireNotNull(model ?: context.defaultModel) { "No model specified, and default model not set." }
   val systemMessage = SystemMessage(
     listOf(
       "Evaluate the LLM's response to the user's question, according to the following criteria.",
       criteria,
-    ).joinToString("\n\n")
+    ).joinToString("\n\n"),
   )
   val response = model.chat {
     messages(context.history.get() + systemMessage)
@@ -46,7 +45,7 @@ public suspend fun evaluate(
       ResponseFormat.builder().apply {
         type(ResponseFormatType.JSON)
         jsonSchema(Structured.schema<Eval>())
-      }.build()
+      }.build(),
     )
   }
   val eval = context.json.deserialize<Eval>(response.aiMessage().text())

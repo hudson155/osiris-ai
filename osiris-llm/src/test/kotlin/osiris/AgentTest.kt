@@ -26,7 +26,7 @@ internal class AgentTest : KoinExtension() {
             openAiApiKey = ProtectedString(System.getenv("OPEN_AI_API_KEY"))
           }
         }
-      }
+      },
     )
   }
 }
