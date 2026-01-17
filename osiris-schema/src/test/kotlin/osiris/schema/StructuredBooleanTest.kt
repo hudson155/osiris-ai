@@ -3,6 +3,7 @@ package osiris.schema
 import dev.langchain4j.model.chat.request.json.JsonAnyOfSchema
 import dev.langchain4j.model.chat.request.json.JsonBooleanSchema
 import dev.langchain4j.model.chat.request.json.JsonNullSchema
+import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.kotest.matchers.shouldBe
 import kotlin.reflect.full.createType
 import kotlinx.coroutines.test.runTest
@@ -12,10 +13,15 @@ internal class StructuredBooleanTest {
   @Test
   fun nullable(): Unit =
     runTest {
-      Structured.generate<Boolean?>()
+      Structured.schema<Boolean?>("schema")
         .shouldBe(
-          JsonAnyOfSchema.builder().apply {
-            anyOf(JsonBooleanSchema.builder().build(), JsonNullSchema)
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonAnyOfSchema.builder().apply {
+                anyOf(JsonBooleanSchema.builder().build(), JsonNullSchema)
+              }.build()
+            )
           }.build(),
         )
     }
@@ -23,13 +29,19 @@ internal class StructuredBooleanTest {
   @Test
   fun `with description`(): Unit =
     runTest {
-      Structured.generate(
-        Boolean::class.createType(
+      Structured.schema(
+        type = Boolean::class.createType(
           annotations = listOf(Structured.Description("A boolean")),
         ),
+        name = "schema"
       ).shouldBe(
-        JsonBooleanSchema.builder().apply {
-          description("A boolean")
+        JsonSchema.builder().apply {
+          name("schema")
+          rootElement(
+            JsonBooleanSchema.builder().apply {
+              description("A boolean")
+            }.build()
+          )
         }.build(),
       )
     }
@@ -37,17 +49,28 @@ internal class StructuredBooleanTest {
   @Test
   fun `explicit (Unit to Boolean)`(): Unit =
     runTest {
-      Structured.generate(
-        Unit::class.createType(
+      Structured.schema(
+        type = Unit::class.createType(
           annotations = listOf(Structured.Type(StructureType.Boolean)),
         ),
-      ).shouldBe(JsonBooleanSchema.builder().build())
+        name = "schema"
+      ).shouldBe(
+        JsonSchema.builder().apply {
+          name("schema")
+          rootElement(JsonBooleanSchema.builder().build())
+        }.build()
+      )
     }
 
   @Test
   fun `well-known (Boolean)`(): Unit =
     runTest {
-      Structured.generate<Boolean>()
-        .shouldBe(JsonBooleanSchema.builder().build())
+      Structured.schema<Boolean>("schema")
+        .shouldBe(
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(JsonBooleanSchema.builder().build())
+          }.build()
+        )
     }
 }

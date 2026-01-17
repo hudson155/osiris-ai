@@ -7,6 +7,7 @@ import dev.langchain4j.model.chat.request.json.JsonArraySchema
 import dev.langchain4j.model.chat.request.json.JsonIntegerSchema
 import dev.langchain4j.model.chat.request.json.JsonNullSchema
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
+import dev.langchain4j.model.chat.request.json.JsonSchema
 import io.kotest.matchers.shouldBe
 import kotlin.reflect.full.createType
 import kotlinx.coroutines.test.runTest
@@ -46,15 +47,20 @@ internal class StructuredObjectTest {
   @Test
   fun nullable(): Unit =
     runTest {
-      Structured.generate<DataObject?>()
+      Structured.schema<DataObject?>("schema")
         .shouldBe(
-          JsonAnyOfSchema.builder().apply {
-            anyOf(
-              JsonObjectSchema.builder().apply {
-                required()
-                additionalProperties(false)
-              }.build(),
-              JsonNullSchema,
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonAnyOfSchema.builder().apply {
+                anyOf(
+                  JsonObjectSchema.builder().apply {
+                    required()
+                    additionalProperties(false)
+                  }.build(),
+                  JsonNullSchema,
+                )
+              }.build()
             )
           }.build(),
         )
@@ -63,15 +69,21 @@ internal class StructuredObjectTest {
   @Test
   fun `with description`(): Unit =
     runTest {
-      Structured.generate(
-        DataObject::class.createType(
+      Structured.schema(
+        type = DataObject::class.createType(
           annotations = listOf(Structured.Description("An object")),
         ),
+        name = "schema"
       ).shouldBe(
-        JsonObjectSchema.builder().apply {
-          description("An object")
-          required()
-          additionalProperties(false)
+        JsonSchema.builder().apply {
+          name("schema")
+          rootElement(
+            JsonObjectSchema.builder().apply {
+              description("An object")
+              required()
+              additionalProperties(false)
+            }.build()
+          )
         }.build(),
       )
     }
@@ -79,11 +91,16 @@ internal class StructuredObjectTest {
   @Test
   fun `data object`(): Unit =
     runTest {
-      Structured.generate<DataObject>()
+      Structured.schema<DataObject>("schema")
         .shouldBe(
-          JsonObjectSchema.builder().apply {
-            required()
-            additionalProperties(false)
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonObjectSchema.builder().apply {
+                required()
+                additionalProperties(false)
+              }.build()
+            )
           }.build(),
         )
     }
@@ -91,27 +108,32 @@ internal class StructuredObjectTest {
   @Test
   fun `data class`(): Unit =
     runTest {
-      Structured.generate<DataClass>()
+      Structured.schema<DataClass>("schema")
         .shouldBe(
-          JsonObjectSchema.builder().apply {
-            addBooleanProperty("boolean")
-            addProperty(
-              "ints",
-              JsonArraySchema.builder().apply {
-                items(JsonIntegerSchema.builder().build())
-              }.build(),
-            )
-            addProperty(
-              "nested",
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
               JsonObjectSchema.builder().apply {
-                description("My nested")
-                addStringProperty("string")
-                required("string")
+                addBooleanProperty("boolean")
+                addProperty(
+                  "ints",
+                  JsonArraySchema.builder().apply {
+                    items(JsonIntegerSchema.builder().build())
+                  }.build(),
+                )
+                addProperty(
+                  "nested",
+                  JsonObjectSchema.builder().apply {
+                    description("My nested")
+                    addStringProperty("string")
+                    required("string")
+                    additionalProperties(false)
+                  }.build(),
+                )
+                required("boolean", "ints", "nested")
                 additionalProperties(false)
-              }.build(),
+              }.build()
             )
-            required("boolean", "ints", "nested")
-            additionalProperties(false)
           }.build(),
         )
     }
@@ -119,26 +141,31 @@ internal class StructuredObjectTest {
   @Test
   fun `sealed class`(): Unit =
     runTest {
-      Structured.generate<Animal>()
+      Structured.schema<Animal>("schema")
         .shouldBe(
-          JsonAnyOfSchema.builder().apply {
-            anyOf(
-              JsonObjectSchema.builder().apply {
-                description("My cat")
-                addEnumProperty("type", listOf("Cat"))
-                addStringProperty("name")
-                addIntegerProperty("napsPerDay")
-                required("type", "name", "napsPerDay")
-                additionalProperties(false)
-              }.build(),
-              JsonObjectSchema.builder().apply {
-                description("My dog")
-                addEnumProperty("type", listOf("Dog"))
-                addStringProperty("name")
-                addIntegerProperty("barksPerMinute")
-                required("type", "name", "barksPerMinute")
-                additionalProperties(false)
-              }.build(),
+          JsonSchema.builder().apply {
+            name("schema")
+            rootElement(
+              JsonAnyOfSchema.builder().apply {
+                anyOf(
+                  JsonObjectSchema.builder().apply {
+                    description("My cat")
+                    addEnumProperty("type", listOf("Cat"))
+                    addStringProperty("name")
+                    addIntegerProperty("napsPerDay")
+                    required("type", "name", "napsPerDay")
+                    additionalProperties(false)
+                  }.build(),
+                  JsonObjectSchema.builder().apply {
+                    description("My dog")
+                    addEnumProperty("type", listOf("Dog"))
+                    addStringProperty("name")
+                    addIntegerProperty("barksPerMinute")
+                    required("type", "name", "barksPerMinute")
+                    additionalProperties(false)
+                  }.build(),
+                )
+              }.build()
             )
           }.build(),
         )

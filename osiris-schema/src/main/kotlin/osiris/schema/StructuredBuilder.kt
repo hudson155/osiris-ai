@@ -237,7 +237,9 @@ internal data class StructuredBuilder(
         buildList {
           kClass.sealedSubclasses.forEach { subclass ->
             val discriminatorAnnotations = subclass.findAnnotations<Structured.Discriminator>()
-            require(discriminatorAnnotations.isNotEmpty())
+            require(discriminatorAnnotations.isNotEmpty()) {
+              "${error.structuredOutput(kClass)}: Must define ${error.discriminatorAnnotation}."
+            }
             val discriminator = discriminatorAnnotations.single().value
             val builder = copy(path = "$path[$discriminator]", type = subclass.createType())
             val schema = builder.generate() as JsonObjectSchema

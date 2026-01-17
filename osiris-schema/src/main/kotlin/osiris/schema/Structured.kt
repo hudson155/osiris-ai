@@ -1,10 +1,16 @@
 package osiris.schema
 
+import dev.langchain4j.model.chat.request.json.JsonSchema
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.findAnnotations
 import kotlin.reflect.typeOf
 
 public object Structured {
+  @Target(AnnotationTarget.CLASS)
+  public annotation class Name(val value: String)
+
   @Target(AnnotationTarget.CLASS)
   public annotation class Discriminator(val value: String)
 
@@ -14,9 +20,29 @@ public object Structured {
   @Target(AnnotationTarget.CLASS, AnnotationTarget.VALUE_PARAMETER)
   public annotation class Description(val value: String)
 
-  public inline fun <reified T> generate(): JsonSchemaElement =
-    generate(typeOf<T>())
+  public inline fun <reified T> schema(name: String? = null): JsonSchema =
+    schema(typeOf<T>(), name)
 
-  public fun generate(type: KType): JsonSchemaElement =
-    StructuredBuilder(path = null, type = type).generate()
+  public fun schema(type: KType, name: String? = null): JsonSchema {
+    val element = element(type)
+    return JsonSchema.builder().apply {
+      name(getName(type, name))
+      rootElement(element)
+    }.build()
+  }
+
+  public inline fun <reified T> element(): JsonSchemaElement =
+    element(typeOf<T>())
+
+  public fun element(type: KType): JsonSchemaElement =
+    StructuredBuilder(null, type).generate()
+
+  private fun getName(type: KType, name: String?): String {
+    val kClass = (type.classifier as KClass<*>)
+    val annotations = kClass.findAnnotations<Name>()
+    if (annotations.isNotEmpty()) return annotations.single().value
+    return requireNotNull(name) {
+      "${error.structuredOutput(kClass)}: Must define ${error.nameAnnotation}."
+    }
+  }
 }
