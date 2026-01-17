@@ -3,6 +3,8 @@
 flexmark = { module = "com.vladsch.flexmark:flexmark-all" }
 
 kairo-datetime = { module = "software.airborne.kairo:kairo-datetime" }
+kairo-dependencyInjectionTesting = { module = "software.airborne.kairo:kairo-dependency-injection-testing" }
+kairo-logging = { module = "software.airborne.kairo:kairo-logging" }
 kairo-reflect = { module = "software.airborne.kairo:kairo-reflect" }
 kairo-serialization = { module = "software.airborne.kairo:kairo-serialization" }
 kairo-testing = { module = "software.airborne.kairo:kairo-testing" }
