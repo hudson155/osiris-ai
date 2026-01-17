@@ -6,8 +6,8 @@ plugins {
 dependencies {
   implementation(libs.kairo.datetime)
   implementation(libs.kairo.reflect)
-  compileOnly(libs.langchain) // Forced peer dependency.
+  compileOnly(libs.langchain4j) // Forced peer dependency.
 
   testImplementation(libs.kairo.testing)
-  testImplementation(libs.langchain)
+  testImplementation(libs.langchain4j)
 }
