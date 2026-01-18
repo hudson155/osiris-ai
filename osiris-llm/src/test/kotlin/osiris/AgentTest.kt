@@ -1,7 +1,6 @@
 package osiris
 
 import kairo.dependencyInjection.KoinExtension
-import kairo.dependencyInjection.koin
 import kairo.protectedString.ProtectedString
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.koin.dsl.module
