@@ -12,6 +12,7 @@ import dev.langchain4j.model.chat.request.json.JsonSchemaElement
 import dev.langchain4j.model.chat.request.json.JsonStringSchema
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -19,9 +20,9 @@ import kotlin.reflect.full.findAnnotations
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.valueParameters
 
-internal data class StructuredBuilder(
-  private val path: String?,
+internal class StructuredBuilder(
   private val type: KType,
+  private val annotations: KAnnotatedElement? = null,
 ) {
   private enum class Kind {
     Array,
@@ -51,9 +52,8 @@ internal data class StructuredBuilder(
    * For parameters annotated with [Structured.Type].
    */
   private fun getExplicitKind(): Kind? {
-    val typeAnnotations = type.findAnnotations<Structured.Type>()
-    if (typeAnnotations.isEmpty()) return null
-    return when (typeAnnotations.single().value) {
+    val type = type.findAnnotations<Structured.Type>().singleNullOrThrow()?.value ?: return null
+    return when (type) {
       StructureType.Boolean -> Kind.Boolean
       StructureType.Integer -> Kind.Integer
       StructureType.Number -> Kind.Number
@@ -177,7 +177,7 @@ internal data class StructuredBuilder(
     val description = getDescription()
     val schema = JsonArraySchema.builder().apply {
       description.takeIf { !type.isMarkedNullable }?.let { description(it) }
-      val builder = copy(path = "$path[]", type = checkNotNull(type.arguments.single().type))
+      val builder = StructuredBuilder(checkNotNull(type.arguments.single().type))
       val schema = builder.generate()
       items(schema)
     }.build()
@@ -234,7 +234,7 @@ internal data class StructuredBuilder(
       }
       params.forEach { param ->
         val paramName = checkNotNull(param.name)
-        val builder = copy(path = "$path.$paramName", type = param.type)
+        val builder = StructuredBuilder(param.type, param)
         val schema = builder.generate()
         addProperty(paramName, schema)
       }
@@ -253,12 +253,11 @@ internal data class StructuredBuilder(
       anyOf(
         buildList {
           kClass.sealedSubclasses.forEach { subclass ->
-            val discriminatorAnnotations = subclass.findAnnotations<Structured.Discriminator>()
-            require(discriminatorAnnotations.isNotEmpty()) {
+            val discriminator = subclass.findAnnotations<Structured.Discriminator>().singleNullOrThrow()?.value
+            requireNotNull(discriminator) {
               "${error.structuredOutput(kClass)}: Must define ${error.discriminatorAnnotation}."
             }
-            val discriminator = discriminatorAnnotations.single().value
-            val builder = copy(path = "$path[$discriminator]", type = subclass.createType())
+            val builder = StructuredBuilder(subclass.createType())
             val schema = builder.generate() as JsonObjectSchema
             add(
               JsonObjectSchema.builder().apply {
@@ -298,15 +297,9 @@ internal data class StructuredBuilder(
    * If a description is found on both, the parameter description takes precedence.
    */
   private fun getDescription(): String? {
-    val typeAnnotations = type.findAnnotations<Structured.Description>()
-    if (typeAnnotations.isNotEmpty()) {
-      return typeAnnotations.single().value
-    }
     val kClass = type.classifier as KClass<*>
-    val classifierAnnotations = kClass.findAnnotations<Structured.Description>()
-    if (classifierAnnotations.isNotEmpty()) {
-      return classifierAnnotations.single().value
+    return listOfNotNull(annotations, type, kClass).firstNotNullOfOrNull { source ->
+      source.findAnnotations<Structured.Description>().singleNullOrThrow()?.value
     }
-    return null
   }
 }
