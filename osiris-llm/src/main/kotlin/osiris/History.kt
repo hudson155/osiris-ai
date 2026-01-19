@@ -21,7 +21,8 @@ public abstract class History {
    * Retrieve the last message in the history, or null if the history is empty.
    */
   context(context: Context)
-  public abstract suspend fun lastOrNull(): ChatMessage?
+  public open suspend fun lastOrNull(): ChatMessage? =
+    get().lastOrNull()
 
   /**
    * Append to the history.
