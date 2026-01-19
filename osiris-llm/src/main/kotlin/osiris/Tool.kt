@@ -2,7 +2,6 @@ package osiris
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
 import dev.langchain4j.agent.tool.ToolSpecification
-import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 
 public abstract class Tool(public val name: String) {
@@ -27,5 +26,5 @@ public abstract class Tool(public val name: String) {
     Unit
 
   context(context: Context)
-  public abstract suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage
+  public abstract suspend fun execute(executionRequest: ToolExecutionRequest): String
 }
