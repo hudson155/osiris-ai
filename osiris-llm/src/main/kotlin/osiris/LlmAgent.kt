@@ -2,8 +2,6 @@ package osiris
 
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
-import dev.langchain4j.data.message.SystemMessage
-import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.request.ResponseFormat
 
@@ -77,26 +75,14 @@ public abstract class LlmAgent(name: String) : Agent(name) {
    */
   context(context: Context)
   protected open suspend fun determineMessages(): List<ChatMessage> =
-    buildList {
-      instructions()?.let { add(it) } // Instructions always go first.
-      val messages = context.history.get()
-      addAll(messages)
-      if (messages.isEmpty()) greeting()?.let { add(it) } // Add the greeting if is no history.
-    }
+    instructions() + context.history.get()
 
   /**
-   * The instructions for the agent ([SystemMessage]).
+   * The instructions for the agent.
    * The default [determineMessages] implementation always includes this as the first [ChatMessage] in the history.
    */
   context(context: Context)
-  protected abstract suspend fun instructions(): SystemMessage?
-
-  /**
-   * The (optional) greeting ([UserMessage]).
-   * This is only included when there is an empty chat history.
-   */
-  context(context: Context)
-  protected open suspend fun greeting(): UserMessage? = null
+  protected abstract suspend fun instructions(): List<ChatMessage>
 
   /**
    * Specifies the available [Tool]s.
