@@ -22,7 +22,7 @@ public abstract class LlmAgent(name: String) : Agent(name) {
   }
 
   context(context: Context)
-  final override suspend fun execute() {
+  final override suspend fun executeAgent() {
     while (true) {
       val action = determineAction()
       when (action) {
