@@ -19,14 +19,16 @@ internal class WeatherServiceTest {
     runTest {
       with(context) {
         setup {
-          history.append(UserMessage("What's the weather in Edmonton and Calgary?"))
+          history.append(UserMessage.from("What's the weather in Edmonton and Calgary?"))
         }
         test {
           weatherService.execute()
         }
         postcondition {
-          evaluate("Should report that the weather in Edmonton is -20 degrees Celsius and snowing.")
-          evaluate("Should report that the weather in Calgary is +10 degrees Celsius and sunny.")
+          evaluate(
+            "Should report that the weather in Edmonton is -20 degrees Celsius and snowing," +
+              "and that the weather in Calgary is +10 degrees Celsius and sunny.",
+          )
         }
       }
     }

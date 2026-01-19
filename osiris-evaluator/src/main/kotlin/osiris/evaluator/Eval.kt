@@ -33,7 +33,7 @@ public suspend fun evaluate(
    */
   threshold: Int = 7,
 ) {
-  val systemMessage = SystemMessage(
+  val systemMessage = SystemMessage.from(
     listOf(
       "Evaluate the LLM's response to the user's question, according to the following criteria.",
       criteria,

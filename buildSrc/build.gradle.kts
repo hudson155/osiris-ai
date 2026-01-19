@@ -12,7 +12,7 @@ dependencies {
   implementation("com.google.cloud.artifactregistry:artifactregistry-gradle-plugin:$artifactRegistryVersion")
 
   // https://github.com/google/ksp/releases
-  val kspVersion = "2.2.20-2.0.3"
+  val kspVersion = "2.3.4"
   implementation("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:$kspVersion")
 
   // https://github.com/detekt/detekt/releases

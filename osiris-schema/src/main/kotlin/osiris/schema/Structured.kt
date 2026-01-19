@@ -48,15 +48,14 @@ public object Structured {
     element(typeOf<T>())
 
   public fun element(type: KType): JsonSchemaElement =
-    StructuredBuilder(null, type).generate()
+    StructuredBuilder(type).generate()
 
   private fun getName(type: KType, name: String?): String {
     if (name != null) return name
     val kClass = type.classifier as KClass<*>
-    val classifierAnnotations = kClass.findAnnotations<Name>()
-    if (classifierAnnotations.isNotEmpty()) {
-      return classifierAnnotations.single().value
-    }
-    throw IllegalArgumentException("${error.structuredOutput(kClass)}: Must define ${error.nameAnnotation}.")
+    val nameAnnotation = kClass.findAnnotations<Name>().singleNullOrThrow()
+    return requireNotNull(nameAnnotation) {
+      "${error.structuredOutput(kClass)}: Must define ${error.nameAnnotation}."
+    }.value
   }
 }
