@@ -25,8 +25,10 @@ internal class WeatherServiceTest {
           weatherService.execute()
         }
         postcondition {
-          evaluate("Should report that the weather in Edmonton is -20 degrees Celsius and snowing.")
-          evaluate("Should report that the weather in Calgary is +10 degrees Celsius and sunny.")
+          evaluate(
+            "Should report that the weather in Edmonton is -20 degrees Celsius and snowing," +
+              "and that the weather in Calgary is +10 degrees Celsius and sunny.",
+          )
         }
       }
     }
