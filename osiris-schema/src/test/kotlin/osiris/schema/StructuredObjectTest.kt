@@ -19,6 +19,7 @@ internal class StructuredObjectTest {
 
   @Structured.Name("my_data_class")
   internal data class DataClass(
+    @Structured.Description("A boolean")
     val boolean: Boolean,
     val ints: List<Int>,
     val nested: Nested,
@@ -116,7 +117,7 @@ internal class StructuredObjectTest {
             name("my_data_class")
             rootElement(
               JsonObjectSchema.builder().apply {
-                addBooleanProperty("boolean")
+                addBooleanProperty("boolean", "A boolean")
                 addProperty(
                   "ints",
                   JsonArraySchema.builder().apply {
