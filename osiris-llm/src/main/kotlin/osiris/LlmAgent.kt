@@ -37,7 +37,7 @@ public abstract class LlmAgent(name: String) : Agent(name) {
    */
   context(context: Context)
   protected open suspend fun determineAction(): Action {
-    val lastMessage = context.history.lastOrNull()
+    val lastMessage = context.history.lastOrNull() ?: return Action.Exit
     if (lastMessage is AiMessage) {
       if (lastMessage.hasToolExecutionRequests()) return Action.ExecuteTools
       return Action.Exit
