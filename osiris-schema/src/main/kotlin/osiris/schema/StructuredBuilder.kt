@@ -52,8 +52,8 @@ internal class StructuredBuilder(
    * For parameters annotated with [Structured.Type].
    */
   private fun getExplicitKind(): Kind? {
-    val type = type.findAnnotations<Structured.Type>().singleNullOrThrow()?.value ?: return null
-    return when (type) {
+    val typeAnnotation = type.findAnnotations<Structured.Type>().singleNullOrThrow() ?: return null
+    return when (typeAnnotation.value) {
       StructureType.Boolean -> Kind.Boolean
       StructureType.Integer -> Kind.Integer
       StructureType.Number -> Kind.Number
@@ -253,8 +253,8 @@ internal class StructuredBuilder(
       anyOf(
         buildList {
           kClass.sealedSubclasses.forEach { subclass ->
-            val discriminator = subclass.findAnnotations<Structured.Discriminator>().singleNullOrThrow()?.value
-            requireNotNull(discriminator) {
+            val discriminatorAnnotation = subclass.findAnnotations<Structured.Discriminator>().singleNullOrThrow()
+            requireNotNull(discriminatorAnnotation) {
               "${error.structuredOutput(kClass)}: Must define ${error.discriminatorAnnotation}."
             }
             val builder = StructuredBuilder(subclass.createType())
@@ -262,7 +262,7 @@ internal class StructuredBuilder(
             add(
               JsonObjectSchema.builder().apply {
                 schema.description()?.let { description(it) }
-                addEnumProperty("type", listOf(discriminator))
+                addEnumProperty("type", listOf(discriminatorAnnotation.value))
                 schema.properties().forEach { (name, schema) -> addProperty(name, schema) }
                 required(listOf("type") + schema.required())
                 additionalProperties(schema.additionalProperties())

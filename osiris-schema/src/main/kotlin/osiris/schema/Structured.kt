@@ -53,7 +53,9 @@ public object Structured {
   private fun getName(type: KType, name: String?): String {
     if (name != null) return name
     val kClass = type.classifier as KClass<*>
-    val name = kClass.findAnnotations<Name>().singleNullOrThrow()?.value
-    return requireNotNull(name) { "${error.structuredOutput(kClass)}: Must define ${error.nameAnnotation}." }
+    val nameAnnotation = kClass.findAnnotations<Name>().singleNullOrThrow()
+    return requireNotNull(nameAnnotation) {
+      "${error.structuredOutput(kClass)}: Must define ${error.nameAnnotation}."
+    }.value
   }
 }
