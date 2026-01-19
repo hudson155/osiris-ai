@@ -10,6 +10,7 @@ kairo-protectedString = { module = "software.airborne.kairo:kairo-protected-stri
 kairo-reflect = { module = "software.airborne.kairo:kairo-reflect" }
 kairo-serialization = { module = "software.airborne.kairo:kairo-serialization" }
 kairo-testing = { module = "software.airborne.kairo:kairo-testing" }
+kairo-util = { module = "software.airborne.kairo:kairo-util" }
 
 ktorUtils = { module = "io.ktor:ktor-utils" }
 
