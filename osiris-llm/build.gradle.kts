@@ -17,6 +17,7 @@ dependencies {
   testImplementation(project(":osiris-open-ai"))
   testImplementation(project(":osiris-schema"))
 
+  testImplementation(libs.kairo.dependencyInjection)
   testImplementation(libs.kairo.dependencyInjectionTesting)
   testImplementation(libs.kairo.testing)
 }
