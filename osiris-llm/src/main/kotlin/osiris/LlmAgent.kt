@@ -2,6 +2,7 @@ package osiris
 
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
+import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.model.chat.request.ChatRequest
 import dev.langchain4j.model.chat.request.ResponseFormat
 
@@ -112,7 +113,8 @@ public abstract class LlmAgent(name: String) : Agent(name) {
     // TODO: Execute Tools in parallel.
     val resultMessages = lastMessage.toolExecutionRequests().map { request ->
       val tool = tools.single { it.name == request.name() }
-      return@map tool.execute(request)
+      val output = tool.execute(request)
+      return@map ToolExecutionResultMessage.from(request, output)
     }
     context.history.append(resultMessages)
   }

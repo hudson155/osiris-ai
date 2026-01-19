@@ -1,7 +1,6 @@
 package osiris
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest
-import dev.langchain4j.data.message.ToolExecutionResultMessage
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema
 import org.koin.core.annotation.Single
 import osiris.schema.Structured
@@ -26,17 +25,13 @@ internal class GetWeather : Tool("get_weather") {
     Structured.element<Input>() as JsonObjectSchema
 
   context(context: Context)
-  override suspend fun execute(executionRequest: ToolExecutionRequest): ToolExecutionResultMessage {
+  override suspend fun execute(executionRequest: ToolExecutionRequest): String {
     val input = context.json.deserialize<Input>(executionRequest.arguments())
     val output = when (input.city) {
       "Calgary" -> Output("10 degrees Celsius", "Sunny")
       "Edmonton" -> Output("-20 degrees Celsius", "Snowing")
-      else ->
-        return ToolExecutionResultMessage.toolExecutionResultMessage(
-          executionRequest,
-          "Unknown city: ${input.city}.",
-        )
+      else -> return "Unknown city: ${input.city}."
     }
-    return ToolExecutionResultMessage.from(executionRequest, context.json.serialize(output))
+    return context.json.serialize(output)
   }
 }
