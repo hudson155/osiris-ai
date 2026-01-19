@@ -16,7 +16,7 @@ internal class PersonIdentifier : LlmAgent("person_identifier") {
 
   context(context: Context)
   override suspend fun instructions(): SystemMessage =
-    SystemMessage("Provide a JSON representation of the person matching this description.")
+    SystemMessage.from("Provide a JSON representation of the person matching this description.")
 
   context(context: Context)
   override suspend fun responseFormat(): ResponseFormat =

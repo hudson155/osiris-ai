@@ -22,7 +22,7 @@ internal class PersonIdentifierTest {
       with(context) {
         setup {
           history.append(
-            UserMessage("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
+            UserMessage.from("Jeff Hudson, 29, is a software engineer. He's also a pilot and an ultra trail runner."),
           )
         }
         test {

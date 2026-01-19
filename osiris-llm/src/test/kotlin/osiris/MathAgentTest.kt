@@ -21,7 +21,7 @@ internal class MathAgentTest {
     runTest {
       with(context) {
         setup {
-          history.append(UserMessage("What's 2+2?"))
+          history.append(UserMessage.from("What's 2+2?"))
         }
         test {
           mathAgent.execute()
