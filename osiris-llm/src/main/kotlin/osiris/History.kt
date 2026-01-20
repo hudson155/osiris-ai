@@ -3,6 +3,8 @@ package osiris
 import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import io.ktor.util.AttributeKey
+import kairo.reflect.KairoType
+import kairo.reflect.kairoType
 
 /**
  * Stores the canonical [ChatMessage] LLM history.
@@ -48,7 +50,14 @@ public var Context.history: History
     attributes[key] = value
   }
 
-public suspend fun Context.getResponse(): String {
+public suspend fun Context.getResponseText(): String {
   val aiMessage = history.lastOrNull() as AiMessage
   return aiMessage.text()
 }
+
+public suspend inline fun <reified T> Context.getResponseAs(): T =
+  getResponseAs(kairoType())
+
+@JvmName("getResponseAs")
+public suspend fun <T> Context.getResponseAs(type: KairoType<T>): T =
+  json.deserialize(getResponseText(), type)
