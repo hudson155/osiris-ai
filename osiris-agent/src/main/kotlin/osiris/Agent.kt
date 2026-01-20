@@ -9,6 +9,13 @@ import io.ktor.util.AttributeKey
  * For an LLM implementation, see osiris-llm.
  */
 public abstract class Agent(public val name: String) {
+  @JvmName("executeWithContext")
+  public suspend fun execute(context: Context) {
+    with(context) {
+      executeAgent()
+    }
+  }
+
   context(context: Context)
   public suspend fun execute() {
     context.with(Context::currentAgent, this) {
