@@ -1,5 +1,6 @@
 package osiris
 
+import dev.langchain4j.data.message.AiMessage
 import dev.langchain4j.data.message.ChatMessage
 import io.ktor.util.AttributeKey
 
@@ -46,3 +47,8 @@ public var Context.history: History
   set(value) {
     attributes[key] = value
   }
+
+public suspend fun Context.getResponse(): String {
+  val aiMessage = history.lastOrNull() as AiMessage
+  return aiMessage.text()
+}

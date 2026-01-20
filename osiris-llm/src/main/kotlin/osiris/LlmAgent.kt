@@ -109,9 +109,9 @@ public abstract class LlmAgent(name: String) : Agent(name) {
   context(context: Context)
   private suspend fun executeTools() {
     val tools = tools()
-    val lastMessage = context.history.lastOrNull() as AiMessage
+    val aiMessage = context.history.lastOrNull() as AiMessage
     // TODO: Execute Tools in parallel.
-    val resultMessages = lastMessage.toolExecutionRequests().map { request ->
+    val resultMessages = aiMessage.toolExecutionRequests().map { request ->
       val tool = tools.single { it.name == request.name() }
       val output = tool.execute(request)
       return@map ToolExecutionResultMessage.from(request, output)
