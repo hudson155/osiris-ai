@@ -5,7 +5,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import osiris.element.element.ParagraphElement
 import osiris.element.element.TextElement
-import osiris.element.parser.MarkdownParser
 
 internal class ParagraphElementParserTest {
   @Test
