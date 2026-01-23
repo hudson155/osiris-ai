@@ -11,12 +11,13 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import osiris.schema.Structured.schema
 
 internal class StructuredArrayTest {
   @Test
   fun nullable(): Unit =
     runTest {
-      Structured.schema<List<String>?>("schema")
+      schema<List<String>?>("schema")
         .shouldBe(
           JsonSchema.builder().apply {
             name("schema")
@@ -37,7 +38,7 @@ internal class StructuredArrayTest {
   @Test
   fun `nullable elements`(): Unit =
     runTest {
-      Structured.schema<List<String?>>("schema")
+      schema<List<String?>>("schema")
         .shouldBe(
           JsonSchema.builder().apply {
             name("schema")
@@ -57,7 +58,7 @@ internal class StructuredArrayTest {
   @Test
   fun `with description`(): Unit =
     runTest {
-      Structured.schema(
+      schema(
         type = List::class.createType(
           arguments = listOf(KTypeProjection.invariant(typeOf<String>())),
           annotations = listOf(Structured.Description("An array")),
@@ -79,7 +80,7 @@ internal class StructuredArrayTest {
   @Test
   fun list(): Unit =
     runTest {
-      Structured.schema<List<String>>("schema")
+      schema<List<String>>("schema")
         .shouldBe(
           JsonSchema.builder().apply {
             name("schema")
@@ -95,7 +96,7 @@ internal class StructuredArrayTest {
   @Test
   fun set(): Unit =
     runTest {
-      Structured.schema<Set<String>>("schema")
+      schema<Set<String>>("schema")
         .shouldBe(
           JsonSchema.builder().apply {
             name("schema")

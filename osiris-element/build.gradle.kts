@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
   implementation(libs.flexmark)
-  compileOnly(libs.kairo.serialization) // Forced peer dependency.
+  compileOnly(libs.kairo.serialization)
 
   testImplementation(libs.kairo.serialization)
   testImplementation(libs.kairo.testing)

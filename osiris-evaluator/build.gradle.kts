@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-  compileOnly(project(":osiris-agent")) // Forced peer dependency.
-  compileOnly(project(":osiris-llm")) // Forced peer dependency.
+  compileOnly(project(":osiris-agent"))
+  compileOnly(project(":osiris-llm"))
   implementation(project(":osiris-schema"))
 
-  compileOnly(libs.kairo.testing) // Forced peer dependency.
+  compileOnly(libs.kairo.testing)
 }

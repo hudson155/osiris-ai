@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import osiris.element.element.LineBreakElement
 import osiris.element.element.ParagraphElement
 import osiris.element.element.TextElement
-import osiris.element.parser.MarkdownParser
 
 internal class HardLineBreakElementParserTest : ElementParserTest() {
   @Test

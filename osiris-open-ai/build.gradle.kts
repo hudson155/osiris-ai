@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  compileOnly(project(":osiris-llm")) // Forced peer dependency.
+  compileOnly(project(":osiris-llm"))
 
   api(libs.kairo.protectedString)
   api(libs.langchain4j.openAi)

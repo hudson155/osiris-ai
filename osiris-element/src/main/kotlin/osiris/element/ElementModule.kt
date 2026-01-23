@@ -6,7 +6,6 @@ import osiris.element.element.BlockQuoteElement
 import osiris.element.element.BulletedListElement
 import osiris.element.element.CodeBlockElement
 import osiris.element.element.CodeElement
-import osiris.element.element.Element
 import osiris.element.element.ExternalLinkElement
 import osiris.element.element.HeadingElement
 import osiris.element.element.LineBreakElement
