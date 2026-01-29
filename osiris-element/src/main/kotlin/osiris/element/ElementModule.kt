@@ -49,7 +49,9 @@ public class ElementModule(
   }
 }
 
-public fun ElementModule(block: ElementModule.Builder.() -> Unit): ElementModule {
+public fun ElementModule(
+  block: ElementModule.Builder.() -> Unit = {},
+): ElementModule {
   val builder = ElementModule.Builder().apply(block)
   return ElementModule(builder.subtypes)
 }
