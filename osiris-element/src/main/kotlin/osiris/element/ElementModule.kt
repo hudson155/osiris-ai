@@ -6,6 +6,7 @@ import osiris.element.element.BlockQuoteElement
 import osiris.element.element.BulletedListElement
 import osiris.element.element.CodeBlockElement
 import osiris.element.element.CodeElement
+import osiris.element.element.Element
 import osiris.element.element.ExternalLinkElement
 import osiris.element.element.HeadingElement
 import osiris.element.element.LineBreakElement
@@ -20,24 +21,35 @@ import osiris.element.element.ThematicBreakElement
  * Jackson module for [Element] support.
  * In the future, this will be adjusted to support custom elements.
  */
-public class ElementModule : SimpleModule() {
+public class ElementModule(
+  private val subtypes: List<NamedType>,
+) : SimpleModule() {
+  public class Builder internal constructor() {
+    public val subtypes: MutableList<NamedType> =
+      mutableListOf(
+        NamedType(BlockQuoteElement::class.java, "BlockQuote"),
+        NamedType(BulletedListElement::class.java, "BulletedList"),
+        NamedType(CodeBlockElement::class.java, "CodeBlock"),
+        NamedType(CodeElement::class.java, "Code"),
+        NamedType(ExternalLinkElement::class.java, "ExternalLink"),
+        NamedType(HeadingElement::class.java, "Heading"),
+        NamedType(LineBreakElement::class.java, "LineBreak"),
+        NamedType(MailtoLinkElement::class.java, "MailtoLink"),
+        NamedType(NumberedListElement::class.java, "NumberedList"),
+        NamedType(ParagraphElement::class.java, "Paragraph"),
+        NamedType(SpanElement::class.java, "Span"),
+        NamedType(TextElement::class.java, "Text"),
+        NamedType(ThematicBreakElement::class.java, "ThematicBreak"),
+      )
+  }
+
   override fun setupModule(context: SetupContext) {
     super.setupModule(context)
-
-    context.registerSubtypes(
-      NamedType(BlockQuoteElement::class.java, "BlockQuote"),
-      NamedType(BulletedListElement::class.java, "BulletedList"),
-      NamedType(CodeBlockElement::class.java, "CodeBlock"),
-      NamedType(CodeElement::class.java, "Code"),
-      NamedType(ExternalLinkElement::class.java, "ExternalLink"),
-      NamedType(HeadingElement::class.java, "Heading"),
-      NamedType(LineBreakElement::class.java, "LineBreak"),
-      NamedType(MailtoLinkElement::class.java, "MailtoLink"),
-      NamedType(NumberedListElement::class.java, "NumberedList"),
-      NamedType(ParagraphElement::class.java, "Paragraph"),
-      NamedType(SpanElement::class.java, "Span"),
-      NamedType(TextElement::class.java, "Text"),
-      NamedType(ThematicBreakElement::class.java, "ThematicBreak"),
-    )
+    context.registerSubtypes(*subtypes.toTypedArray())
   }
+}
+
+public fun ElementModule(block: ElementModule.Builder.() -> Unit): ElementModule {
+  val builder = ElementModule.Builder().apply(block)
+  return ElementModule(builder.subtypes)
 }
