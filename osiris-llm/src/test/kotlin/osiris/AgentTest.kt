@@ -16,13 +16,13 @@ internal class AgentTest : KoinExtension() {
       module {
         factory {
           context {
-            defaultModel = get<ModelFactory>().openAi("gpt-5.2")
+            defaultModel = get<ModelFactory>().anthropic("claude-opus-4-6")
           }
         }
         single {
           modelFactory {
             @OptIn(ProtectedString.Access::class)
-            openAiApiKey = ProtectedString(System.getenv("OPEN_AI_API_KEY"))
+            anthropicApiKey = ProtectedString(System.getenv("ANTHROPIC_API_KEY"))
           }
         }
       },

@@ -15,5 +15,6 @@ kairo-util = { module = "software.airborne.kairo:kairo-util" }
 ktorUtils = { module = "io.ktor:ktor-utils" }
 
 langchain4j = { module = "dev.langchain4j:langchain4j-core" }
+langchain4j-anthropic = { module = "dev.langchain4j:langchain4j-anthropic" }
 langchain4j-googleAiGemini = { module = "dev.langchain4j:langchain4j-google-ai-gemini" }
 langchain4j-openAi = { module = "dev.langchain4j:langchain4j-open-ai" }

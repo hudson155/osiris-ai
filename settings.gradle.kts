@@ -3,6 +3,7 @@ rootProject.name = "osiris-ai"
 include(":bom")
 
 include(":osiris-agent")
+include(":osiris-anthropic")
 include(":osiris-element")
 include(":osiris-evaluator")
 include(":osiris-gemini")
