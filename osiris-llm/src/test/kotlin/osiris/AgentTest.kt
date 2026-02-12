@@ -16,7 +16,9 @@ internal class AgentTest : KoinExtension() {
       module {
         factory {
           context {
-            defaultModel = get<ModelFactory>().anthropic("claude-opus-4-6")
+            defaultModel = get<ModelFactory>().anthropic("claude-opus-4-6") {
+              beta("structured-outputs-2025-11-13")
+            }
           }
         }
         single {
