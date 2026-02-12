@@ -31,6 +31,7 @@ public fun ModelFactory.anthropic(name: String, block: AnthropicChatModelBuilder
     modelName(name)
     @OptIn(ProtectedString.Access::class)
     apiKey(apiKey.value)
+    strictTools(true)
     block()
   }.build()
   return Model(model)
