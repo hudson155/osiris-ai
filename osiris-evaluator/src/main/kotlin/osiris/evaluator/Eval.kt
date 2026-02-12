@@ -1,6 +1,6 @@
 package osiris.evaluator
 
-import dev.langchain4j.data.message.SystemMessage
+import dev.langchain4j.data.message.UserMessage
 import dev.langchain4j.model.chat.request.ResponseFormat
 import dev.langchain4j.model.chat.request.ResponseFormatType
 import io.kotest.assertions.withClue
@@ -33,14 +33,14 @@ public suspend fun evaluate(
    */
   threshold: Int = 7,
 ) {
-  val systemMessage = SystemMessage.from(
+  val userMessage = UserMessage.from(
     listOf(
       "Evaluate the LLM's response to the user's question, according to the following criteria.",
       criteria,
     ).joinToString("\n\n"),
   )
   val response = model.chat {
-    messages(context.history.get() + systemMessage)
+    messages(context.history.get() + userMessage)
     responseFormat(
       ResponseFormat.builder().apply {
         type(ResponseFormatType.JSON)
