@@ -9,13 +9,16 @@ internal val javaVersion: JavaLanguageVersion = JavaLanguageVersion.of(21)
 
 internal fun RepositoryHandler.artifactRegistry() {
   maven {
+    url = URI("artifactregistry://us-central1-maven.pkg.dev/highbeam-kairo/maven")
+  }
+  maven {
     url = URI("artifactregistry://us-central1-maven.pkg.dev/airborne-software/maven")
   }
 }
 
 public object Airborne {
-  // https://github.com/hudson155/kairo/releases
-  public const val kairo: String = "software.airborne.kairo:bom-full:6.0.0-beta.18"
+  // https://github.com/highbeamco/kairo/releases
+  public const val kairo: String = "com.highbeam.kairo:bom-full:20260216.211909-4bed00c2"
 }
 
 internal fun groupId(): String =
